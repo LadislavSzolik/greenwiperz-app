@@ -10,7 +10,9 @@ class Booking extends Model
     use HasFactory;
 
     protected $fillable = [
-        'parking_street',
+        'refno',
+        'parking_route',
+        'parking_street_number',
         'parking_postal_code',
         'parking_city',
         'vehicle_model',
@@ -29,12 +31,15 @@ class Booking extends Model
         'billing_city',
         'billing_country',
         'notes',
-        'internal_notes',
-        'status'
+        'internal_notes',        
     ];
 
     public function bookingTimeslot() {
         return $this->hasOne('App\Models\BookingTimeslot');
+    }
+
+    public function payment() {
+        return $this->hasOne('App\Models\Payment');
     }
 
     public function user() {

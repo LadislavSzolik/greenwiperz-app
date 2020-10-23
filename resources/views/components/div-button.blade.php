@@ -8,6 +8,6 @@
 ])
 
 <div
-    {{ $attributes->merge(['class' => "{$colors[$buttonType]} inline-flex items-center justify-center px-4 py-2 rounded-md font-semibold text-xs uppercase tracking-widest  focus:outline-none  focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150"]) }}>
+    {{ $attributes->merge(['class' => "{$colors[$buttonType]} cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded-md font-semibold text-xs uppercase tracking-widest  focus:outline-none  focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150"]) }}>
     {{ $slot }}    
 </div>

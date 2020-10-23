@@ -4,7 +4,7 @@
        
         @if (!$checkoutVisibility)
         <div  class="flex flex-wrap content-start">
-                <div class="shadow overflow-hidden sm:rounded-md  w-full sm:w-4/6">
+                <div class="shadow overflow-hidden sm:rounded-md  w-full sm:w-4/6 ">
                     <div class="px-4 py-5 bg-white sm:p-10 sm:px-20">
                         <div class="grid grid-cols-6 gap-6">
                             <x-input.group for="serviceType" label="{{ __('Cleaning service') }}">
@@ -22,9 +22,13 @@
 
                             <x-input.group for="parkingStreet" label="{{ __('Parking Location') }}">                                
                                 <x-input.location-search wire:ignore id="parkingStreet" type="text" placeholder="Start typing..." />                                
-                                @if($errors->has('postal_code'))
-                                    <p class='text-sm text-red-600'>{{ __('Unfortunately our services are not available in this area. Please call us on +41 123 12 12 to discuss further details.')}}</p>
+                                @if($errors->has('street_number') || $errors->has('street_number') || $errors->has('route'))
+                                    <p class='text-sm text-red-600'>{{ __('Please provide the entire address.')}}</p>
                                 @endif   
+
+                                @error('postal_code') 
+                                    <p class='text-sm text-red-600'>{{ __('Unfortunately our services are not available in this area. Please call us on +41 123 12 12 to discuss further details.')}}</p>
+                                @enderror   
                                                       
                             </x-input.group>
 

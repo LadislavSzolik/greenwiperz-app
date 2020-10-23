@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Booking;
 
 class PaymentController extends Controller
 {
@@ -34,7 +35,22 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+
+        $booking = Booking::where('refno',$request['refno'])->first();
+
+        $payment =  auth()->user()->payments()->create([
+            'booking_id' => $booking->id,
+            'refno' => $request['refno'],
+            'amount' => $request['amount'],
+            'currency' => $request['currency'],
+            'uppTransactionId' => $request['uppTransactionId'],
+            'pmethod' => $request['pmethod'],
+            'reqtype' => $request['reqtype'],
+            'uppMsgType' => $request['uppMsgType'],
+            'status' => $request['status'],
+        ]);
+        return redirect()->route('payments.show', ['id' => $payment->id ]);
     }
 
     /**

@@ -19,9 +19,10 @@ class CreateBookingsTable extends Migration
             $table->string('refno');
 
             // vehicle location 
-            $table->string('parking_street',200);
-            $table->string('parking_postal_code',20);
+            $table->string('parking_street_number',200);
+            $table->string('parking_route',200);
             $table->string('parking_city',100);    
+            $table->string('parking_postal_code',20);            
 
             // vehicle  
             $table->string('vehicle_model',100);
@@ -46,7 +47,7 @@ class CreateBookingsTable extends Migration
             $table->string('billing_street',200);
             $table->string('billing_postal_code',20);
             $table->string('billing_city',100);
-            $table->char('billing_country',2);
+            $table->char('billing_country',100);
 
             $table->timestamp('completed_at')->nullable();
             $table->timestamp('canceled_at')->nullable();

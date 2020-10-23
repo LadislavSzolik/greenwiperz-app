@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\PaymentController;
 
 
 Route::get('/', function () {
@@ -18,5 +19,5 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/bookings', [BookingContro
 Route::middleware(['auth:sanctum', 'verified'])->get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
 Route::middleware(['auth:sanctum', 'verified'])->get('/bookings/{id}', [BookingController::class, 'show'])->name('bookings.show');
 
-Route::post('/payment/store', [BookingController::class, 'store'])->name('payment.store');
-
+Route::post('/payments/store', [PaymentController::class, 'store'])->name('payment.store');
+Route::middleware(['auth:sanctum', 'verified'])->get('/payments/{id}', [PaymentController::class, 'show'])->name('payments.show');

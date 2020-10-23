@@ -32,6 +32,20 @@
                 </div>
             @empty
                 <p>{{ __('No bookings yet') }}</p>
-            @endforelse        
+            @endforelse       
+            
+           <form method="POST" action="/payments/store">
+              <input type="text" name="refno" value="GW23B0E66029-0001">
+              <input type="text" name="amount" value="6500">
+              <input type="text" name="currency" value="CHF">
+              <input type="text" name="uppTransactionId" value="123456789">
+              <input type="text" name="pmethod" value="CA">
+              <input type="text" name="reqtype" value="CA">
+              <input type="text" name="uppMsgType" value="CA">
+              <input type="text" name="status" value="success">
+            <x-button>
+                Submit
+            </x-button>
+           </form>
     </x-content-section>
 </x-app-layout>

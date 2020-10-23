@@ -162,11 +162,11 @@ class Create extends Component
     {
         $customValidator = Validator::make(
             $placeData,
-            [
-                'postal_code' => 'required | in:8001,8002,8003,8004,8005,8006,8037,8046',
+            [                
                 'street_number' => 'required',
                 'route' => 'required',
-                'postal_code' => 'required',
+                'locality' => 'required',
+                'postal_code' => 'required | in:8001,8002,8003,8004,8005,8006,8037,8046',
             ]
         )->validate();
 
@@ -177,21 +177,27 @@ class Create extends Component
     }
 
     public function toggleCheckoutVisibility() {
-       // $this->validate();
+        $this->validate();
         $this->checkoutVisibility = !$this->checkoutVisibility;
     }
 
     public function submitBooking(Request $request)
     {
-        /*                  
+        
+        $this->validate();
+
+        $refno = $this->generateInvoiceReferenceNumber();
+        $paymentDetails = $this->getPaymentDetails($this->servicePrice, $refno);
+        
         $startTime = Carbon::parse($this->bookingTime)->addMinutes($this->travelTimeNeeded)->format('H:i');   
         $endTime = Carbon::parse($this->bookingTime)->addMinutes($this->travelTimeNeeded + $this->serviceDuration-1)->format('H:i');        
-        $user = Auth::user();        
-        $booking = [
+           
+        $bookingData = [
+        'refno'                     => $refno,        
+        'parking_street_number'     => $this->parkingStreetNumber,
         'parking_route'             => $this->parkingRoute,
-        'parking_street_number'     =>$this->parkingStreetNumber,
-        'parking_postal_code'       => $this->parkingPostalCode,
         'parking_city'              => $this->parkingCity,
+        'parking_postal_code'       => $this->parkingPostalCode,        
         'vehicle_model'             => $this->vehicleModel,
         'number_plate'              => $this->numberPlate,
         'vehicle_size'              => $this->vehicleSize,
@@ -208,27 +214,39 @@ class Create extends Component
         'billing_postal_code'       => $this->billingPostalCode,
         'billing_city'              => $this->billingCity,
         'billing_country'           => $this->billingCountry,
-        'status'                    => 'pending',
-        'bookingTimeslot'           => [ 'date' => $this->bookingDate,
-        'start_time' => $startTime,
-        'end_time' => $endTime, ]
         ];
-        $request->session()->put('newBooking', $booking); 
-        return redirect()->route('bookings.review');
-        */
 
-        $paymentDetails = $this->getPaymentDetails();
-        return redirect()->away('https://pay.sandbox.datatrans.com/upp/jsp/upStart.jsp?sign='.$paymentDetails['sign'].'&merchantId='.$paymentDetails['merchantId'].'&refno='.$paymentDetails['refno'].'&amount='.$paymentDetails['amount'].'&currency='.$paymentDetails['currency'].'&theme=DT2015');
         
+        $booking = auth()->user()->bookings()->create($bookingData);
+        $booking->bookingTimeslot()->create([
+            'date' => $this->bookingDate,
+            'start_time' => $startTime,
+            'end_time' => $endTime 
+        ]);
+                    
+        return redirect()->away('https://pay.sandbox.datatrans.com/upp/jsp/upStart.jsp?sign='.$paymentDetails['sign'].'&merchantId='.$paymentDetails['merchantId'].'&refno='.$paymentDetails['refno'].'&amount='.$paymentDetails['amount'].'&currency='.$paymentDetails['currency'].'&theme=DT2015');        
+    }
+
+    protected function generateInvoiceReferenceNumber() {
+        
+        $refnoStructure = [
+            'prefix' => 'GW',
+            'date' => Carbon::now('GMT+2')->format('d'),
+            'random' => strtoupper(bin2hex(random_bytes(4))),            
+            'divider2' => '-',
+            'userid' => str_pad(auth()->user()->id,4,"0",STR_PAD_LEFT) ,         
+        ];
+ 
+        return implode($refnoStructure);
     }
 
 
-    protected function getPaymentDetails() {
-        $paymentDetails = [
+    protected function getPaymentDetails($servicePrice, $refno) {
+        $paymentDetails = [            
             'merchantId' => 1100026445,
-            'amount' => 100 * $this->servicePrice,
+            'amount' => 100 * $servicePrice,
             'currency' => 'CHF', 
-            'refno' => 1,                        
+            'refno' => $refno,                        
         ];   
         $binaryKey = hex2bin('c8c468f12382a4eac3fd1f536157af70d2a97b952b4ff8d1122fba82a1e5d739660fae58ef8afdb0b670301822598077f812cd99e0a7690ab7a439c41c0892f0');        
         $sign = hash_hmac('sha256', implode($paymentDetails),$binaryKey);
