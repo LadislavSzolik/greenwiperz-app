@@ -35,7 +35,7 @@ class CreateBookingsTable extends Migration
             // service
             $table->enum('service_type', ['outside', 'inside-outside']);             
             $table->integer('service_duration');  
-            $table->decimal('service_price',5, 2);  
+            $table->integer('service_price');  
 
             // notes
             $table->text('notes')->nullable();

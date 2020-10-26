@@ -18,7 +18,7 @@ class CreatePaymentsTable extends Migration
             $table->unsignedBigInteger('booking_id');
             $table->unsignedBigInteger('user_id');
             $table->string('refno');
-            $table->double('amount',10, 2);
+            $table->integer('amount');
             $table->string('currency');
             $table->unsignedBigInteger("uppTransactionId");
             $table->string('pmethod');

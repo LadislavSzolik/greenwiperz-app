@@ -6,8 +6,8 @@
     </x-slot>
 
     <div>
-        <div class="max-w-6xl mx-auto py-5 sm:px-6 lg:px-8">          
-            @livewire('booking.create', ['draftBooking' => $draftBooking])           
+        <div class="max-w-6xl mx-auto pt-5 sm:py-5 sm:px-6 lg:px-8">          
+            @livewire('booking.create')           
         </div>
     </div>
 </x-app-layout>

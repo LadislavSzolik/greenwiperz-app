@@ -18,7 +18,7 @@ class CreateServicesTable extends Migration
             $table->enum('type', ['outside', 'inside-outside']);
             $table->enum('vehicle_size', ['small', 'medium', 'large','x-large']); 
             $table->integer('duration');
-            $table->decimal('price',5, 2);              
+            $table->integer('price');              
             $table->timestamps();
         });
     }

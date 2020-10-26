@@ -1,12 +1,24 @@
 <div class='mt-2 md:mt-0'>
     <form wire:submit.prevent="submitBooking">
         @csrf
-       
+
+
+        <div wire:click="sendMail()">
+            Send that mail
+        </div>
+
         @if (!$checkoutVisibility)
-        <div  class="flex flex-wrap content-start">
+            <div class="flex flex-wrap content-start">
                 <div class="shadow overflow-hidden sm:rounded-md  w-full sm:w-4/6 ">
                     <div class="px-4 py-5 bg-white sm:p-10 sm:px-20">
                         <div class="grid grid-cols-6 gap-6">
+
+                            @if (session()->has('message'))
+                                <div class="col-span-6 bg-red-100 text-red-800 rounded p-4">
+                                    {{ session('message') }}
+                                </div>
+                            @endif
+                            
                             <x-input.group for="serviceType" label="{{ __('Cleaning service') }}">
                                 <x-input.radio wire:model="serviceType" name="serviceType" value="outside"
                                     text="{{ __('Outside only') }}" subText="{{ __('from CHF 65') }}">
@@ -20,16 +32,21 @@
                                 <h3 class="text-2xl font-medium text-gray-900">Car Information</h3>
                             </div>
 
-                            <x-input.group for="parkingStreet" label="{{ __('Parking Location') }}">                                
-                                <x-input.location-search wire:ignore id="parkingStreet" type="text" placeholder="Start typing..." />                                
-                                @if($errors->has('street_number') || $errors->has('street_number') || $errors->has('route'))
-                                    <p class='text-sm text-red-600'>{{ __('Please provide the entire address.')}}</p>
-                                @endif   
+                            <x-input.group for="parkingStreet" label="{{ __('Parking Location') }}">
+                                <p class="text-xs text-gray-500">Your address needs to be selected from the dropdown
+                                    after you typed the street address.</p>
+                                <x-input.location-search wire:ignore id="parkingStreet" type="text"
+                                    placeholder="Start typing..." />
+                                @if ($errors->has('street_number') || $errors->has('street_number') || $errors->has('route'))
+                                    <p class='text-sm text-red-600'>{{ __('Please provide the entire address.') }}</p>
+                                @endif
 
-                                @error('postal_code') 
-                                    <p class='text-sm text-red-600'>{{ __('Unfortunately our services are not available in this area. Please call us on +41 123 12 12 to discuss further details.')}}</p>
-                                @enderror   
-                                                      
+                                @error('postal_code')
+                                <p class='text-sm text-red-600'>
+                                    {{ __('Unfortunately our services are not yet available in this area. Please call us on +41 123 12 12 to discuss further details.') }}
+                                </p>
+                                @enderror
+
                             </x-input.group>
 
                             <x-input.group for="vehicleModel" label="{{ __('Car Model') }}">
@@ -101,14 +118,14 @@
                                 label="{{ __('Day of the cleaning') }}">
                                 <x-input.date-picker wire:model="bookingDate" id="bookingDate" type="text"
                                     placeholder="DD.MM.YYYY" />
-                            </x-input.flexible-group>                          
+                            </x-input.flexible-group>
 
                             <!-- timeslots -->
                             <x-input.flexible-group class="col-span-6 ms:col-span-3" for="bookingTime"
                                 label="{{ __('Available timeslots') }}">
-                                <x-input.timepicker :bookingTime="$bookingTime" :availableSlots="$availableSlots"
-                                    :travelTimeNeeded="$travelTimeNeeded" :serviceDuration="$serviceDuration"
-                                    id="bookingTime" type="text" />
+                                <x-input.timepicker wire:loading.attr="disabled" :bookingTime="$bookingTime"
+                                    :availableSlots="$availableSlots" :travelTimeNeeded="$travelTimeNeeded"
+                                    :serviceDuration="$serviceDuration" id="bookingTime" type="text" />
                             </x-input.flexible-group>
 
                             <!-- billing addresss -->
@@ -169,7 +186,7 @@
 
                         <div class="flex justify-between border-b border-cool-gray-200 py-2">
                             <div>{{ __('Total cost') }} </div>
-                            <div class="font-bold"> {{ $servicePrice }}</div>
+                            <div class="font-bold"> {{ $servicePrice/100 }}</div>
                         </div>
 
                         <div class="flex justify-between border-b border-cool-gray-200 py-2">
@@ -178,7 +195,8 @@
                         </div>
 
                         <div class="flex items-center justify-end pt-4 ">
-                            <x-div-button wire:loading.attr="disabled" wire:click="toggleCheckoutVisibility()">
+                            <x-div-button wire:loading.attr="disabled" buttonType="primary"
+                                wire:click="toggleCheckoutVisibility()">
                                 {{ __('To the checkout') }}
                             </x-div-button>
                         </div>
@@ -186,16 +204,17 @@
                 </div>
 
                 <!-- MOBILE -->
-                <div class="block sm:hidden w-full sticky bottom-0 shadow-md  ">
-                    <div class="px-4 pt-2 pb-4 bg-cool-gray-100 ">
-                        <div class="text-base mb-2">{{ __('Cleaning service price and duration') }} </div>
+                <div class="block sm:hidden w-full sticky bottom-0">
+                    <div class="px-4 pt-2 pb-4 bg-cool-gray-300 ">
+                        <div class="text-base mb-2">{{ __('Price and aprox. duration') }} </div>
 
                         <div class="flex justify-between items-center">
-                            <div class="font-bold">
-                                CHF {{ $servicePrice }}/ {{ $serviceDuration }} min
+                            <div class="font-bold text-xl">
+                                CHF {{ $servicePrice/100 }}/ {{ $serviceDuration }} min
                             </div>
                             <div>
-                                <x-div-button wire:loading.attr="disabled" wire:click="toggleCheckoutVisibility()">
+                                <x-div-button wire:loading.attr="disabled" buttonType="primary"
+                                    wire:click="toggleCheckoutVisibility()">
                                     {{ __('To the checkout') }}
                                 </x-div-button>
                             </div>
@@ -207,7 +226,7 @@
 
         @else
 
-<!-- start of read only part -->
+            <!-- start of read only part -->
             <div class="flex flex-wrap content-start">
                 <div class="shadow overflow-hidden sm:rounded-md  w-full sm:w-4/6">
                     <div class="px-4 py-5 bg-white sm:p-10 sm:px-20">
@@ -264,9 +283,9 @@
                                 <x-input.readonly>
                                     @if ($vehicleSize == 'small')
                                         {{ __('Small') }}
-                                    @elseif($vehicleSize  == 'medium')
+                                    @elseif($vehicleSize == 'medium')
                                         {{ __('Medium') }}
-                                    @elseif($vehicleSize  == 'large')
+                                    @elseif($vehicleSize == 'large')
                                         {{ __('Large') }}
                                     @else
                                         {{ __('Extra large') }}
@@ -286,8 +305,8 @@
                                         <span class="ml-2">{{ __('Animal hair') }}</span>
                                     @endif
 
-                                    @if($hasExtraDirt == 0 && $hasAnimalHair == 0)
-                                    -
+                                    @if ($hasExtraDirt == 0 && $hasAnimalHair == 0)
+                                        -
                                     @endif
                                 </x-input.readonly>
                             </x-input.group>
@@ -299,16 +318,17 @@
 
                             <!-- booking date -->
                             <x-input.flexible-group class="col-span-6 sm:col-span-3" for="bookingDate"
-                                label="{{ __('Day of the cleaning') }}">                               
-                                    {{ $bookingDate }}                            
+                                label="{{ __('Day of the cleaning') }}">
+                                {{ $bookingDate }}
                             </x-input.flexible-group>
 
                             <!-- timeslots -->
                             <x-input.flexible-group class="col-span-6 sm:col-span-3" for="bookingTime"
                                 label="{{ __('Starting time') }}">
                                 <x-input.readonly>
-                                    @if($bookingTime) 
-                                    {{ Carbon\Carbon::parse($bookingTime)->addMinutes($travelTimeNeeded)->format('H:i') }} <span class="text-gray-500"> (c.a. {{ $serviceDuration }} min)
+                                    @if ($bookingTime)
+                                        {{ Carbon\Carbon::parse($bookingTime)->addMinutes($travelTimeNeeded)->format('H:i') }}
+                                        <span class="text-gray-500"> (c.a. {{ $serviceDuration }} min)
                                     @endif
                                 </x-input.readonly>
                             </x-input.flexible-group>
@@ -319,8 +339,8 @@
                             </div>
 
                             <x-input.flexible-group class="col-span-6 sm:col-span-3" for="billingFirstName"
-                                label="{{ __('First Name') }}"> 
-                                {{ $billingFirstName }}                               
+                                label="{{ __('First Name') }}">
+                                {{ $billingFirstName }}
                             </x-input.flexible-group>
 
                             <x-input.flexible-group class="col-span-6 sm:col-span-3" for="billingLastName"
@@ -359,7 +379,17 @@
                                     -
                                 @endif
                             </div>
-                            
+
+                            <!-- terms and conditions -->
+                            <x-input.flexible-group class="col-span-6" for="termsAndConditions"
+                                label="{{ __('Terms and conditions') }}">
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 "
+                                        wire:model.defer="termsAndConditions">
+                                    <span class="ml-2">{{ __('I accept the Greenwiperz GmbH terms and conditions.') }}</span>
+                                </label>
+                            </x-input.flexible-group>
+
                         </div>
                     </div>
                 </div>
@@ -371,11 +401,11 @@
 
                         <div class="flex justify-between border-cool-gray-200 py-1">
                             <div class="text-xl">{{ __('Total cost') }} </div>
-                            <div class="text-xl font-bold"> {{ $servicePrice }}</div>
+                            <div class="text-xl font-bold">CHF {{ $servicePrice/100 }}</div>
                         </div>
 
                         <div class="flex justify-between border-cool-gray-200 py-1 ">
-                            {{ __('You will be redirected to the Datatrans payment page.') }}
+                            {{ __('To make a payment, you will be redirected to the Datatrans payment page.') }}
                         </div>
 
                         <div class="flex items-center justify-between pt-4 ">
@@ -383,7 +413,7 @@
                                 {{ __('Change booking') }}
                             </x-div-button>
 
-                            <x-button wire:loading.attr="disabled" >
+                            <x-button buttonType="primary" wire:loading.attr="disabled">
                                 {{ __('Pay') }}
                             </x-button>
                         </div>
@@ -392,8 +422,32 @@
 
 
                 <!-- MOBILE -->
+                <div class="block sm:hidden w-full sticky bottom-0   ">
+                    <div class="px-4 pt-2 pb-4 bg-cool-gray-300 shadow-2xl ">
+
+                        <div class="flex justify-between border-cool-gray-200 py-1">
+                            <div class="text-xl">{{ __('Total cost') }} </div>
+                            <div class="text-xl font-bold">CHF {{ $servicePrice/100 }}</div>
+                        </div>
+
+                        <div class="text-sm text-gray-600">
+                            {{ __('To make a payment, you will be redirected to the Datatrans payment page.') }}
+                        </div>
+
+                        <div class="flex justify-between mt-2 ">
+                            <x-div-button class="w-full" wire:loading.attr="disabled"
+                                wire:click="toggleCheckoutVisibility()">
+                                {{ __('Change booking') }}
+                            </x-div-button>
+                            <x-button class="ml-2 w-full" buttonType="primary" wire:loading.attr="disabled">
+                                {{ __('Pay') }}
+                            </x-button>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         @endif
     </form>
 </div>
-

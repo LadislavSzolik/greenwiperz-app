@@ -20,7 +20,7 @@ class CreateBillingAddressesTable extends Migration
             $table->string('street',200);
             $table->string('postal_code',20);
             $table->string('city',100);
-            $table->char('country',2);
+            $table->char('country',100);
             $table->boolean('default')->default(true);      
             $table->unsignedBigInteger('user_id');        
             $table->timestamps();

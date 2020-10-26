@@ -14,7 +14,7 @@ class TimeslotSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('timeslots')->insert(['timeslot' => '07:30:00', 'created_at' => now(), 'updated_at'=> now()]); 
+       DB::table('timeslots')->insert(['timeslot' => '07:30:00', 'created_at' => now(), 'updated_at'=> now()]); 
         DB::table('timeslots')->insert(['timeslot' => '07:45:00', 'created_at' => now(), 'updated_at'=> now()]); 
         DB::table('timeslots')->insert(['timeslot' => '08:00:00', 'created_at' => now(), 'updated_at'=> now()]);
         DB::table('timeslots')->insert(['timeslot' => '08:15:00', 'created_at' => now(), 'updated_at'=> now()]);

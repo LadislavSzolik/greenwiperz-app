@@ -2,21 +2,18 @@
 
 namespace App\Http\Livewire\Booking;
 
-use Livewire\Component;
-use App\Models\Booking;
-use App\Models\BookingTimeslot;
-use App\Models\Services;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
+use App\Models\Services;
 use Illuminate\Http\Request;
+use App\Mail\BookingConfirmed;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class Create extends Component
 {
     public $checkoutVisibility = false;
-
-    
 
     public $priceList;
 
@@ -55,16 +52,17 @@ class Create extends Component
     public $billingCountry = '';
 
     public $contactEmail;
+    public $termsAndConditions = false;
 
     public $listeners = ['placeChanged'];
-    public $customValidator;    
+    public $customValidator;
 
     protected $rules = [
         'bookingDate' => 'required',
         'bookingTime' => 'required',
         'serviceDuration' => 'required',
-        'travelTimeNeeded' => 'required',     
-        
+        'travelTimeNeeded' => 'required',
+
         'parkingRoute' => 'required',
         'parkingStreetNumber' => 'required',
         'parkingPostalCode' => 'required',
@@ -83,7 +81,7 @@ class Create extends Component
         'servicePrice' => 'required|numeric',
 
         'notes' => 'nullable',
-        
+
         'billingFirstName' => 'required',
         'billingLastName' => 'required',
         'billingStreet' => 'required',
@@ -96,49 +94,55 @@ class Create extends Component
     {
         $this->bookingDate = null;
         $this->priceList = Services::all();
-        $this->updateService();                   
+        $this->updateService();
     }
 
     // this helps when I use click inside of blade component
     public function hydrate()
-    {       
-        if(strtotime($this->bookingDate)) {
-            $this->totalTimeRequired = 2* $this->travelTimeNeeded + $this->serviceDuration-1;
-            $this->availableSlots = $this->getAvailableTimeSlotsFor($this->bookingDate); 
-        }        
+    {
+        if (strtotime($this->bookingDate)) {
+            $this->totalTimeRequired = 2 * $this->travelTimeNeeded + $this->serviceDuration - 1;
+            $this->availableSlots = $this->getAvailableTimeSlotsFor($this->bookingDate);
+        }
     }
 
-    public function getAvailableTimeSlotsFor($date) {
-        $timeslots = DB::table('timeslots')->select('timeslots.id as takenTimeSlotId', 'timeslot')->crossJoin('booking_timeslots')->whereDate('booking_timeslots.date', $date)->where(function ($query) { $query->whereBetween('booking_timeslots.start_time', [ DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL '$this->totalTimeRequired' minute)")])->orWhereBetween('booking_timeslots.end_time', [ DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL '$this->totalTimeRequired' minute)")])->orWhereBetween('timeslots.timeslot', [ DB::raw('booking_timeslots.start_time'), DB::raw('booking_timeslots.end_time')]);});
+    public function getAvailableTimeSlotsFor($date)
+    {
+        $timeslots = DB::table('timeslots')->select('timeslots.id as takenTimeSlotId', 'timeslot')->crossJoin('booking_timeslots')->whereDate('booking_timeslots.date', $date)->where(function ($query) {
+            $query->whereBetween('booking_timeslots.start_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL '$this->totalTimeRequired' minute)")])->orWhereBetween('booking_timeslots.end_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL '$this->totalTimeRequired' minute)")])->orWhereBetween('timeslots.timeslot', [DB::raw('booking_timeslots.start_time'), DB::raw('booking_timeslots.end_time')]);
+        });
 
-        return DB::table('timeslots as availableSlots')->select('availableSlots.timeslot')->leftJoinSub($timeslots, 'disabledTimeSlots', function($join) { $join->on('availableSlots.id','=', 'disabledTimeSlots.takenTimeSlotId');})->whereNull('disabledTimeSlots.takenTimeSlotId')->get();
+        return DB::table('timeslots as availableSlots')->select('availableSlots.timeslot')->leftJoinSub($timeslots, 'disabledTimeSlots', function ($join) {
+            $join->on('availableSlots.id', '=', 'disabledTimeSlots.takenTimeSlotId');
+        })->whereNull('disabledTimeSlots.takenTimeSlotId')->get();
     }
 
     // this is live:wire event hook
-    public function updatedBookingDate() {          
+    public function updatedBookingDate()
+    {
         $selectedDate = Carbon::parse($this->bookingDate);
-            
-        if($selectedDate->lt(Carbon::now())) {            
+
+        if ($selectedDate->lt(Carbon::now())) {
             $availableSlots = null;
             $this->bookingTime = null;
-
         } else {
-            $this->totalTimeRequired = 2* $this->travelTimeNeeded + $this->serviceDuration -1;
-            $availableSlots = $this->getAvailableTimeSlotsFor($this->bookingDate );
-            if ($availableSlots->count() > 0)
-            {                
+            $this->totalTimeRequired = 2 * $this->travelTimeNeeded + $this->serviceDuration - 1;
+            $availableSlots = $this->getAvailableTimeSlotsFor($this->bookingDate);
+            if ($availableSlots->count() > 0) {
                 $this->bookingTime = $availableSlots->first()->timeslot;
-            }            
-        }        
-        $this->availableSlots = $availableSlots;    
+            }
+        }
+        $this->availableSlots = $availableSlots;
     }
     // this is live:wire event hook
-    public function updatedServiceType() {       
+    public function updatedServiceType()
+    {
         $this->updateService();
         $this->resetDateAndTime();
     }
     // this is live:wire event hook
-    public function updatedVehicleSize() {
+    public function updatedVehicleSize()
+    {
         $this->updateService();
         $this->resetDateAndTime();
     }
@@ -148,11 +152,12 @@ class Create extends Component
     {
         $actualPriceData =  $this->priceList->where('type', $this->serviceType)->where('vehicle_size', $this->vehicleSize)->first();
         $this->servicePrice  = $actualPriceData->price;
-        $this->serviceDuration = $actualPriceData->duration;        
+        $this->serviceDuration = $actualPriceData->duration;
     }
 
-    public function resetDateAndTime() {
-        $this->bookingDate = null; 
+    public function resetDateAndTime()
+    {
+        $this->bookingDate = null;
         $this->bookingTime = null;
         $this->availableSlots = null;
     }
@@ -162,7 +167,7 @@ class Create extends Component
     {
         $customValidator = Validator::make(
             $placeData,
-            [                
+            [
                 'street_number' => 'required',
                 'route' => 'required',
                 'locality' => 'required',
@@ -176,83 +181,102 @@ class Create extends Component
         $this->parkingPostalCode = $placeData['postal_code'];
     }
 
-    public function toggleCheckoutVisibility() {
+    public function toggleCheckoutVisibility()
+    {
         $this->validate();
         $this->checkoutVisibility = !$this->checkoutVisibility;
     }
 
     public function submitBooking(Request $request)
     {
-        
-        $this->validate();
+        $availableSlots = $this->getAvailableTimeSlotsFor($this->bookingDate);
+        if (!$availableSlots->contains('timeslot', $this->bookingTime)) {
+            $this->bookingDate = null;
+            $this->bookingTime = null;
+            $this->toggleCheckoutVisibility();
+            session()->flash('message', 'Unfortunately in a meanwhile the timeslot has been taken. Please select a new one.');
+            
+        } else {
+            Validator::make(
+                ['termsAndConditions' => $this->termsAndConditions,],
+                ['termsAndConditions' => 'accepted',]
+            )->validate();
+            $this->validate();
 
-        $refno = $this->generateInvoiceReferenceNumber();
-        $paymentDetails = $this->getPaymentDetails($this->servicePrice, $refno);
-        
-        $startTime = Carbon::parse($this->bookingTime)->addMinutes($this->travelTimeNeeded)->format('H:i');   
-        $endTime = Carbon::parse($this->bookingTime)->addMinutes($this->travelTimeNeeded + $this->serviceDuration-1)->format('H:i');        
-           
-        $bookingData = [
-        'refno'                     => $refno,        
-        'parking_street_number'     => $this->parkingStreetNumber,
-        'parking_route'             => $this->parkingRoute,
-        'parking_city'              => $this->parkingCity,
-        'parking_postal_code'       => $this->parkingPostalCode,        
-        'vehicle_model'             => $this->vehicleModel,
-        'number_plate'              => $this->numberPlate,
-        'vehicle_size'              => $this->vehicleSize,
-        'vehicle_color'             => $this->vehicleColor,
-        'has_extra_dirt'            => $this->hasExtraDirt,
-        'has_animal_hair'           => $this->hasAnimalHair,
-        'service_type'              => $this->serviceType,
-        'service_duration'          => $this->serviceDuration,
-        'service_price'             => $this->servicePrice,
-        'notes'                     => $this->notes,
-        'billing_first_name'        => $this->billingFirstName,
-        'billing_last_name'         => $this->billingLastName,
-        'billing_street'            => $this->billingStreet,
-        'billing_postal_code'       => $this->billingPostalCode,
-        'billing_city'              => $this->billingCity,
-        'billing_country'           => $this->billingCountry,
-        ];
+            $refno = $this->generateInvoiceReferenceNumber();
+            $bookingData = [
+                'refno'                     => $refno,
+                'parking_street_number'     => $this->parkingStreetNumber,
+                'parking_route'             => $this->parkingRoute,
+                'parking_city'              => $this->parkingCity,
+                'parking_postal_code'       => $this->parkingPostalCode,
+                'vehicle_model'             => $this->vehicleModel,
+                'number_plate'              => $this->numberPlate,
+                'vehicle_size'              => $this->vehicleSize,
+                'vehicle_color'             => $this->vehicleColor,
+                'has_extra_dirt'            => $this->hasExtraDirt,
+                'has_animal_hair'           => $this->hasAnimalHair,
+                'service_type'              => $this->serviceType,
+                'service_duration'          => $this->serviceDuration,
+                'service_price'             => $this->servicePrice,
+                'notes'                     => $this->notes,
+                'billing_first_name'        => $this->billingFirstName,
+                'billing_last_name'         => $this->billingLastName,
+                'billing_street'            => $this->billingStreet,
+                'billing_postal_code'       => $this->billingPostalCode,
+                'billing_city'              => $this->billingCity,
+                'billing_country'           => $this->billingCountry,
+            ];
+            $booking = auth()->user()->bookings()->create($bookingData);
 
-        
-        $booking = auth()->user()->bookings()->create($bookingData);
-        $booking->bookingTimeslot()->create([
-            'date' => $this->bookingDate,
-            'start_time' => $startTime,
-            'end_time' => $endTime 
-        ]);
-                    
-        return redirect()->away('https://pay.sandbox.datatrans.com/upp/jsp/upStart.jsp?sign='.$paymentDetails['sign'].'&merchantId='.$paymentDetails['merchantId'].'&refno='.$paymentDetails['refno'].'&amount='.$paymentDetails['amount'].'&currency='.$paymentDetails['currency'].'&theme=DT2015');        
+            $startTime = Carbon::parse($this->bookingTime)->addMinutes($this->travelTimeNeeded)->format('H:i');
+            $endTime = Carbon::parse($this->bookingTime)->addMinutes($this->travelTimeNeeded + $this->serviceDuration - 1)->format('H:i');
+            $booking->bookingTimeslot()->create([
+                'date' => $this->bookingDate,
+                'start_time' => $startTime,
+                'end_time' => $endTime
+            ]);
+
+            $paymentDetails = $this->getPaymentDetails($this->servicePrice, $refno);
+            return redirect('https://pay.sandbox.datatrans.com/upp/jsp/upStart.jsp?sign=' . $paymentDetails['sign'] . '&merchantId=' . $paymentDetails['merchantId'] . '&refno=' . $paymentDetails['refno'] . '&amount=' . $paymentDetails['amount'] . '&currency=' . $paymentDetails['currency'] . '&theme=DT2015');
+        }
     }
 
-    protected function generateInvoiceReferenceNumber() {
-        
+    protected function generateInvoiceReferenceNumber()
+    {
+
         $refnoStructure = [
             'prefix' => 'GW',
             'date' => Carbon::now('GMT+2')->format('d'),
-            'random' => strtoupper(bin2hex(random_bytes(4))),            
+            'random' => strtoupper(bin2hex(random_bytes(4))),
             'divider2' => '-',
-            'userid' => str_pad(auth()->user()->id,4,"0",STR_PAD_LEFT) ,         
+            'userid' => str_pad(auth()->user()->id, 4, "0", STR_PAD_LEFT),
         ];
- 
         return implode($refnoStructure);
     }
 
 
-    protected function getPaymentDetails($servicePrice, $refno) {
-        $paymentDetails = [            
+    protected function getPaymentDetails($servicePrice, $refno)
+    {
+        $paymentDetails = [
             'merchantId' => 1100026445,
-            'amount' => 100 * $servicePrice,
-            'currency' => 'CHF', 
-            'refno' => $refno,                        
-        ];   
-        $binaryKey = hex2bin('c8c468f12382a4eac3fd1f536157af70d2a97b952b4ff8d1122fba82a1e5d739660fae58ef8afdb0b670301822598077f812cd99e0a7690ab7a439c41c0892f0');        
-        $sign = hash_hmac('sha256', implode($paymentDetails),$binaryKey);
+            'amount' => $servicePrice,
+            'currency' => 'CHF',
+            'refno' => $refno,
+        ];
+        $binaryKey = hex2bin('c8c468f12382a4eac3fd1f536157af70d2a97b952b4ff8d1122fba82a1e5d739660fae58ef8afdb0b670301822598077f812cd99e0a7690ab7a439c41c0892f0');
+        $sign = hash_hmac('sha256', implode($paymentDetails), $binaryKey);
         $paymentDetails['sign'] =  $sign;
         return $paymentDetails;
     }
 
-    public function render() { return view('livewire.booking.create');}
+    public function render()
+    {
+        return view('livewire.booking.create');
+    }
+
+
+    public function sendMail() {
+        Mail::to(auth()->user())->send(new BookingConfirmed());       
+    }
 }
