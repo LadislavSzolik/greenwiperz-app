@@ -20,6 +20,18 @@ Route::get('/how-it-works', function () {
     return view('how-it-works');
 })->name('how.it.works');
 
+Route::get('/service-area', function () {
+    return view('service-area');
+})->name('service.area');
+
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
