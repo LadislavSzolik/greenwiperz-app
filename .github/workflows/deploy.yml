@@ -18,7 +18,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Setup PHP environment        
-        uses: nanasess/setup-php@v3.0.4
+        uses: shivammathur/setup-php@v2
         
       - name: Speed up the packages installation process
         run: composer global require hirak/prestissimo
@@ -34,4 +34,4 @@ jobs:
           path: '~/www/lifiluzi.myhostpoint.ch/test'
           owner: 'lifiluzi'
         env:
-          DEPLOY_KEY: ${{ secrets.deploy_key }}   
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}   
