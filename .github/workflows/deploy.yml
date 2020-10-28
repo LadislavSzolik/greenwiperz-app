@@ -20,12 +20,13 @@ jobs:
       - name: Setup PHP environment        
         uses: nanasess/setup-php@v3.0.4
         
+      - name: Speed up the packages installation process
+        run: composer global require hirak/prestissimo
+                
       - name: Install packages        
-        uses: composer install --no-interaction --prefer-dist --optimize-autoloader
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
       
       - name: Laravel Deploy with Migrate and Cache Config
-        # You may pin to the exact commit or the version.
-        # uses: MJAISE/laravel-deploy-migrate-cache@60651666dd0702885a59c51443d10c3d073d4c42
         uses: MJAISE/laravel-deploy-migrate-cache@v2.0.4
         with:
           user: 'lifiluzi' 
