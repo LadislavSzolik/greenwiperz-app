@@ -33,3 +33,5 @@ jobs:
           host: 'greenwiperz.ch'
           path: '~/www/lifiluzi.myhostpoint.ch/test'
           owner: 'lifiluzi'
+        env:
+          DEPLOY_KEY: ${{ secrets.deploy_key }}   
