@@ -19,6 +19,8 @@ jobs:
       # Runs a single command using the runners shell
       - name: Setup PHP environment        
         uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
         
       - name: Speed up the packages installation process
         run: composer global require hirak/prestissimo
