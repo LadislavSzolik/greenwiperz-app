@@ -13,10 +13,13 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: FTP copy
-        uses: SamKirkland/FTP-Deploy-Action@3.1.1
+        uses: GenieTim/ftp-action@v4.0.1
         with:
-          ftp-server: 'sl1735.web.hostpoint.ch'
-          ftp-username: 'lifiluzi'
-          ftp-password: 'qZE-Xb5qpAd*cD4qV9Dq'
-          local-dir: '~/www/lifiluzi.myhostpoint.ch/test'
+          host: 'sl1735.web.hostpoint.ch'
+          user: 'lifiluzi'
+          password: 'qZE-Xb5qpAd*cD4qV9Dq'
+          remoteDir: '~/www/lifiluzi.myhostpoint.ch/test'
+          
