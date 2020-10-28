@@ -13,20 +13,8 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Setup PHP environment        
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
-        
-      - name: Speed up the packages installation process
-        run: composer global require hirak/prestissimo
-                
-      - name: Install packages        
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+      - name: Checkout project
+        uses: actions/checkout@v2
       
       - name: Laravel Deploy with Migrate and Cache Config
         uses: MJAISE/laravel-deploy-migrate-cache@v2.0.4
