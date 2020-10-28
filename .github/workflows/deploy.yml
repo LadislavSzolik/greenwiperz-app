@@ -13,12 +13,10 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the 
     steps:
-      - name: Laravel Rsync Deploy
-        uses: SHSharkar/Laravel-Rsync-Deploy@master
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
-          ARGS: "--ignore-times --compress --verbose --exclude=.git --exclude=.github --exclude=node_modules --no-perms --no-owner --no-group --recursive"
-          REMOTE_HOST: 'greenwiperz.ch'
-          REMOTE_HOST_PORT: '22'
-          REMOTE_USER: 'lifiluzi'
-          TARGET_DIRECTORY: '~/www/lifiluzi.myhostpoint.ch/test'
+      - name: FTP copy
+        uses: SamKirkland/FTP-Deploy-Action@3.1.1
+        with:
+          ftp-server: 'sl1735.web.hostpoint.ch'
+          ftp-username: 'lifiluzi'
+          ftp-password: 'qZE-Xb5qpAd*cD4qV9Dq'
+          local-dir: '~/www/lifiluzi.myhostpoint.ch/test'
