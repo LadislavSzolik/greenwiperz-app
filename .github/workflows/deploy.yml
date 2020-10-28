@@ -13,9 +13,6 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the j
     steps:
-      - name: Checkout project
-        uses: actions/checkout@v2
-      
       - name: Laravel Deploy with Migrate and Cache Config
         uses: MJAISE/laravel-deploy-migrate-cache@v2.0.4
         with:
