@@ -13,12 +13,12 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the j
     steps:
-      - name: Laravel Deploy with Migrate and Cache Config
-        uses: MJAISE/laravel-deploy-migrate-cache@v2.0.4
-        with:
-          user: 'lifiluzi' 
-          host: 'greenwiperz.ch'
-          path: '~/www/lifiluzi.myhostpoint.ch/test'
-          owner: 'lifiluzi'
+      - name: Laravel Rsync Deploy
+        uses: SHSharkar/Laravel-Rsync-Deploy@master
         env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}   
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+          ARGS: "--ignore-times --compress --verbose --exclude=.git --exclude=.github --exclude=node_modules --no-perms --no-owner --no-group --recursive"
+          REMOTE_HOST: 'greenwiperz.ch'
+          REMOTE_HOST_PORT: '22'
+          REMOTE_USER: 'lifiluzi'
+          TARGET_DIRECTORY: '~/www/lifiluzi.myhostpoint.ch/test'
