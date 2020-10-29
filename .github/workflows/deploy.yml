@@ -1,4 +1,4 @@
-name: Deploy
+name: CI
 
 on:
   push:
@@ -11,24 +11,32 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    # Steps represent a sequence of tasks that will be executed as part of th
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Setup PHP environment
-        uses: nanasess/setup-php@v3.0.4
-
-      - name: Install packages
-        uses: composer install --no-interaction --prefer-dist --optimize-autoloader
-
-      - name: Laravel Deploy with Migrate and Cache Config
-        # You may pin to the exact commit or the version.
-        # uses: MJAISE/laravel-deploy-migrate-cache@60651666dd0702885a59c51443d10c3d073d4c42
-        uses: MJAISE/laravel-deploy-migrate-cache@v2.0.4
+      - name: Set up Node
+        uses: actions/setup-node@v1
         with:
-          user: 'lifiluzi'
-          host: 'greenwiperz.ch'
-          path: '~/www/lifiluzi.myhostpoint.ch/test'
-          owner: 'lifiluzi'
+          node-version: '12.x'
+      - run: npm install
+      - run: npm run production
+      - name: Commit built assets
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git checkout -B deploy
+          git add -f public/
+          git commit -m "Build front-end assets"
+          git push -f origin deploy
+      - name: Connect to server with SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: 's19.server.hostpoint.ch'
+          username: 'lifiluzi'
+          passphrase: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: '22'
+          script: |
+            cd ~/www/lifiluzi.myhostpoint.ch/
+            ./server_deploy.sh
+          script_stop: true
