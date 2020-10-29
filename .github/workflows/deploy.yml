@@ -16,10 +16,8 @@ jobs:
       - name: Deploy to production
         uses: JimCronqvist/action-ssh@0.1.1
         with:
-          command: |
-              ls -al
-          username: 'lifiluzi'
+          command: ls -al
           hosts: 'lifiluzi@greenwiperz.ch'
-          password: ${{ secrets.PRIVATE_KEY }}
+          privateKey: ${{ secrets.PRIVATE_KEY }}
           debug: '1'
           
