@@ -18,6 +18,7 @@ jobs:
         with:
           host: 's19.server.hostpoint.ch'
           username: 'lifiluzi'
+          passphrase: ${{ secrets.SSH_PASSWORD }}
           key: ${{ secrets.PRIVATE_KEY }}
           port: '22'
           script: ls -al
