@@ -7,22 +7,23 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
-  
+
     public function index()
     {
         //
     }
 
 
-  
-    public function handlePaymentSucceeded(Request $request)
-    {              
-        $booking = $this->getBooking($request['refno']);
 
-        //check if the payment is valid        
+    public function handlePaymentSucceeded(Request $request)
+    {
+        $booking = $this->getBookingOrFail($request['refno']);
+
+        //check if the payment is valid
         $isAccepted = $this->isPaymentAccepted($booking->service_price,1100026445, $request['uppTransactionId']);
         if(! $isAccepted) {
             $request->session()->flash('failure', 'Payment was not proccessed accordinly. Please contact us.');
@@ -34,10 +35,10 @@ class PaymentController extends Controller
         if(!Auth::check()) {
             Auth::loginUsingId($userId);
         }
-        
+
 
         //if all good continue
-        Auth::user()->payments()->create([            
+        Auth::user()->payments()->create([
             'booking_id' => $booking->id,
             'refno' => $request['refno'],
             'amount' => $request['amount'],
@@ -47,6 +48,7 @@ class PaymentController extends Controller
             'reqtype' => $request['reqtype'],
             'uppMsgType' => $request['uppMsgType'],
             'status' => $request['status'],
+            'paid_at' => Carbon::now(),
         ]);
         // setup the success flash indicator
         $request->session()->flash('success', $booking->id);
@@ -66,17 +68,16 @@ class PaymentController extends Controller
             </transaction>
           </body>
         </statusService>
-        ';        
+        ';
        $response = Http::withBasicAuth('1100026445', 'MG04T2JRi4mXCSJD')->withHeaders(['Content-Type' => 'text/xml; charset=UTF8'])->withBody( $xml, 'text/xml; charset=UTF8')->post('https://api.sandbox.datatrans.com/upp/jsp/XML_status.jsp');
-        
+
        $xmlObject = simplexml_load_string($response->body());
-      
+
        return $xmlObject->body['status'] == 'accepted' && $xmlObject->body->transaction->response->amount == $amount;
     }
 
-
     public function handleCancelPayment(Request $request) {
-        $booking = $this->getBooking($request['refno']);
+        $booking = $this->getBookingOrFail($request['refno']);
 
         $userId = $booking->user_id;
         if(!Auth::check()) {
@@ -90,8 +91,9 @@ class PaymentController extends Controller
         return redirect()->route('bookings.index');
     }
 
+    // User makes a mistake and returns to the payment page
     public function handleErrorPayment(Request $request) {
-        $booking = $this->getBooking($request['refno']);
+        $booking = $this->getBookingOrFail($request['refno']);
 
         $userId = $booking->user_id;
         if(!Auth::check()) {
@@ -99,15 +101,28 @@ class PaymentController extends Controller
         }
 
         if($this->isErrorResponse($request['status'])) {
-            $booking->delete();
+          //if all good continue
+          Auth::user()->payments()->create([
+              'booking_id' => $booking->id,
+              'refno' => $request['refno'],
+              'amount' => $request['amount'],
+              'currency' => $request['currency'],
+              'uppTransactionId' => $request['uppTransactionId'],
+              'pmethod' => $request['pmethod'],
+              'reqtype' => $request['reqtype'],
+              'uppMsgType' => $request['uppMsgType'],
+              'status' => $request['status'],
+              'errorCode' => $request['errorCode'],
+              'errorMessage' => $request['errorMessage'],
+              'errorDetail' => $request['errorDetail'],
+          ]);
         }
-        $request->session()->flash('error', 'Whoops! Something went wrong during payment processing. No payment has been made. Please try again.');
-        return redirect()->route('bookings.index');
+        return redirect()->route('bookings.show',['id'=> $booking]);
     }
 
 
 
-    public function getBooking(string $refno){
+    public function getBookingOrFail(string $refno){
         return Booking::where('refno',$refno)->firstOrFail();
     }
 
@@ -117,6 +132,6 @@ class PaymentController extends Controller
 
     public function isErrorResponse(string $status) {
         return $status =='error';
-    }    
-   
+    }
+
 }

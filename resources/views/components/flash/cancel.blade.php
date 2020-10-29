@@ -9,7 +9,7 @@
             </svg>
         </div>
         <div class="ml-3">
-            <h3 class="text-sm leading-5 font-medium text-yellow-800">
+            <h3 class="text-sm leading-5 font-bold text-yellow-800">
                 {{ $title }}
             </h3>
             <div class="mt-2 text-sm leading-5 text-yellow-700">
@@ -19,7 +19,7 @@
             </div>
             <div class="mt-4">
                 <div class="-mx-2 -my-1.5 flex">
-                  {{ $actions }}                        
+                  {{ $actions }}
                 </div>
               </div>
         </div>

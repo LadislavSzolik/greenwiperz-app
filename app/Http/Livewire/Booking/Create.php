@@ -108,7 +108,7 @@ class Create extends Component
 
     public function getAvailableTimeSlotsFor($date)
     {
-        $timeslots = DB::table('timeslots')->select('timeslots.id as takenTimeSlotId', 'timeslot')->crossJoin('booking_timeslots')->whereDate('booking_timeslots.date', $date)->where(function ($query) {
+        $timeslots = DB::table('timeslots')->select('timeslots.id as takenTimeSlotId', 'timeslot')->crossJoin('booking_timeslots')->where([['booking_timeslots.date', $date],['booking_timeslots.deleted_at', null]])->where(function ($query) {
             $query->whereBetween('booking_timeslots.start_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL '$this->totalTimeRequired' minute)")])->orWhereBetween('booking_timeslots.end_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL '$this->totalTimeRequired' minute)")])->orWhereBetween('timeslots.timeslot', [DB::raw('booking_timeslots.start_time'), DB::raw('booking_timeslots.end_time')]);
         });
 
@@ -193,9 +193,8 @@ class Create extends Component
         if (!$availableSlots->contains('timeslot', $this->bookingTime)) {
             $this->bookingDate = null;
             $this->bookingTime = null;
-            $this->toggleCheckoutVisibility();
             session()->flash('message', 'Unfortunately in a meanwhile the timeslot has been taken. Please select a new one.');
-            
+            $this->toggleCheckoutVisibility();
         } else {
             Validator::make(
                 ['termsAndConditions' => $this->termsAndConditions,],
@@ -277,6 +276,6 @@ class Create extends Component
 
 
     public function sendMail() {
-        Mail::to(auth()->user())->send(new BookingConfirmed());       
+        Mail::to(auth()->user())->send(new BookingConfirmed());
     }
 }

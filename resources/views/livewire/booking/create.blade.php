@@ -2,11 +2,6 @@
     <form wire:submit.prevent="submitBooking">
         @csrf
 
-
-        <div wire:click="sendMail()">
-            Send that mail
-        </div>
-
         @if (!$checkoutVisibility)
             <div class="flex flex-wrap content-start">
                 <div class="shadow overflow-hidden sm:rounded-md  w-full sm:w-4/6 ">
@@ -18,7 +13,7 @@
                                     {{ session('message') }}
                                 </div>
                             @endif
-                            
+
                             <x-input.group for="serviceType" label="{{ __('Cleaning service') }}">
                                 <x-input.radio wire:model="serviceType" name="serviceType" value="outside"
                                     text="{{ __('Outside only') }}" subText="{{ __('from CHF 65') }}">
@@ -383,7 +378,7 @@
                             <!-- terms and conditions -->
                             <x-input.flexible-group class="col-span-6" for="termsAndConditions"
                                 label="{{ __('Terms and conditions') }}">
-                                <label class="inline-flex items-center">
+                                <label class="mt-2 inline-flex items-center">
                                     <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 "
                                         wire:model.defer="termsAndConditions">
                                     <span class="ml-2">{{ __('I accept the Greenwiperz GmbH terms and conditions.') }}</span>

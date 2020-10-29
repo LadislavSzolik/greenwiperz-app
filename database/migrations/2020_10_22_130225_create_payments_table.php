@@ -31,12 +31,13 @@ class CreatePaymentsTable extends Migration
             $table->string('errorMessage')->nullable();
             $table->string('errorDetail')->nullable();
             $table->string('aliasCC')->nullable();
+            $table->softDeletes();
             $table->timestamp('paid_at')->nullable();
             $table->timestamp('refunded_at')->nullable();
             $table->timestamps();
 
             $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users'); 
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
