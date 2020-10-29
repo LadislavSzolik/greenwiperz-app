@@ -14,10 +14,12 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of th
     steps:
       - name: Deploy to production
-        uses: JimCronqvist/action-ssh@0.1.1
+        uses: appleboy/ssh-action@master
         with:
-          command: 'ls -al'
-          hosts: 'lifiluzi@s19.server.hostpoint.ch'
-          privateKey: ${{ secrets.PRIVATE_KEY }}
-          debug: true
+          host: 's19.server.hostpoint.ch'
+          username: 'lifiluzi'
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: '22'
+          script: ls -al
+          script_stop: true
           
