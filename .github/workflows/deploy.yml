@@ -15,11 +15,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: FTP copy
-        uses: GenieTim/ftp-action@v4.0.1
+      - name: Set up Node
+        uses: actions/setup-node@v1
         with:
-          host: 'sl1735.web.hostpoint.ch'
-          user: 'lifiluzi'
-          password: 'qZE-Xb5qpAd*cD4qV9Dq'
-          remoteDir: '~/www/lifiluzi.myhostpoint.ch/test'
+          node-version: '12.x'
+      - run: npm install
+      - run: npm run production
+      - name: Commit built assets
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git checkout -B deploy
+          git add -f public/
+          git commit -m "Build front-end assets"
+          git push -f origin deploy
+      - name: Deploy to production
+        uses: appleboy/ssh-action@master
+        with:
+          username: 'lifiluzi'
+          host: 'greenwiperz.ch'
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: 'cd ~/www/lifiluzi.myhostpoint.ch/ && ./server_deploy.sh'
           
