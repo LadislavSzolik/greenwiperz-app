@@ -30,7 +30,7 @@ jobs:
           git commit -m "Build front-end assets"
           git push -f origin deploy
       - name: Deploy to production
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.3
         with:
           username: 'lifiluzi'
           host: 'greenwiperz.ch'
