@@ -13,7 +13,22 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of th
     steps:
-      - name: Deploy to production
+      - uses: actions/checkout@v2
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - run: npm install
+      - run: npm run production
+      - name: Commit built assets
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git checkout -B deploy
+          git add -f public/
+          git commit -m "Build front-end assets"
+          git push -f origin deploy
+      - name: Connect to server with SSH
         uses: appleboy/ssh-action@master
         with:
           host: 's19.server.hostpoint.ch'
@@ -21,6 +36,8 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSWORD }}
           key: ${{ secrets.PRIVATE_KEY }}
           port: '22'
-          script: ls -al
+          script: |
+            cd ~/www/lifiluzi.myhostpoint.ch/
+            ./server_deploy.sh
           script_stop: true
           
