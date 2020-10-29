@@ -14,6 +14,10 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden md:flex space-x-8 sm:-my-px sm:ml-10">
+                    <x-jet-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
+                        {{ __('Home') }}
+                    </x-jet-nav-link>
+
                     <x-jet-nav-link href="{{ route('how.it.works') }}" :active="request()->routeIs('how.it.works')">
                         {{ __('How it works') }}
                     </x-jet-nav-link>
@@ -83,6 +87,10 @@
 
             <div class="pt-2 pb-3 space-y-1">
                 <div class="pt-2 pb-3 space-y-1">
+                    <x-jet-responsive-nav-link href="{{ route('home') }}"
+                        :active="request()->routeIs('home')">
+                        {{ __('Home') }}
+                    </x-jet-responsive-nav-link>
                     <x-jet-responsive-nav-link href="{{ route('how.it.works') }}"
                         :active="request()->routeIs('how.it.works')">
                         {{ __('How it works') }}

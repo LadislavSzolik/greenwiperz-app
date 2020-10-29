@@ -5,7 +5,6 @@
                 {{ __('Your bookings') }}
             </h2>
             <x-form-button method="GET" action="{{ route('bookings.create') }}" buttonType="primary">New</x-form-button>
-            <x-form-button method="POST" action="/bookings/mail" >Send mail</x-form-button>
         </div>
     </x-slot>
 
@@ -35,6 +34,29 @@
             </x-flash.success>
         </div>
     @endif
+
+    @if (session()->has('deleted'))
+        <div class="py-4 sm:px-6 px-4 w-full sm:max-w-7xl mx-auto ">
+            <x-flash.success x-data="{open: true}" x-show.transition.out="open">
+                <x-slot name="title">
+                    Booking deletion
+                </x-slot>
+
+                <x-slot name="description">
+                    Your booking was successfully deleted. There were no charges.
+                </x-slot>
+
+                <x-slot name="actions">
+                    <button x-on:click="open=false"
+                        class="ml-3 px-2 py-1.5 rounded-md text-sm leading-5 font-medium text-green-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 transition ease-in-out duration-150">
+                        Dismiss
+                    </button>
+                </x-slot>
+            </x-flash.success>
+        </div>
+    @endif
+
+
     @if (session()->has('cancel'))
         <div class="py-4 sm:px-6 px-4 w-full sm:max-w-7xl mx-auto ">
             <x-flash.cancel x-data="{open: true}" x-show.transition.out="open">
@@ -55,26 +77,7 @@
             </x-flash.cancel>
         </div>
     @endif
-    @if (session()->has('error'))
-        <div class="py-4 sm:px-6 px-4 w-full sm:max-w-7xl mx-auto ">
-            <x-flash.error x-data="{open: true}" x-show.transition.out="open">
-                <x-slot name="title">
-                    Booking error
-                </x-slot>
 
-                <x-slot name="description">
-                    {{ session('error') }}
-                </x-slot>
-
-                <x-slot name="actions">
-                    <button x-on:click="open=false"
-                        class="ml-3 px-2 py-1.5 rounded-md text-sm leading-5 font-medium text-yellow-800 hover:bg-yellow-100 focus:outline-none focus:bg-yellow-100 transition ease-in-out duration-150">
-                        Dismiss
-                    </button>
-                </x-slot>¯
-            </x-flash.error>
-        </div>
-    @endif
 
 
     <div class="py-4 sm:px-6 lg:px-8 w-full sm:max-w-7xl mx-auto hidden sm:block">

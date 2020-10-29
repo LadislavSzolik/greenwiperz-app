@@ -12,8 +12,8 @@
                     <div>
                         <dt class="sr-only">Postal address</dt>
                         <dd>
-                            <p>742 Evergreen Terrace</p>
-                            <p>Springfield, OR 12345</p>
+                            <p>Grindelstrasse 41D</p>
+                            <p>8604 Volketswil</p>
                         </dd>
                     </div>
                     <div class="mt-6">
@@ -51,6 +51,6 @@
             </div>
         </div>
     </div>
-    
+
     <x-footer />
 </x-guest-layout>

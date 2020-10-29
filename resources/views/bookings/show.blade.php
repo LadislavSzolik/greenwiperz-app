@@ -4,9 +4,38 @@
             {{ __('Booking details') }}
         </h2>
     </x-slot>
+    <x-content-section>
 
-    <x-content-section>        
-     
+    @if($booking->payment)
+      @if ($booking->payment['status'] == 'error')
+          <div class="py-4 w-full sm:max-w-7xl mx-auto ">
+              <x-flash.error x-data="{open: true}" x-show.transition.out="open">
+                  <x-slot name="title">
+                      Payment could not be completed
+                  </x-slot>
+
+                  <x-slot name="description">
+                      Reason: {{ $booking->payment['errorDetail'] }}
+                  </x-slot>
+
+                  <x-slot name="actions">
+                      <button x-on:click="open=false"
+                          class="ml-3 px-2 py-1.5 rounded-md text-sm leading-5 font-medium text-red-800 hover:bg-red-100 focus:outline-none focus:bg-red-100 transition ease-in-out duration-150">
+                          Try again
+                      </button>
+
+                      <x-form action='/bookings/{{ $booking->id }}/delete' >
+                        <button
+                            class="ml-3 px-2 py-1.5 rounded-md text-sm leading-5 font-medium text-red-800 hover:bg-red-100 focus:outline-none focus:bg-red-100 transition ease-in-out duration-150">
+                            Delete booking
+                        </button>
+                      </x-form>
+                  </x-slot>
+              </x-flash.error>
+          </div>
+      @endif
+    @endif
+
         <div class="grid grid-cols-6 gap-4">
 
             <x-input.group for="serviceType" label="{{ __('Cleaning service') }}">
@@ -18,7 +47,7 @@
                     @endif
                 </x-input.readonly>
             </x-input.group>
-            
+
             <div class="col-span-6 border-cool-gray-200 mt-4">
                 <h3 class="text-2xl font-medium text-gray-900">Car Information</h3>
             </div>
@@ -26,8 +55,8 @@
             <x-input.flexible-group class="col-span-6 sm:col-span-3" for="parkingStreet"
                 label="{{ __('Parking Location') }}">
                 <x-input.readonly>
-                    <p>{{ $booking['parking_street'] }} </p>
-                    <p>{{ $booking['parking_postal_code'] }}, {{ $booking['parking_city'] }}</p>
+                    <p>{{ $booking['parking_route'] }} {{ $booking['parking_street_number'] }} </p>
+                    <p>{{ $booking['parking_city'] }}, {{ $booking['parking_postal_code'] }}</p>
                 </x-input.readonly>
             </x-input.flexible-group>
 
@@ -158,13 +187,12 @@
                 @else
                     -
                 @endif
-            </div>                
+            </div>
         </div>
-        
+
         <div class="mt-2 ">
-            <x-form-button method="GET" action="/bookings/" > {{ __('Back to overview') }}</x-form-button>                            
+            <x-form-button method="GET" action="/bookings/" > {{ __('Back to overview') }}</x-form-button>
         </div>
 
     </x-content-section>
 </x-app-layout>
-

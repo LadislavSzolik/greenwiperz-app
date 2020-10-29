@@ -14,17 +14,17 @@ class CreateBookingsTable extends Migration
     public function up()
     {
         Schema::create('bookings', function (Blueprint $table) {
-            $table->id();  
+            $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('refno');
 
-            // vehicle location 
+            // vehicle location
             $table->string('parking_street_number',200);
             $table->string('parking_route',200);
-            $table->string('parking_city',100);    
-            $table->string('parking_postal_code',20);            
+            $table->string('parking_city',100);
+            $table->string('parking_postal_code',20);
 
-            // vehicle  
+            // vehicle
             $table->string('vehicle_model',100);
             $table->string('number_plate',50);
             $table->enum('vehicle_size', ['small', 'medium', 'large','x-large']);
@@ -33,14 +33,14 @@ class CreateBookingsTable extends Migration
             $table->boolean('has_animal_hair');
 
             // service
-            $table->enum('service_type', ['outside', 'inside-outside']);             
-            $table->integer('service_duration');  
-            $table->integer('service_price');  
+            $table->enum('service_type', ['outside', 'inside-outside']);
+            $table->integer('service_duration');
+            $table->integer('service_price');
 
             // notes
             $table->text('notes')->nullable();
-            $table->text('internal_notes')->nullable();   
-                         
+            $table->text('internal_notes')->nullable();
+
             // copied here the billing address
             $table->string('billing_first_name',255);
             $table->string('billing_last_name',255);
@@ -51,9 +51,10 @@ class CreateBookingsTable extends Migration
 
             $table->timestamp('completed_at')->nullable();
             $table->timestamp('canceled_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');            
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

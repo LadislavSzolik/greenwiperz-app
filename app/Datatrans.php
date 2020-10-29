@@ -11,7 +11,6 @@ class Datatrans
         return 'https://api.'.(config('datatrans.sandbox') ? 'sandbox' : '').'.datatrans.com';
     }
 
-
     public static function redirectToPaymentPages() {
 
     }

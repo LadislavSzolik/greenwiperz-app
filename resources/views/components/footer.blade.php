@@ -1,11 +1,11 @@
 <footer>
     <div class="max-w-screen-xl mx-auto py-4 px-4 overflow-hidden space-y-8 sm:px-6 lg:px-8">
 
-        <div class="">
-            <h4 class="text-center text-sm leading-5 font-semibold text-gray-400 tracking-wider uppercase">
+        <div class="text-sm ">
+            <h4 class="text-center tleading-5 font-semibold text-gray-400 tracking-wider uppercase">
                 Opening hours
             </h4>
-            <div class="flex justify-center mt-4 text-gray-500">
+            <div class="flex justify-center mt-4 text-gray-400">
                 <div>
                     <ul class="">
                         <li>Monday - Friday</li>
@@ -15,7 +15,7 @@
                 </div>
 
                 <div>
-                    <ul class="ml-8 font-bold">
+                    <ul class="ml-8">
                         <li>09:00 - 17:00</li>
                         <li>09:00 - 12:00</li>
                         <li>Closed</li>

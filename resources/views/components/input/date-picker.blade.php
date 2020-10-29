@@ -1,22 +1,29 @@
 <div class="mt-1 flex rounded-md shadow-sm"
     x-data="{ value: @entangle($attributes->wire('model')) }"
-    
+
     x-on:change="value = $event.target.value"
 
-    x-init="new Pikaday({ field: $refs.input,format:'YYYY-MM-DD', toString(date, format) {
+    x-init="new Pikaday({ field: $refs.input, firstDay:1, format:'YYYY-MM-DD', toString(date, format) {
         const day = date.getDate();
         const month = date.getMonth() + 1;
         const year = date.getFullYear();
         return `${year}-${month}-${day}`;
     },
-    parse(dateString, format) {        
+    parse(dateString, format) {
         const parts = dateString.split('-');
         const day = parseInt(parts[0], 10);
         const month = parseInt(parts[1], 10) - 1;
         const year = parseInt(parts[2], 10);
         return new Date(year, month, day);
+    },
+    disableDayFn: function(theDate) {
+      if(theDate.getDay() == 0) {
+        return true;
+      } else {
+        return false;
+      }
     }
-})" 
+})"
 >
     <span
         class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
@@ -29,7 +36,7 @@
 
 </div>
 
-@push('scripts') 
+@push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js" defer></script>
 @endpush
 
