@@ -17,7 +17,7 @@ jobs:
         uses: JimCronqvist/action-ssh@0.1.1
         with:
           command: 'ls -al'
-          hosts: 'lifiluzi@greenwiperz.ch'
+          hosts: 'lifiluzi@s19.server.hostpoint.ch'
           privateKey: ${{ secrets.PRIVATE_KEY }}
           debug: true
           
