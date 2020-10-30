@@ -2,13 +2,12 @@
 
 namespace App\Http\Livewire\Booking;
 
+use App\TimeslotService;
 use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Services;
 use Illuminate\Http\Request;
-use App\Mail\BookingConfirmed;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class Create extends Component
@@ -51,7 +50,7 @@ class Create extends Component
     public $billingCity = '';
     public $billingCountry = '';
 
-    public $contactEmail;
+
     public $termsAndConditions = false;
 
     public $listeners = ['placeChanged'];
@@ -100,21 +99,12 @@ class Create extends Component
     // this helps when I use click inside of blade component
     public function hydrate()
     {
+
         if (strtotime($this->bookingDate)) {
             $this->totalTimeRequired = 2 * $this->travelTimeNeeded + $this->serviceDuration - 1;
-            $this->availableSlots = $this->getAvailableTimeSlotsFor($this->bookingDate);
+            $timeslotsService = new TimeslotService($this->bookingDate, $this->totalTimeRequired );
+            $this->availableSlots = $timeslotsService->fetchSlots();
         }
-    }
-
-    public function getAvailableTimeSlotsFor($date)
-    {
-        $timeslots = DB::table('timeslots')->select('timeslots.id as takenTimeSlotId', 'timeslot')->crossJoin('booking_timeslots')->where([['booking_timeslots.date', $date],['booking_timeslots.deleted_at', null]])->where(function ($query) {
-            $query->whereBetween('booking_timeslots.start_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL '$this->totalTimeRequired' minute)")])->orWhereBetween('booking_timeslots.end_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL '$this->totalTimeRequired' minute)")])->orWhereBetween('timeslots.timeslot', [DB::raw('booking_timeslots.start_time'), DB::raw('booking_timeslots.end_time')]);
-        });
-
-        return DB::table('timeslots as availableSlots')->select('availableSlots.timeslot')->leftJoinSub($timeslots, 'disabledTimeSlots', function ($join) {
-            $join->on('availableSlots.id', '=', 'disabledTimeSlots.takenTimeSlotId');
-        })->whereNull('disabledTimeSlots.takenTimeSlotId')->get();
     }
 
     // this is live:wire event hook
@@ -123,11 +113,13 @@ class Create extends Component
         $selectedDate = Carbon::parse($this->bookingDate);
 
         if ($selectedDate->lt(Carbon::now())) {
-            $availableSlots = null;
+            $availableSlots = [];
             $this->bookingTime = null;
         } else {
+
             $this->totalTimeRequired = 2 * $this->travelTimeNeeded + $this->serviceDuration - 1;
-            $availableSlots = $this->getAvailableTimeSlotsFor($this->bookingDate);
+            $timeslotsService = new TimeslotService($this->bookingDate, $this->totalTimeRequired );
+            $availableSlots = $timeslotsService->fetchSlots();            
             if ($availableSlots->count() > 0) {
                 $this->bookingTime = $availableSlots->first()->timeslot;
             }
@@ -181,20 +173,26 @@ class Create extends Component
         $this->parkingPostalCode = $placeData['postal_code'];
     }
 
-    public function toggleCheckoutVisibility()
-    {
+    public function goToReviewPage() {
         $this->validate();
-        $this->checkoutVisibility = !$this->checkoutVisibility;
+        $this->checkoutVisibility = true;
+    }
+
+    public function goBackToEdit() {
+        $this->checkoutVisibility = false;
     }
 
     public function submitBooking(Request $request)
     {
-        $availableSlots = $this->getAvailableTimeSlotsFor($this->bookingDate);
+        // recalculate timeslots
+        $timeslotsService = new TimeslotService($this->bookingDate, $this->totalTimeRequired );
+        $availableSlots = $timeslotsService->fetchSlots();        
+
         if (!$availableSlots->contains('timeslot', $this->bookingTime)) {
             $this->bookingDate = null;
             $this->bookingTime = null;
             session()->flash('message', 'Unfortunately in a meanwhile the timeslot has been taken. Please select a new one.');
-            $this->toggleCheckoutVisibility();
+            $this->checkoutVisibility = false;
         } else {
             Validator::make(
                 ['termsAndConditions' => $this->termsAndConditions,],
@@ -274,8 +272,4 @@ class Create extends Component
         return view('livewire.booking.create');
     }
 
-
-    public function sendMail() {
-        Mail::to(auth()->user())->send(new BookingConfirmed());
-    }
 }

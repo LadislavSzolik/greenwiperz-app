@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="fixed top-0 right-0 w-full bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="fixed top-0 right-0 w-full bg-white border-b border-gray-100 z-40">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -7,9 +7,8 @@
                 <div class="flex-shrink-0 flex items-center">
                     <a class="inline-flex items-center" href="{{ route('home') }}">
                         <x-application-logo class="h-10 text-green-500 " />
-                        <span class="ml-2 font-extrabold uppercase text-green-600">Greenwiperz</span>
+                        <span class="block sm:hidden ml-2 font-extrabold uppercase text-green-600">Greenwiperz</span>
                     </a>
-
                 </div>
 
                 <!-- Navigation Links -->
@@ -41,6 +40,11 @@
             </div>
 
             <div class="hidden sm:flex items-center">
+                 
+                <div class="text-sm text-green-600 mr-6 space-x-2">
+                    <a class=”” href="{{ route('language', ['locale' => 'en']) }}" id="de"> English</a> 
+                    <a class=”” href="{{ route('language', ['locale' => 'de']) }}" id="de"> Deutsch</a> 
+                </div>
                 @auth
                     <a href="{{ route('bookings.create') }}" class="text-gray-700 underline">Book a car
                         cleaning</a>
@@ -72,6 +76,11 @@
 
             <div class="pt-4 pb-1 border-t border-gray-200">
                 <div class="mt-3 space-y-1">
+
+                    <div class="text-sm text-green-700 ml-4 my-4 space-x-4 uppercase">
+                        <a class="" href="{{ route('language', ['locale' => 'en']) }}" id="de"> English</a> 
+                        <a class=”” href="{{ route('language', ['locale' => 'de']) }}" id="de"> Deutsch</a> 
+                    </div>
 
                     <x-jet-responsive-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')">
                         {{ __('Register') }}

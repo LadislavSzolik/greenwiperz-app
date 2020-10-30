@@ -1,12 +1,16 @@
 <?php
 
+
 use App\Models\Booking;
 use App\Mail\BookingConfirmed;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\LocalizationController;
 
+
+Route::get('lang/{locale}', LocalizationController::class)->name('language');
 
 Route::get('/', function () {
     return view('welcome');
@@ -46,6 +50,6 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/payments/{id}', [PaymentC
 
 // TODO: finish mail testing
 Route::get('mailable',function(){
-    $booking = Booking::findOrFail(13);
+    $booking = Booking::findOrFail(1);
     return new BookingConfirmed($booking);
 });
