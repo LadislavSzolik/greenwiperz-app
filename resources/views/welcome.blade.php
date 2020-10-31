@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="flex justify-center w-full sm:w-3/5 px-2 sm:px-0 mt-6">
-                    <img class="shadow-2xl sm:w-96 object-cover" src="{{ asset('img/hero-image.png') }}"
+                    <img class="shadow-2xl h-48 sm:h-80" src="{{ asset('img/hero-image.png') }}"
                         alt="Hero image" />
                 </div>
             </div>
