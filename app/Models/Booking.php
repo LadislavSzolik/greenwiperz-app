@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Money\Money;
+use Money\Currency;
+use Money\Currencies\ISOCurrencies;
 use Illuminate\Database\Eloquent\Model;
+use Money\Formatter\IntlMoneyFormatter;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Booking extends Model
 {
@@ -12,7 +16,8 @@ class Booking extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'refno',
+        'refno', 
+        'transaction_id',       
         'parking_route',
         'parking_street_number',
         'parking_postal_code',
@@ -35,6 +40,16 @@ class Booking extends Model
         'notes',
         'internal_notes',
     ];
+
+    public function getMoneyPriceAttribute() {
+        $money = new Money($this->service_price, new Currency('CHF'));
+        $currencies = new ISOCurrencies();
+
+        $numberFormatter = new \NumberFormatter('de_CH', \NumberFormatter::CURRENCY);
+        $moneyFormatter = new IntlMoneyFormatter($numberFormatter, $currencies);
+        
+        return $moneyFormatter->format($money);;
+    }
 
     public function bookingTimeslot() {
         return $this->hasOne('App\Models\BookingTimeslot');

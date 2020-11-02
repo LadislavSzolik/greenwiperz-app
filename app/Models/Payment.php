@@ -14,20 +14,22 @@ class Payment extends Model
     protected $fillable = [
         'user_id',
         'booking_id',
-        'refno',
-        'amount',
-        'currency',
-        'uppTransactionId',
-        'pmethod',
-        'reqtype',
-        'uppMsgType',
+        'transaction_id',
+        'type',
         'status',
-        'responseCode',
-        'responseMessage',
-        'errorCode',
-        'errorMessage',
-        'errorDetail',
-        'aliasCC'
+        'currency',
+        'refno',
+        'payment_method',
+       
+        'detail_auth_amount',
+        'detail_auth_authcode',
+        'detail_settle_amount',
+        'detail_credit_amount',
+        'detail_cancel_reversal',
+        'detail_fail_reason',
+        'detail_fail_msg',
+        'paid_at',
+        'refunded_at',     
     ];
 
     public function user() {

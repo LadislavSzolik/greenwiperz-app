@@ -16,10 +16,10 @@
 
                             <x-input.group for="serviceType" label="{{ __('Cleaning service') }}">
                                 <x-input.radio wire:model="serviceType" name="serviceType" value="outside"
-                                    text="{{ __('Outside only') }}" subText="{{ __('from CHF 65') }}">
+                                    text="{{ __('Outside only') }}" subText=" ">
                                 </x-input.radio>
                                 <x-input.radio wire:model="serviceType" name="serviceType" value="inside-outside"
-                                    text="{{ __('Inside and outsdie') }}" subText="{{ __('from CHF 125') }}">
+                                    text="{{ __('Inside and outsdie') }}" subText=" ">
                                 </x-input.radio>
                             </x-input.group>
 
@@ -129,18 +129,20 @@
                                         </svg>
                                     </span>
                                     <select class="rounded-none rounded-r-md flex-1 form-input block w-full" id="bookingTime" wire:model="bookingTime" >
-                                        @forelse($availableSlots as $timeslot)
-                                            <option>{{ Carbon\Carbon::parse($timeslot->timeslot)->addMinutes($travelTimeNeeded)->format('H:i') }} </option>
-                                        @empty                                
-                                            <option>No timeslot</option>
-                                        @endforelse
+                                        @if (is_array($availableSlots) || is_object($availableSlots))
+                                            @forelse($availableSlots as $timeslot)
+                                                <option>{{ Carbon\Carbon::parse($timeslot)->format('H:i') }} </option>
+                                            @empty                                
+                                                <option>No timeslot</option>
+                                            @endforelse
+                                        @endif
                                     </select>                                    
                                 </div>
                                 @empty($availableSlots)
                                     <p class="text-xs mt-1 ml-1 text-gray-500">Select a date with available timeslots</p>
                                 @endempty
                             </x-input.flexible-group>
-                                                        
+                                                                                  
 
                             <!-- billing addresss -->
 
@@ -181,7 +183,7 @@
                             <x-input.flexible-group class="col-span-6 sm:col-span-3" for="billingCountry"
                                 label="{{ __('Country') }}">
                                 <x-input.text wire:model.defer="billingCountry" id="billingCountry" type="text"
-                                    placeholder="CH" />
+                                    placeholder="Switzerland" />
                             </x-input.flexible-group>
 
                             <div class="col-span-6 ">
@@ -200,7 +202,7 @@
 
                         <div class="flex justify-between border-b border-cool-gray-200 py-2">
                             <div>{{ __('Total cost') }} </div>
-                            <div class="font-bold"> {{ $servicePrice/100 }}</div>
+                            <div class="font-bold"> {{ $this->moneyPrice }}</div>
                         </div>
 
                         <div class="flex justify-between border-b border-cool-gray-200 py-2">
@@ -223,8 +225,8 @@
                         <div class="text-base mb-2">{{ __('Price and aprox. duration') }} </div>
 
                         <div class="flex justify-between items-center">
-                            <div class="font-bold text-xl">
-                                CHF {{ $servicePrice/100 }}/ {{ $serviceDuration }} min
+                            <div class="font-bold">
+                                {{ $this->moneyPrice }}/ {{ $serviceDuration }} min
                             </div>
                             <div>
                                 <x-div-button wire:loading.attr="disabled" buttonType="primary"
@@ -415,7 +417,7 @@
 
                         <div class="flex justify-between border-cool-gray-200 py-1">
                             <div class="text-xl">{{ __('Total cost') }} </div>
-                            <div class="text-xl font-bold">CHF {{ $servicePrice/100 }}</div>
+                            <div class="text-xl font-bold">{{ $this->moneyPrice }}</div>
                         </div>
 
                         <div class="flex justify-between border-cool-gray-200 py-1 ">
@@ -441,7 +443,7 @@
 
                         <div class="flex justify-between border-cool-gray-200 py-1">
                             <div class="text-xl">{{ __('Total cost') }} </div>
-                            <div class="text-xl font-bold">CHF {{ $servicePrice/100 }}</div>
+                            <div class="text-xl font-bold">{{ $this->moneyPrice }}</div>
                         </div>
 
                         <div class="text-sm text-gray-600">

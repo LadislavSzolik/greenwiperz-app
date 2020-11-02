@@ -4,9 +4,11 @@
         <x-guest-navigation />
 
         <div class="sm:pb-6 bg-white rounded">
-            <div class="mt-8 max-w-screen-xl mx-auto py-6  px-4 sm:px-16 lg:px-20">
+            <div class="mt-8 max-w-screen-xl mx-auto py-6 px-4 sm:px-16 lg:px-20">
 
-                <h3 class="font-black text-2xl text-gray-800 leading-tight m-4">{{ __('Our prices') }}</h3>
+                <h2 class="text-xl leading-9 tracking-tight font-bold text-gray-900 sm:text-2xl sm:leading-10 mb-4 uppercase text-center">
+                    {{ __('pricespage.title') }} 
+                </h2>                
 
                 <div class="flex flex-col">
                     <div class="hidden sm:block -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -17,25 +19,25 @@
                                         <tr>
                                             <th
                                                 class="px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
-                                                Car categories
+                                                {{ __('pricespage.carcategories') }} 
                                             </th>
                                             <th
                                                 class="px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
-                                                Exterior only
+                                                {{ __('pricespage.exterior') }}
                                             </th>
                                             <th
                                                 class="px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
-                                                Interior & Exterior
+                                                {{ __('pricespage.intexterior') }}
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
                                         <x-prices.row size='S' exteriorPrice='CHF 60.00' exteriorDuration='40 min*' intextPrice='CHF 110.00' intextDuration='80 min*'>
                                             <x-slot name="carType" >
-                                                Small cars
+                                                {{ __('pricespage.carcategory1type') }}
                                             </x-slot>
                                             <x-slot name="carExamples" >
-                                                e.g. Smart, Mini, Fiat500
+                                                {{ __('pricespage.carcategory1examples') }}
                                             </x-slot>
                                         </x-prices.row>
                 
@@ -44,7 +46,7 @@
                                                 Medium cars
                                             </x-slot>
                                             <x-slot name="carExamples" >
-                                                e.g. VW Golf, VW Passat, Ford Focus (most cars belong to this category)
+                                                e.g. VW Golf, VW Passat, Ford Focus <p>(most cars belong to this category)</p>
                                             </x-slot>
                                         </x-prices.row>                 
                 
@@ -72,13 +74,13 @@
                         </div>
                     </div>
 
-                    <ul class="grid sm:hidden grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <ul class=" grid sm:hidden grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <x-prices.card size='S' colorSelected="0" exteriorPrice='CHF 60.00' exteriorDuration='40 min*' intextPrice='CHF 110.00' intextDuration='80 min*'>
                             <x-slot name="carType" >
-                                Small cars
+                                {{ __('pricespage.carcategory1type') }}
                             </x-slot>
                             <x-slot name="carExamples" >
-                                e.g. Smart, Mini, Fiat500
+                                {{ __('pricespage.carcategory1examples') }}
                             </x-slot>
                         </x-prices.card>
 
@@ -87,7 +89,7 @@
                                 Medium cars
                             </x-slot>
                             <x-slot name="carExamples" >
-                                e.g. VW Golf, VW Passat, Ford Focus (most cars belong to this category)
+                                e.g. VW Golf, VW Passat, Ford Focus  (most cars belong to this category) 
                             </x-slot>
                         </x-prices.card>                 
 

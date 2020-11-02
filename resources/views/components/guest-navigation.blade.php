@@ -46,8 +46,7 @@
                     <a class=”” href="{{ route('language', ['locale' => 'de']) }}" id="de"> Deutsch</a> 
                 </div>
                 @auth
-                    <a href="{{ route('bookings.create') }}" class="text-gray-700 underline">Book a car
-                        cleaning</a>
+                    <a href="{{ route('bookings.index') }}" class="text-gray-700 underline">My Bookings</a>
                 @else
                     <a href="{{ route('login') }}" class="text-gray-700 underline">Login</a>
                     @if (Route::has('register'))

@@ -2,89 +2,125 @@
 
 namespace App\Http\Controllers;
 
+use App\Datatrans;
+use Carbon\Carbon;
 use App\Models\Booking;
 use App\Models\Payment;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
 
-    public function index()
-    {
-        //
+
+    public function redirectToDatatrans(Request $request) {
+        if (!Arr::exists($request, 'id')) {  
+            abort(400, 'Booking id missing...');
+        }   
+        $booking = Booking::findOrFail($request['id']);
+
+        // construct payload and init transaction
+        $payload = [
+            'currency'=>'CHF', 
+            'refno'=> $booking->refno, 
+            'amount'=> $booking->service_price, 
+            'autoSettle' => true,
+            'redirect' => 
+                ['successUrl' => url('/').'/payments/handlePaymentSucceeded',
+                'cancelUrl' => url('/').'/payments/handlePaymentCancelled',
+                'errorUrl' => url('/').'/payments/handlePaymentFailed',
+                'method' => 'POST',
+                ]
+        ];
+        $response = Datatrans::initiateTransaction($payload);         
+
+        // update the tranaction id on booking. will be compared after redirect
+        if (Arr::exists($response, 'transactionId')) {               
+            $booking->transaction_id = $response['transactionId'];   
+            $booking->save();
+        } else {
+            abort(400, 'Transaction id was not recieved...');
+        }
+
+        // use the link from header to redirect
+        $redirectLink = '/';
+        if (Arr::exists($response->headers(), 'Location')) {  
+            $redirectLink = $response->headers()['Location'][0];  
+        } else {
+            abort(400, 'Location missing...');
+        }       
+        return redirect($redirectLink);
     }
+
 
 
 
     public function handlePaymentSucceeded(Request $request)
-    {
-        $booking = $this->getBookingOrFail($request['refno']);
-
-        //check if the payment is valid
-        $isAccepted = $this->isPaymentAccepted($booking->service_price,1100026445, $request['uppTransactionId']);
-        if(! $isAccepted) {
-            $request->session()->flash('failure', 'Payment was not proccessed accordinly. Please contact us.');
+    {        
+        if (!Arr::exists($request, 'datatransTrxId')) {  
+            abort(400, 'Transaction id not provided...');
+        }        
+        $datatransTrxId = $request['datatransTrxId'];
+        $response = Datatrans::checkTransactionStatus($datatransTrxId);       
+        $booking = Booking::where('transaction_id', $response['transactionId'])->firstOrFail();       
+        
+        if(!$this->isRequestValid($response, $booking)) {
+            abort(400, 'The request not valid...');
         }
-
-        //check if the user is valid
+       
         $userId = $booking->user_id;
-
         if(!Auth::check()) {
             Auth::loginUsingId($userId);
+        }       
+        
+        // delete previous payment if it was failed.
+        if($booking->payment != null && $booking->payment->status == 'failed') {                 
+            $booking->payment->forceDelete();
         }
-
-
-        //if all good continue
         Auth::user()->payments()->create([
             'booking_id' => $booking->id,
-            'refno' => $request['refno'],
-            'amount' => $request['amount'],
-            'currency' => $request['currency'],
-            'uppTransactionId' => $request['uppTransactionId'],
-            'pmethod' => $request['pmethod'],
-            'reqtype' => $request['reqtype'],
-            'uppMsgType' => $request['uppMsgType'],
-            'status' => $request['status'],
+            'transaction_id' => $response['transactionId'],
+            'type' => $response['type'],
+            'status' => $response['status'],
+            'currency' => $response['currency'],
+            'refno' => $response['refno'],
+            'payment_method' => $response['paymentMethod'],
+            'detail_auth_amount' => $response['detail']['authorize']['amount'],  
+            'detail_auth_authcode' => $response['detail']['authorize']['acquirerAuthorizationCode'],
+            'detail_settle_amount' => $response['detail']['settle']['amount'],                              
             'paid_at' => Carbon::now(),
-        ]);
-        // setup the success flash indicator
+        ]);             
+        
         $request->session()->flash('success', $booking->id);
         return redirect()->route('bookings.index');
     }
 
-    protected function isPaymentAccepted($amount, $merchantId, $uppTransactionId){
-        $xml = '
-        <?xml version="1.0" encoding="UTF-8" ?>
-        <statusService version="5">
-          <body merchantId="'.$merchantId.'">
-            <transaction>
-              <request>
-                <uppTransactionId>'.$uppTransactionId.'</uppTransactionId>
-                <reqtype>STX</reqtype>
-              </request>
-            </transaction>
-          </body>
-        </statusService>
-        ';
-       $response = Http::withBasicAuth('1100026445', 'MG04T2JRi4mXCSJD')->withHeaders(['Content-Type' => 'text/xml; charset=UTF8'])->withBody( $xml, 'text/xml; charset=UTF8')->post('https://api.sandbox.datatrans.com/upp/jsp/XML_status.jsp');
 
-       $xmlObject = simplexml_load_string($response->body());
 
-       return $xmlObject->body['status'] == 'accepted' && $xmlObject->body->transaction->response->amount == $amount;
-    }
 
-    public function handleCancelPayment(Request $request) {
-        $booking = $this->getBookingOrFail($request['refno']);
+
+    public function handlePaymentCancelled(Request $request) {
+        
+        if (!Arr::exists($request, 'datatransTrxId')) {  
+            abort(400);
+        }        
+        $datatransTrxId = $request['datatransTrxId'];
+        $response = Datatrans::checkTransactionStatus($datatransTrxId);       
+        
+        $booking = Booking::where('transaction_id', $response['transactionId'])->get()->first();       
+        
+        if($this->isRequestValid($response, $booking)) {
+            abort(401);
+        }
 
         $userId = $booking->user_id;
         if(!Auth::check()) {
             Auth::loginUsingId($userId);
         }
 
-        if($this->isCancelResponse($request['status'])) {
+        if($this->isCancelResponse($response['status'])) {            
             $booking->delete();
         }
         $request->session()->flash('cancel', 'Your booking has been canceled. You were not charged.');
@@ -92,46 +128,67 @@ class PaymentController extends Controller
     }
 
     // User makes a mistake and returns to the payment page
-    public function handleErrorPayment(Request $request) {
-        $booking = $this->getBookingOrFail($request['refno']);
+    public function handlePaymentFailed(Request $request) {
 
+        if (!Arr::exists($request, 'datatransTrxId')) {  
+            abort(400, "Missing transaction Id...");
+        }        
+        $datatransTrxId = $request['datatransTrxId'];
+        $response = Datatrans::checkTransactionStatus($datatransTrxId);       
+        
+        $booking = Booking::where('transaction_id', $response['transactionId'])->get()->first();       
+        
+        if(!$this->isRequestValid($response, $booking) ) {
+            abort(400, 'Request is invalid...');
+        }
+        
         $userId = $booking->user_id;
         if(!Auth::check()) {
             Auth::loginUsingId($userId);
+        }       
+        
+        // does it have another error?
+        if($booking->payment != null && $booking->payment->status == 'failed') {            
+            $booking->payment->forceDelete();
         }
 
-        if($this->isErrorResponse($request['status'])) {
-          //if all good continue
-          Auth::user()->payments()->create([
-              'booking_id' => $booking->id,
-              'refno' => $request['refno'],
-              'amount' => $request['amount'],
-              'currency' => $request['currency'],
-              'uppTransactionId' => $request['uppTransactionId'],
-              'pmethod' => $request['pmethod'],
-              'reqtype' => $request['reqtype'],
-              'uppMsgType' => $request['uppMsgType'],
-              'status' => $request['status'],
-              'errorCode' => $request['errorCode'],
-              'errorMessage' => $request['errorMessage'],
-              'errorDetail' => $request['errorDetail'],
-          ]);
+       
+        Auth::user()->payments()->create([
+            'booking_id' => $booking->id,
+            'transaction_id' => $response['transactionId'],
+            'type' => $response['type'],
+            'status' => $response['status'],
+            'currency' => $response['currency'],
+            'refno' => $response['refno'],
+            'payment_method' => $response['paymentMethod'],
+            'detail_auth_amount' => $response['detail']['authorize']['amount'],              
+            'detail_fail_reason' => $response['detail']['fail']['reason'],                              
+            'detail_fail_msg' => $response['detail']['fail']['message'],                              
+        ]);    
+        
+        return redirect()->route('bookings.show',['id'=> $booking->id]);
+    }
+
+    protected function isRequestValid($response, Booking $booking) {
+        if($response->status() > 299) {            
+            return false;
         }
-        return redirect()->route('bookings.show',['id'=> $booking]);
+        if($booking->payment != null && $booking->payment->status == 'settled' ){         
+            return false;
+        }
+        if($booking->refno != $response['refno']) {                 
+            return false;
+        }
+        return true;
     }
 
-
-
-    public function getBookingOrFail(string $refno){
-        return Booking::where('refno',$refno)->firstOrFail();
-    }
 
     public function isCancelResponse(string $status) {
-        return $status =='cancel';
+        return $status =='canceled';
     }
 
-    public function isErrorResponse(string $status) {
-        return $status =='error';
+    public function isFailResponse(string $status) {
+        return $status =='failed';
     }
 
 }

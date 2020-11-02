@@ -16,6 +16,17 @@ class BookingFactory extends Factory
      */
     protected $model = Booking::class;
 
+    public function configure()
+    {
+        return $this->afterMaking(function (Booking $booking) {
+            //
+        })->afterCreating(function (Booking $booking) {
+            //
+        });
+    }
+
+
+
     /**
      * Define the model's default state.
      *
@@ -24,7 +35,8 @@ class BookingFactory extends Factory
     public function definition()
     {
         return [
-            'refno' =>  $this->faker->numerify('GW########-#####'),         
+            'refno' =>  $this->faker->numerify('GW########-#####'),             
+            'transaction_id' => $this->faker->numerify('##################'),      
             'user_id' => User::factory(), 
             'parking_street_number' => $this->faker->buildingNumber(),
             'parking_route' => $this->faker->streetName(),
@@ -42,6 +54,8 @@ class BookingFactory extends Factory
             'service_type' => $this->faker->randomElement(['outside','inside-outside']),
             'service_duration' => $this->faker->numberBetween(45,120),        
             'service_price' => $this->faker->numberBetween(45,120),
+            
+            'notes' => $this->faker->text(),
 
             'billing_first_name' => $this->faker->firstName(),
             'billing_last_name' => $this->faker->firstName(),

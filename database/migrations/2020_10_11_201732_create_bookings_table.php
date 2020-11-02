@@ -17,6 +17,7 @@ class CreateBookingsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('refno');
+            $table->bigInteger('transaction_id')->nullable();            
 
             // vehicle location
             $table->string('parking_street_number',200);

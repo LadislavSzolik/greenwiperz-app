@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
-                    <a href="{{ route('bookings.index') }}">
+                    <a href="/">
                         <x-application-logo class="h-10 text-green-600 " />
                     </a>
                 </div>

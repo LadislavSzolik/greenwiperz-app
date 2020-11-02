@@ -3,7 +3,7 @@
 'colors' => [
     'primary' => 'text-white bg-green-800 hover:bg-green-700 active:bg-green-900 focus:border-green-900',
     'secondary' => 'bg-cool-gray-100 hover:bg-gray-300 active:bg-gray-500 focus:border-gray-900',
-    'destructive' => 'text-red-700 bg-cool-gray-100 hover:bg-gray-300 active:bg-gray-500 focus:border-gray-900',
+    'destructive' => 'text-white bg-red-600 hover:bg-red-500 active:bg-red-500 focus:border-red-900',
     ],
 ])
 

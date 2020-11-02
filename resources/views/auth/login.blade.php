@@ -1,7 +1,9 @@
 <x-guest-layout>
     <x-jet-authentication-card>
         <x-slot name="logo">
-            <x-application-logo class="h-32 "/>
+            <a href="{{ route('home') }}">
+                <x-application-logo class="h-32 "/>
+            </a>
         </x-slot>
 
         <x-jet-validation-errors class="mb-4"/>
@@ -44,15 +46,20 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-end mt-6">
-
-                @if (Route::has('register'))
-                <a href="{{ route('register') }}" class="ml-4 px-4 py-2 border border-transparent text-xs tracking-widest uppercase rounded-md bg-cool-gray-100 hover:bg-gray-300 active:bg-gray-500 focus:border-gray-900 focus:outline-none focus:shadow-outline-gray">Register</a>
-                @endif
-
-                <x-jet-button class="ml-4">
-                    {{ __('Login') }}
-                </x-jet-button>
+            <div class="flex justify-between">
+                <div class="flex items-center mt-6">
+                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('home') }}">{{ __('Back to home') }}</a>
+                </div>
+                
+                <div class="flex items-center justify-end mt-6">
+                    @if (Route::has('register'))
+                    <a href="{{ route('register') }}" class="ml-4 px-4 py-2 border border-transparent text-xs tracking-widest uppercase rounded-md bg-cool-gray-100 hover:bg-gray-300 active:bg-gray-500 focus:border-gray-900 focus:outline-none focus:shadow-outline-gray">Register</a>
+                    @endif
+    
+                    <x-jet-button class="ml-4">
+                        {{ __('Login') }}
+                    </x-jet-button>
+                </div>
             </div>
         </form>
     </x-jet-authentication-card>

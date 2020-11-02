@@ -2,7 +2,7 @@
     'size', 'exteriorPrice', 'exteriorDuration', 'intextPrice' , 'intextDuration',
 ])
 <tr>
-    <td class="px-6 py-4 whitespace-no-wrap">
+    <td class="px-6 py-4 ">
         <div class="flex items-center">
             <div class="flex-shrink-0 h-10 w-10 text-2xl font-bold">
                 {{ $size }}

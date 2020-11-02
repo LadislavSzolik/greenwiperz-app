@@ -8,6 +8,7 @@
         </div>
     </x-slot>
 
+
     @if (session()->has('success'))
         <div class="py-4 sm:px-6 px-4 w-full sm:max-w-7xl mx-auto ">
             <x-flash.success x-data="{open: true}" x-show.transition.out="open">
@@ -87,9 +88,9 @@
                 <x-table.heading sortable>Cleaning date</x-table.heading>
                 <x-table.heading>Car</x-table.heading>
                 <x-table.heading>Car parking</x-table.heading>
-                <x-table.heading>Service description</x-table.heading>
+                <x-table.heading>Cleaning</x-table.heading>
                 <x-table.heading>Amount </x-table.heading>
-                <x-table.heading>Actions </x-table.heading>
+                <x-table.heading> </x-table.heading>
             </x-slot>
 
             <x-slot name="body">
@@ -101,8 +102,12 @@
                         </x-table.cell>
 
                         <x-table.cell>
-                            <span class="font-semibold">{{ $booking->number_plate }}</span>
-                            {{ $booking->vehicle_model }}
+                           <div>
+                               {{ $booking->number_plate }}
+                           </div>
+                            <div>
+                                {{ $booking->vehicle_model }}
+                            </div>
                         </x-table.cell>
 
                         <x-table.cell>
@@ -110,21 +115,30 @@
                         </x-table.cell>
 
                         <x-table.cell>
-                            {{ $booking->service_type }}
+                            {{ $booking->service_type }}                         
+
                         </x-table.cell>
 
                         <x-table.cell>
-                            CHF <span class="text-cool-gray-900 font-medium">{{ $booking->service_price / 100 }}</span>
+                            <span class="text-cool-gray-900 font-medium">{{ $booking->moneyPrice  }}</span>
+                           
+                           
+                        @if ($booking->payment && $booking->payment['status'] == 'settled')
+                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-green-100 text-green-800">
+                            Paid
+                        </span>
+                        @else
+                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-yellow-100 text-yellow-800">
+                            Not yet paid
+                        </span>
+                        @endif
+                            
                         </x-table.cell>
 
                         <x-table.cell>
-                            <x-form-button method="GET" action="/bookings/{{ $booking->id }}" buttonType="tertiary">
-                                {{ __('Show details') }}
-                            </x-form-button>
-                            <x-form-button class="mr-2" method="GET" action="" buttonType="tertiaryDestructive">
-                                {{ __('Cancel') }}
-                            </x-form-button>
-
+                            <x-form-button method="GET" action="/bookings/{{ $booking->id }}" buttonType="secondary">
+                                {{ __('details') }}
+                            </x-form-button>                                
                         </x-table.cell>
                     </x-table.row>
                 @endforeach
@@ -164,21 +178,16 @@
 
                             <p class="mt-2 text-gray-500 text-sm leading-5 truncate">Price</p>
                             <div class="text-gray-900 text-sm leading-5 font-medium truncate">
-                                CHF <span>{{ $booking->service_price / 100 }}</span>
+                                <span>{{ $booking->moneyPrice  }}</span>
                             </div>
 
                         </div>
                     </x-slot>
                     <x-slot name="actions">
-                        <div class="flex flex-no-wrap h-12 justify-center items-center w-full">
-                            <div class="flex-none border-r border-gray-200 w-1/2 text-center">
-                                <x-form-button method="GET" action="" buttonType="tertiaryDestructive">
-                                    {{ __('Cancel') }}
-                                </x-form-button>
-                            </div>
+                        <div class="flex flex-no-wrap h-12 justify-center items-center w-full">                            
                             <div class="flex-none w-1/2 text-center">
                                 <x-form-button method="GET" action="/bookings/{{ $booking->id }}" buttonType="tertiary">
-                                    {{ __('Show details') }}
+                                    {{ __('details') }}
                                 </x-form-button>
                             </div>
                         </div>
@@ -188,5 +197,5 @@
         </x-grid.list>
     </div>
 
-
+    <x-footer />
 </x-app-layout>

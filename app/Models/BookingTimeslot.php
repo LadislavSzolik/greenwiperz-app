@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BookingTimeslot extends Model
 {
-    protected $fillable = ['date', 'start_time','end_time'];
+    protected $fillable = ['booking_id', 'date', 'start_time','end_time'];
 
     use HasFactory;
     use SoftDeletes;
