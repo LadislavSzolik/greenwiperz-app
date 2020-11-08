@@ -16,42 +16,18 @@ class CreateBookingsTable extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('refno');
+            $table->string('booking_nr');
             $table->bigInteger('transaction_id')->nullable();            
-
-            // vehicle location
-            $table->string('parking_street_number',200);
-            $table->string('parking_route',200);
-            $table->string('parking_city',100);
-            $table->string('parking_postal_code',20);
-
-            // vehicle
-            $table->string('vehicle_model',100);
-            $table->string('number_plate',50);
-            $table->enum('vehicle_size', ['small', 'medium', 'large','x-large']);
-            $table->string('vehicle_color',10);
-            $table->boolean('has_extra_dirt');
-            $table->boolean('has_animal_hair');
-
-            // service
-            $table->enum('service_type', ['outside', 'inside-outside']);
-            $table->integer('service_duration');
-            $table->integer('service_price');
-
-            // notes
             $table->text('notes')->nullable();
             $table->text('internal_notes')->nullable();
-
-            // copied here the billing address
-            $table->string('billing_first_name',255);
-            $table->string('billing_last_name',255);
-            $table->string('billing_street',200);
-            $table->string('billing_postal_code',20);
-            $table->string('billing_city',100);
-            $table->char('billing_country',100);
-
+            $table->timestamp('failed_at')->nullable();
+            $table->string('failed_reason')->nullable();
+            $table->timestamp('tc_accepted_at')->nullable();
+            $table->timestamp('paid_at')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamp('canceled_at')->nullable();
+            $table->unsignedBigInteger('completed_by')->nullable();
+            $table->unsignedBigInteger('canceled_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
 

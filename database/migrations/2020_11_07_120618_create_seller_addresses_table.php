@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLocationsTable extends Migration
+class CreateSellerAddressesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateLocationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('locations', function (Blueprint $table) {
-            $table->id();
+        Schema::create('seller_addresses', function (Blueprint $table) {
+            $table->id();            
+            $table->unsignedBigInteger('booking_id'); 
+            $table->string('company_name',255);
             $table->string('street',200);
             $table->string('postal_code',20);
-            $table->string('city',100);        
-            $table->boolean('default')->default(true); 
-            $table->unsignedBigInteger('user_id'); 
+            $table->string('city',100);
+            $table->string('country',100);     
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('booking_id')->references('id')->on('bookings');  
         });
     }
 
@@ -33,6 +33,6 @@ class CreateLocationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('locations');
+        Schema::dropIfExists('seller_addresses');
     }
 }

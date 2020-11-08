@@ -79,4 +79,29 @@ class TimeslotServiceTest extends TestCase
         $this->assertTrue($isTimeslotTaken);
     }
 
+
+    public function testIgnroeCanceledTimeslots_success()
+    {        
+        $this->seed(TimeslotSeeder::class);
+        $this->seed(ServiceSeeder::class);
+
+        $bookingDate = '2020-11-02';
+        $booking = Booking::factory()->create();
+        BookingTimeslot::create([
+            'booking_id' => $booking->id,
+            'date' =>  $bookingDate,
+            'start_time' =>  '07:30',
+            'end_time' =>  '09:30',
+            'canceled_at' => Carbon::now(),
+        ]);
+     
+        $timeslots = TimeslotService::fetchSlots($bookingDate, 30, 104);        
+
+        $bookingTimeWithoutTravel = Carbon::parse('08:00')->format('H:i');
+        
+        $isTimeslotTaken = $timeslots->contains($bookingTimeWithoutTravel);
+        
+        $this->assertTrue($isTimeslotTaken);
+    }
+
 }

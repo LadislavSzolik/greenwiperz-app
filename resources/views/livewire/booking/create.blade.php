@@ -84,19 +84,19 @@
 
                             <!-- Extra dirt  and  Animal hair -->
                             <div class="col-span-6 sm:col-span-4">
-                                <x-jet-label for="additionalInformation" value="{{ __('Additional information') }}" />
+                                <x-jet-label for="additionalInformation" value="Dirty surcharge + CHF 30.00" />
                                 <div>
                                     <div class="mt-2">
                                         <label class="inline-flex items-center">
                                             <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 "
-                                                wire:model.defer="hasExtraDirt">
+                                                wire:model="hasExtraDirt">
                                             <span class="ml-2">{{ __('Extra dirt on car') }}</span>
                                         </label>
                                     </div>
                                     <div class="mt-2">
                                         <label class="inline-flex items-center">
                                             <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 "
-                                                wire:model.defer="hasAnimalHair">
+                                                wire:model="hasAnimalHair">
                                             <span class="ml-2">{{ __('Animal hair ') }}</span>
                                         </label>
                                     </div>
@@ -162,6 +162,12 @@
                                     placeholder="e.g. Muster" />
                             </x-input.flexible-group>
 
+                            <x-input.flexible-group class="col-span-6" for="billingCompanyName"
+                                label="{{ __('Company Name (Optional)') }}">
+                                <x-input.text wire:model.defer="billingCompanyName" id="billingCompanyName" type="text"
+                                    placeholder="e.g. SBB" />
+                            </x-input.flexible-group>
+
                             <x-input.flexible-group class="col-span-6 sm:col-span-3" for="billingStreet"
                                 label="{{ __('Street') }}">
                                 <x-input.text wire:model.defer="billingStreet" id="billingStreet" type="text"
@@ -187,7 +193,7 @@
                             </x-input.flexible-group>
 
                             <div class="col-span-6 ">
-                                <x-jet-label for="notes" value="{{ __('Notes') }}" />
+                                <x-jet-label for="notes" value="{{ __('Remarks') }}" />
                                 <textarea id="notes" name="notes" class="mt-1 block w-full form-input"
                                     wire:model="notes" rows="4" cols="50"></textarea>
                             </div>
@@ -207,7 +213,7 @@
 
                         <div class="flex justify-between border-b border-cool-gray-200 py-2">
                             <div>{{ __('Aproximate duration') }} </div>
-                            <div class="font-bold"> {{ $serviceDuration }} min</div>
+                            <div class="font-bold"> {{ $this->formatedServiceDuration }}</div>
                         </div>
 
                         <div class="flex items-center justify-end pt-4 ">
@@ -226,7 +232,7 @@
 
                         <div class="flex justify-between items-center">
                             <div class="font-bold">
-                                {{ $this->moneyPrice }}/ {{ $serviceDuration }} min
+                                {{ $this->moneyPrice }}/ {{ $this->formatedServiceDuration }}
                             </div>
                             <div>
                                 <x-div-button wire:loading.attr="disabled" buttonType="primary"
@@ -311,14 +317,14 @@
 
 
                             <!-- Extra dirt  and  Animal hair -->
-                            <x-input.group for="vehicleSize" label="{{ __('Additional information') }}">
+                            <x-input.group for="vehicleSize" label="{{ __('Dirty surcharge + CHF 30.00') }}">
                                 <x-input.readonly>
                                     @if ($hasExtraDirt == 1)
-                                        <span class="ml-2">{{ __('Extra dirt on car') }}</span>
+                                        <span class="mr-2">{{ __('Extra dirt on car - Yes') }}</span>
 
                                     @endif
                                     @if ($hasAnimalHair == 1)
-                                        <span class="ml-2">{{ __('Animal hair') }}</span>
+                                        <span class="mr-2">{{ __('Animal hair - Yes') }}</span>
                                     @endif
 
                                     @if ($hasExtraDirt == 0 && $hasAnimalHair == 0)
@@ -344,7 +350,7 @@
                                 <x-input.readonly>
                                     @if ($bookingTime)
                                         {{ Carbon\Carbon::parse($bookingTime)->addMinutes($travelTimeNeeded)->format('H:i') }}
-                                        <span class="text-gray-500"> (c.a. {{ $serviceDuration }} min)
+                                        <span class="text-gray-500"> (c.a. {{ $this->formatedServiceDuration }})
                                     @endif
                                 </x-input.readonly>
                             </x-input.flexible-group>
@@ -388,7 +394,7 @@
 
 
                             <div class="col-span-6 ">
-                                <x-jet-label for="notes" value="{{ __('Notes') }}" />
+                                <x-jet-label for="notes" value="{{ __('Remarks') }}" />
                                 @if ($notes)
                                     {{ $notes }}
                                 @else

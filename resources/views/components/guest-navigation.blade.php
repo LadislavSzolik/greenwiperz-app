@@ -29,6 +29,10 @@
                         {{ __('Service area') }}
                     </x-jet-nav-link>
 
+                    <x-jet-nav-link href="{{ route('terms') }}" :active="request()->routeIs('terms')">
+                        {{ __('Terms & Conditions') }}
+                    </x-jet-nav-link>
+
                     <x-jet-nav-link href="{{ route('about') }}" :active="request()->routeIs('about')">
                         {{ __('About us') }}
                     </x-jet-nav-link>
@@ -112,7 +116,12 @@
                         :active="request()->routeIs('service.area')">
                         {{ __('Service area') }}
                     </x-jet-responsive-nav-link>
-
+                    
+                    <x-jet-responsive-nav-link href="{{ route('terms') }}"
+                        :active="request()->routeIs('terms')">
+                        {{ __(' Terms & Conditions') }}
+                    </x-jet-responsive-nav-link>
+                   
                     <x-jet-responsive-nav-link href="{{ route('about') }}"
                         :active="request()->routeIs('about')">
                         {{ __('About us') }}

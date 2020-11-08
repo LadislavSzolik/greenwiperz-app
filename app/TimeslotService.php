@@ -13,7 +13,7 @@ class TimeslotService
       $bookedTimeslots = DB::table('timeslots')
       ->select('timeslots.id as takenTimeSlotId', 'timeslot')
       ->crossJoin('booking_timeslots')
-      ->where([['booking_timeslots.date', $date],['booking_timeslots.deleted_at', null]])
+      ->where([['booking_timeslots.date', $date],['booking_timeslots.canceled_at', null]])
       ->where(function ($query) use ($serviceDurationTime) {
           $query->whereBetween('booking_timeslots.start_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL $serviceDurationTime minute)")])
           ->orWhereBetween('booking_timeslots.end_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL $serviceDurationTime minute)")])

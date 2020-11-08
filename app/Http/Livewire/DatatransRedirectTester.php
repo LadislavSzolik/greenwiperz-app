@@ -42,14 +42,14 @@ class DatatransRedirectTester extends Component
         $startTime = Carbon::parse('08:00')->addMinutes(30)->format('H:i');
         $endTime = Carbon::parse('08:00')->addMinutes(30 + 120 - 1)->format('H:i');
 
-        $bookingTimeslot = [    
+        $BookingTimeslot = [    
             'date' => '2020-11-12',
             'start_time' => $startTime,
             'end_time' => $endTime
         ];
 
         session()->put('bookingData',$bookingData);
-        session()->put('bookingTimeslot',$bookingTimeslot);
+        session()->put('BookingTimeslot',$BookingTimeslot);
         return redirect()->route('bookings.store');
 
     }

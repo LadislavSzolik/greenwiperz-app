@@ -6,35 +6,7 @@
             </h2>
             <x-form-button method="GET" action="{{ route('bookings.create') }}" buttonType="primary">New</x-form-button>
         </div>
-    </x-slot>
-
-
-    @if (session()->has('success'))
-        <div class="py-4 sm:px-6 px-4 w-full sm:max-w-7xl mx-auto ">
-            <x-flash.success x-data="{open: true}" x-show.transition.out="open">
-                <x-slot name="title">
-                    Booking confirmation
-                </x-slot>
-
-                <x-slot name="description">
-                    Your booking was successful.
-                </x-slot>
-
-                <x-slot name="actions">
-                    <x-form method="GET" action="/bookings/{{ session('success') }}">
-                        <button
-                            class="px-2 py-1.5 rounded-md text-sm leading-5 font-medium text-green-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 transition ease-in-out duration-150">
-                            View details
-                        </button>
-                    </x-form>
-                    <button x-on:click="open=false"
-                        class="ml-3 px-2 py-1.5 rounded-md text-sm leading-5 font-medium text-green-800 hover:bg-green-100 focus:outline-none focus:bg-green-100 transition ease-in-out duration-150">
-                        Dismiss
-                    </button>
-                </x-slot>
-            </x-flash.success>
-        </div>
-    @endif
+    </x-slot>    
 
     @if (session()->has('deleted'))
         <div class="py-4 sm:px-6 px-4 w-full sm:max-w-7xl mx-auto ">
@@ -44,7 +16,7 @@
                 </x-slot>
 
                 <x-slot name="description">
-                    Your booking was successfully deleted. There were no charges.
+                    Your booking was successfully deleted. 
                 </x-slot>
 
                 <x-slot name="actions">
@@ -85,7 +57,7 @@
         <!--  -->
         <x-table>
             <x-slot name="head">
-                <x-table.heading sortable>Cleaning date</x-table.heading>
+                <x-table.heading>Cleaning date</x-table.heading>
                 <x-table.heading>Car</x-table.heading>
                 <x-table.heading>Car parking</x-table.heading>
                 <x-table.heading>Cleaning</x-table.heading>
@@ -103,35 +75,45 @@
 
                         <x-table.cell>
                            <div>
-                               {{ $booking->number_plate }}
+                               {{ $booking->bookingService->number_plate }}
                            </div>
                             <div>
-                                {{ $booking->vehicle_model }}
+                                {{ $booking->bookingService->vehicle_model }}
                             </div>
                         </x-table.cell>
 
                         <x-table.cell>
-                            {{ $booking->parking_route }} {{ $booking->parking_street_number }}
+                            <p>{{ $booking->bookingService->parking_route }} {{ $booking->bookingService->parking_street_number }}</p>
+                            <p>{{ $booking->bookingService->parking_postal_code }}, {{ $booking->bookingService->parking_city }}
                         </x-table.cell>
 
                         <x-table.cell>
-                            {{ $booking->service_type }}                         
+                            {{ $booking->bookingService->service_type }}                         
 
                         </x-table.cell>
 
                         <x-table.cell>
-                            <span class="text-cool-gray-900 font-medium">{{ $booking->moneyPrice  }}</span>
+                            <span class="text-cool-gray-900 font-medium">{{ $booking->invoice->moneyPrice  }}</span>
                            
                            
-                        @if ($booking->payment && $booking->payment['status'] == 'settled')
-                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-green-100 text-green-800">
-                            Paid
-                        </span>
-                        @else
-                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-yellow-100 text-yellow-800">
-                            Not yet paid
-                        </span>
-                        @endif
+                        @unless($booking->refund)
+                            @isset ($booking->paid_at )
+                                <span
+                                    class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-green-100 text-green-800">
+                                    Paid
+                                </span>
+                            @else
+                                <span
+                                    class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-yellow-100 text-yellow-800">
+                                    Not yet paid
+                                </span>
+                            @endisset
+                        @endunless
+                        @isset($booking->refund)
+                            <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-green-100 text-green-800">
+                            Canceled & Refunded {{ $booking->refund->moneyRefundedAmount }}
+                            </span>
+                        @endisset
                             
                         </x-table.cell>
 
@@ -161,25 +143,44 @@
                             <p class="mt-2 text-gray-500 text-sm leading-5 truncate">Car
                             </p>
                             <div class="text-gray-900 text-sm leading-5 font-medium truncate">
-                                <span class="font-semibold">{{ $booking->number_plate }}</span>
-                                {{ $booking->vehicle_model }}
+                                <span class="font-semibold">{{ $booking->bookingService->number_plate }}</span>
+                                {{ $booking->bookingService->vehicle_model }}
                             </div>
 
                             <p class="mt-2 text-gray-500 text-sm leading-5 truncate">Car parking place
                             </p>
                             <div class="text-gray-900 text-sm leading-5 font-medium truncate">
-                                {{ $booking->parking_route }} {{ $booking->parking_street_number }}
+                                {{ $booking->bookingService->parking_route }} {{ $booking->bookingService->parking_street_number }}
                             </div>
 
                             <p class="mt-2 text-gray-500 text-sm leading-5 truncate"> Cleaning service</p>
                             <div class="text-gray-900 text-sm leading-5 font-medium truncate">
-                                {{ $booking->service_type }}
+                                {{ $booking->bookingService->service_type }}
                             </div>
 
                             <p class="mt-2 text-gray-500 text-sm leading-5 truncate">Price</p>
                             <div class="text-gray-900 text-sm leading-5 font-medium truncate">
-                                <span>{{ $booking->moneyPrice  }}</span>
+                                <span>{{ $booking->invoice->moneyPrice  }}</span>
                             </div>
+
+                            @unless($booking->refund)
+                            @isset ($booking->paid_at )
+                                <span
+                                    class="ml-0 sm:ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-green-100 text-green-800">
+                                    Paid
+                                </span>
+                            @else
+                                <span
+                                    class="ml-0 sm:ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-yellow-100 text-yellow-800">
+                                    Not yet paid
+                                </span>
+                            @endisset
+                        @endunless
+                        @isset($booking->refund)
+                            <span class="ml-0 sm:ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-green-100 text-green-800">
+                            Canceled & Refunded {{ $booking->refund->moneyRefundedAmount }}
+                            </span>
+                        @endisset
 
                         </div>
                     </x-slot>
@@ -196,6 +197,5 @@
             @endforeach
         </x-grid.list>
     </div>
-
     <x-footer />
 </x-app-layout>

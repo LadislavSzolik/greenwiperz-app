@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\User;
 use Livewire\Livewire;
@@ -20,15 +21,13 @@ class CreateBookingLivewireTest extends TestCase
      *
      * @return void
      */
-    public function testExample()
+    public function testCreateBooking_success()
     {
         $this->seed(TimeslotSeeder::class);
         $this->seed(ServiceSeeder::class);
         $this->actingAs(User::factory()->create());
 
-        Livewire::test(Create::class)          
-            ->set('bookingDate', '2020-11-02')
-            ->set('bookingTime', '08:00:00')  
+        Livewire::test(Create::class)                        
             ->set('termsAndConditions', true)  
             ->set('parkingStreetNumber', '543')  
             ->set('parkingRoute', 'Street')  
@@ -45,14 +44,15 @@ class CreateBookingLivewireTest extends TestCase
             ->set('billingPostalCode', 'Text')  
             ->set('billingCity', 'Text')      
             ->set('billingCountry', 'Text')              
-            ->set('bookingDate', '2020-11-03')      
+            ->set('bookingDate', Carbon::now()->addDay()->format('Y-m-d'))      
             ->call('submitBooking')
             ->assertSet('travelTimeNeeded', 30)
             ->assertSet('bookingTime', '08:00')
-            ->assertSet('bookingDate', '2020-11-03')
-            ->assertRedirect('/bookings/store');     
-
-           
-            
+            ->assertSet('bookingDate', Carbon::now()->addDay()->format('Y-m-d'));
+        $this->assertDatabaseCount('bookings',1);                   
+        $this->assertDatabaseCount('booking_timeslots',1); 
+        $this->assertDatabaseCount('invoices',1); 
+        $this->assertDatabaseCount('billing_addresses',1); 
+        $this->assertDatabaseCount('seller_addresses',1); 
     }
 }

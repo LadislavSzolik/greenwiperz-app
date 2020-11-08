@@ -140,6 +140,7 @@
                 :active="request()->routeIs('bookings.create')">
                 {{ __('New Booking') }}
             </x-jet-responsive-nav-link>
+
         </div>
 
         <!-- Responsive Settings Options -->

@@ -22,7 +22,7 @@ class CreateBookingTimeslotsTable extends Migration
             $table->timestamp('canceled_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
+            $table->foreign('booking_id')->references('id')->on('bookings')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

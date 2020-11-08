@@ -75,6 +75,18 @@ class DatatransTest extends TestCase
         $response = Datatrans::checkTransactionStatus( $transactionId );        
         $this->assertSame($response->status(), 200);
     }
+
+
+    public function testRefundTransaction_success() {
+        $transactionId = '201101103538422731';
+        $baseUrl = '/v1/transactions/';
+        $refundTransURL = Datatrans::apiBaseUrl().$baseUrl.$transactionId.'/credit';
+        Http::fake([
+            $refundTransURL => Http::response(['transactionId' => '201103192707588322' ], 200)
+        ]);
+        $response = Datatrans::refundTransaction( $transactionId );        
+        $this->assertSame($response->status(), 200);
+    }
     
     
 }

@@ -24,6 +24,14 @@ class Datatrans
         return static::makeApiCall('post','/v1/transactions',$payload);
     }
 
+    /** 
+    * 
+    *  
+    */
+    public static function refundTransaction($transactionId, array $payload = []) {
+        return static::makeApiCall('post','/v1/transactions/'.$transactionId.'/credit',$payload);
+    }
+
     public static function makeApiCall($method, $uri, array $payload = []) 
     {
         $merchantId = config('datatrans.merchant_id');

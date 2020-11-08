@@ -35,34 +35,10 @@ class BookingFactory extends Factory
     public function definition()
     {
         return [
-            'refno' =>  $this->faker->numerify('GW########-#####'),             
-            'transaction_id' => $this->faker->numerify('##################'),      
             'user_id' => User::factory(), 
-            'parking_street_number' => $this->faker->buildingNumber(),
-            'parking_route' => $this->faker->streetName(),
-            'parking_city' => $this->faker->city(),
-            'parking_postal_code' => $this->faker->postcode(),
-
-            'vehicle_model' => $this->faker->word(),
-            'number_plate' => $this->faker->numerify('ZH ######'),
-            'vehicle_size' => $this->faker->randomElement(['small', 'medium', 'large','x-large']),
-            'vehicle_color' => $this->faker->safeColorName(),
-            'has_extra_dirt' => $this->faker->boolean(),
-            'has_animal_hair' => $this->faker->boolean(),
-            
-            
-            'service_type' => $this->faker->randomElement(['outside','inside-outside']),
-            'service_duration' => $this->faker->numberBetween(45,120),        
-            'service_price' => $this->faker->numberBetween(45,120),
-            
+            'booking_nr' =>  $this->faker->numerify('GW########-####'),             
+            'transaction_id' => $this->faker->numerify('##################'),          
             'notes' => $this->faker->text(),
-
-            'billing_first_name' => $this->faker->firstName(),
-            'billing_last_name' => $this->faker->firstName(),
-            'billing_street' => $this->faker->firstName(),
-            'billing_postal_code' => $this->faker->firstName(),
-            'billing_city' => $this->faker->firstName(),
-            'billing_country' => $this->faker->firstName(),
         ];
     }
 }
