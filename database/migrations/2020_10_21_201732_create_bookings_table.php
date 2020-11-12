@@ -16,6 +16,7 @@ class CreateBookingsTable extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('appointment_id');
             $table->string('booking_nr');
             $table->bigInteger('transaction_id')->nullable();            
             $table->text('notes')->nullable();
@@ -30,7 +31,7 @@ class CreateBookingsTable extends Migration
             $table->unsignedBigInteger('canceled_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
-
+            $table->foreign('appointment_id')->references('id')->on('appointments')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

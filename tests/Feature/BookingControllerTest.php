@@ -11,7 +11,10 @@ use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Receipt;
 use Illuminate\Http\Request;
-use App\Models\BookingTimeslot;
+use App\Models\SellerAddress;
+use App\Models\BillingAddress;
+use App\Models\BookingService;
+use App\Models\Appointment;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Event;
 use App\Http\Controllers\BookingController;
@@ -26,20 +29,33 @@ class BookingControllerTest extends TestCase
 
 
 
-    public function testForcedDeletion_success() {              
+    public function testForcedBookingFullDeletion_success() {              
         $user = User::factory()->create();
-
+        $appointment = Appointment::factory()->create();
         $booking = Booking::factory()->state([
             'user_id' => $user->id,
+            'appointment_id' =>  $appointment->id,
         ])->create();
 
-        BookingTimeslot::factory()->create([
-            'booking_id' =>  $booking->id,
-        ]);
-                
+        $billingAddress = BillingAddress::factory()->state([
+            'booking_id' => $booking->id,
+        ])->create();
+
+        $sellerAddress = SellerAddress::factory()->state([
+            'booking_id' => $booking->id,
+        ])->create();
+
+        $bookingService = BookingService::factory()->state([
+            'booking_id' => $booking->id,
+        ])->create();
+            
         $response = $this->actingAs($user)->post('/bookings/'.$booking->id.'/delete', ['id' => $booking->id]);
         $response->assertStatus(302);
+        $this->assertDatabaseMissing('appointments', ['id' => $appointment->id]);
         $this->assertDatabaseMissing('bookings', ['id' => $booking->id]);
+        $this->assertDatabaseMissing('billing_addresses', ['id' => $billingAddress->id]);
+        $this->assertDatabaseMissing('seller_addresses', ['id' => $sellerAddress->id]);
+        $this->assertDatabaseMissing('booking_services', ['id' => $bookingService->id]);
     }
 
 
@@ -94,8 +110,13 @@ class BookingControllerTest extends TestCase
         
         $user = User::factory()->create();
 
+        $Appointment = Appointment::factory()->create([           
+            'start_time' => '22:14:00',
+            'date' => '2020-11-03'
+        ]);
         $booking = Booking::factory()->state([
             'user_id' => $user->id,
+            'appointment_id' => $Appointment->id,
             'transaction_id' => $transactionId,
             'paid_at' => now(),
         ])->create();
@@ -110,23 +131,19 @@ class BookingControllerTest extends TestCase
             'transaction_id' =>  $transactionId,
         ]);
 
-        $BookingTimeslot = BookingTimeslot::factory()->create([
-            'booking_id' =>  $booking->id,            
-            'start_time' => '22:14:00',
-            'date' => '2020-11-03'
-        ]);
+       
                 
         $response = $this->actingAs($user)->post('/bookings/'.$booking->id.'/cancel');
         $response->assertStatus(302);        
 
         // does the new transaction id saved on booking?
-        $this->assertDatabaseHas('bookings', ['transaction_id' => $newTransactionId  ]);
-        
-
+        $this->assertDatabaseHas('bookings', ['transaction_id' => $newTransactionId  ]); 
+         
         // does the timeslot freed up?
-        $BookingTimeslot->refresh();
-        $this->assertNotNull($BookingTimeslot->canceled_at);       
-        
+        $Appointment->refresh();
+        $this->assertNotNull($Appointment->canceled_at);       
+        $this->assertDatabaseCount('refunds',1);
+        $this->assertDatabaseHas('refunds', ['refunded_amount' => 5500  ]);
     }
 
 }

@@ -201,7 +201,7 @@
                                 Cleaning date and time
                             </dt>
                             <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-                                {{ $booking->bookingTimeslot->date }} {{ $booking->bookingTimeslot->start_time }} <span
+                                {{ $booking->appointment->date }} {{ $booking->appointment->start_time }} <span
                                     class="text-gray-500"> (c.a. {{ $booking->bookingService['service_duration'] }} min)
                             </dd>
                         </div>

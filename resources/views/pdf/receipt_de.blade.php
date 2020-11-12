@@ -128,7 +128,7 @@
         </tr>
         <tr>
             <td >Leistungszeitraum</td>
-            <td class="text-right">{{ $booking->bookingTimeslot->date }} {{ $booking->bookingTimeslot->start_time }}</td>
+            <td class="text-right">{{ $booking->appointment->date }} {{ $booking->appointment->start_time }}</td>
         </tr>
     </table>
 

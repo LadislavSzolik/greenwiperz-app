@@ -2,7 +2,7 @@
 
 
 <!-- order is important, first my script after that the google -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGzWQdAXtQf9LYqySkZrvuV0dtEVpXymE&libraries=places&v=weekly"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('greenwiperz.google_maps_api_key') }}&libraries=places&v=weekly"></script>
 <script defer="defer">
     
 

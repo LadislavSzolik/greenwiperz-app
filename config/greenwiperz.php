@@ -14,5 +14,8 @@ return [
         'dirty_surcharge' => env('GW_SURCHARGE', '3000'),
     ],
     'mwst_percent' => env('MWST_PERCENT', '0.077'),
+    'google_maps_api_key' => env('GOOGLE_MAPS_API_KEY', null),
+
+    'registration_enabled' => false,
 
 ];

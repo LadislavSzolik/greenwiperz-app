@@ -30,7 +30,7 @@ class CreateReceiptsTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('booking_id')->references('id')->on('bookings');  
+            $table->foreign('booking_id')->references('id')->on('bookings')->onUpdate('cascade')->onDelete('cascade');  
         });
     }
 

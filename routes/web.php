@@ -2,46 +2,36 @@
 
 
 use App\Models\Booking;
-use App\Events\BookingConfirmed;
 use App\Mail\BookingConfirmedMail;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Mail\CanceledConfirmationMail;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Livewire\DatatransRedirectTester;
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\LocalizationController;
 
 // GUEST ZONE
 Route::get('lang/{locale}', LocalizationController::class)->name('language');
+Route::get('/', function () { return view('welcome'); })->name('home');
+Route::get('/prices', function () { return view('prices'); })->name('prices');
+Route::get('/how-it-works', function () { return view('how-it-works'); })->name('how.it.works');
+Route::get('/service-area', function () { return view('service-area');})->name('service.area');
+Route::get('/about', function () {return view('about');})->name('about');
+Route::get('/contact', function () {return view('contact');})->name('contact');
+Route::get('/terms', function () {return view('terms');})->name('terms');
+// temporary solution
+Route::get('/comingsoon', function () {return view('coming-soon');})->name('coming.soon');
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::middleware(['auth:sanctum', 'verified'])->get('/termsinapp', function () {return view('terms-inapp');})->name('terms.inapp');
 
-Route::get('/prices', function () {
-    return view('prices');
-})->name('prices');
 
-Route::get('/how-it-works', function () {
-    return view('how-it-works');
-})->name('how.it.works');
+Route::middleware(['auth:sanctum', 'verified','can:view_appointments'])->get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+Route::middleware(['auth:sanctum', 'verified','can:view_appointments'])->get('/appointments/{appointment}', [AppointmentController::class, 'show'])->name('appointments.show');
+Route::middleware(['auth:sanctum', 'verified','can:update_appointments'])->get('/appointments/{appointment}/edit', [AppointmentController::class, 'edit'])->name('appointments.edit');
+Route::middleware(['auth:sanctum', 'verified','can:update_appointments'])->get('/appointments/{appointment}/update', [AppointmentController::class, 'update'])->name('appointments.update');
 
-Route::get('/service-area', function () {
-    return view('service-area');
-})->name('service.area');
 
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
-
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
-
-Route::get('/terms', function () {
-    return view('terms');
-})->name('terms');
+// 
 
 // AUTH USER ZONE
 Route::middleware(['auth:sanctum', 'verified'])->get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
@@ -58,12 +48,10 @@ Route::post('/payments/handlePaymentSucceeded', [PaymentController::class, 'hand
 Route::post('/payments/handlePaymentCanceled', [PaymentController::class, 'handlePaymentCanceled']);
 Route::post('/payments/handlePaymentFailed', [PaymentController::class, 'handlePaymentFailed']);
 
-
-Route::middleware(['auth:sanctum', 'verified'])->get('/payments/{id}', [PaymentController::class, 'show'])->name('payments.show');
-
 // TODO: finish mail testing
 Route::get('mailable',function(){
-    $booking = Booking::findOrFail(1);    
+    $booking = Booking::findOrFail(1);   
+    //return new BookingConfirmedMail($booking);
     return new CanceledConfirmationMail($booking);
 });
 

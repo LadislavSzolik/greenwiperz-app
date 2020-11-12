@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\User;
 use Livewire\Livewire;
+use Database\Seeders\UserSeeder;
 use Database\Seeders\ServiceSeeder;
 use Database\Seeders\TimeslotSeeder;
 use App\Http\Livewire\Booking\Create;
@@ -25,6 +26,8 @@ class CreateBookingLivewireTest extends TestCase
     {
         $this->seed(TimeslotSeeder::class);
         $this->seed(ServiceSeeder::class);
+        $this->seed(UserSeeder::class);
+
         $this->actingAs(User::factory()->create());
 
         Livewire::test(Create::class)                        
@@ -50,7 +53,7 @@ class CreateBookingLivewireTest extends TestCase
             ->assertSet('bookingTime', '08:00')
             ->assertSet('bookingDate', Carbon::now()->addDay()->format('Y-m-d'));
         $this->assertDatabaseCount('bookings',1);                   
-        $this->assertDatabaseCount('booking_timeslots',1); 
+        $this->assertDatabaseCount('appointments',1); 
         $this->assertDatabaseCount('invoices',1); 
         $this->assertDatabaseCount('billing_addresses',1); 
         $this->assertDatabaseCount('seller_addresses',1); 

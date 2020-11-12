@@ -4,14 +4,14 @@
         <div class="bg-white rounded-lg shadow-sm px-4 py-10 sm:px-16 sm:py-12">
 
             <!-- HOW IT WORKS -->
-            <div class="my-8 ">
+            <div>
                 <h2
-                    class="text-xl leading-9 tracking-tight font-bold text-gray-900 sm:text-2xl sm:leading-10 mb-4 uppercase text-center">
+                    class="text-xl leading-9 font-bold text-gray-900 sm:text-2xl sm:leading-10 mb-4 uppercase text-center">
                     {{ __('homepage.howWorksMainTitle') }}
                 </h2>
 
                 <div class="flex flex-wrap">
-                    <div class="prose prose-lg text-gray-500 w-full sm:w-2/5">
+                    <div class="prose prose-lg text-gray-500 w-full sm:w-3/5">
                         <ul>
                             <li>{{ __('homepage.howWorksParagrph1') }} </li>
                             <li>{{ __('homepage.howWorksParagrph2') }} </li>
@@ -22,7 +22,7 @@
                         </ul>
                     </div>
 
-                    <div class="flex justify-center w-full sm:w-3/5 px-2 sm:px-0 mt-6">
+                    <div class="flex justify-center w-full sm:w-2/5 px-2 sm:px-0 mt-6">
                         <img class="shadow-2xl h-48 sm:h-80" src="{{ asset('img/howitworks/how-it-works-biker.jpg') }}"
                             alt="Cleaning" />
                     </div>
@@ -64,7 +64,7 @@
                     {{ __('homepage.exclConditionMainTitle') }}
                 </h2>
 
-                <div class="prose prose-lg text-gray-500 ">
+                <div class="prose prose-lg text-gray-500 text-center mx-auto">
                     <ul>
                         <li>{{ __('homepage.exclConditionParagrph1') }}</li>
                     </ul>

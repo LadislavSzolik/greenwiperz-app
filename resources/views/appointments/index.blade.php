@@ -1,11 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="inline-flex  items-center justify-between w-full">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Your bookings') }}
-            </h2>
-            <x-form-button method="GET" action="{{ route('bookings.create') }}" buttonType="primary">New</x-form-button>
-        </div>
+       
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('My appointments') }}
+        </h2>                    
     </x-slot>    
 
     @if (session()->has('deleted'))
@@ -58,46 +56,45 @@
         <x-table>
             <x-slot name="head">
                 <x-table.heading>Cleaning date</x-table.heading>
-                <x-table.heading>Car</x-table.heading>
-                <x-table.heading>Car parking</x-table.heading>
-                <x-table.heading>Cleaning</x-table.heading>
-                <x-table.heading>Amount </x-table.heading>
+                <x-table.heading>Car/Parking</x-table.heading>             
+                <x-table.heading>Cleaning</x-table.heading>  
+                <x-table.heading>Contact</x-table.heading>             
                 <x-table.heading> </x-table.heading>
             </x-slot>
 
             <x-slot name="body">
-                @forelse ($bookings as $booking)
+                @forelse ($appointments as $appointment)
                     <x-table.row>
 
                         <x-table.cell>
-                            {{ $booking->appointment->date }} {{ $booking->appointment->start_time }}
+                            {{ $appointment->date }} {{ $appointment->start_time }}
                         </x-table.cell>
 
                         <x-table.cell>
                            <div>
-                               {{ $booking->bookingService->number_plate }}
+                               {{ $appointment->booking->bookingService->number_plate }}
                            </div>
                             <div>
-                                {{ $booking->bookingService->vehicle_model }}
+                                {{ $appointment->booking->bookingService->vehicle_model }}
                             </div>
                         </x-table.cell>
 
                         <x-table.cell>
-                            <p>{{ $booking->bookingService->parking_route }} {{ $booking->bookingService->parking_street_number }}</p>
-                            <p>{{ $booking->bookingService->parking_postal_code }}, {{ $booking->bookingService->parking_city }}
+                            <p>{{$appointment->booking->bookingService->parking_route }} {{$appointment->booking->bookingService->parking_street_number }}</p>
+                            <p>{{$appointment->booking->bookingService->parking_postal_code }}, {{$appointment->booking->bookingService->parking_city }}
                         </x-table.cell>
 
                         <x-table.cell>
-                            {{ $booking->bookingService->service_type }}                         
+                            {{$appointment->booking->bookingService->service_type }}                         
 
                         </x-table.cell>
 
                         <x-table.cell>
-                            <span class="text-cool-gray-900 font-medium">{{ $booking->invoice->moneyPrice  }}</span>
+                            <span class="text-cool-gray-900 font-medium">{{$appointment->booking->invoice->moneyPrice  }}</span>
                            
                            
-                        @unless($booking->refund)
-                            @isset ($booking->paid_at )
+                        @unless($appointment->booking->refund)
+                            @isset ($appointment->booking->paid_at )
                                 <span
                                     class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-green-100 text-green-800">
                                     Paid
@@ -109,16 +106,16 @@
                                 </span>
                             @endisset
                         @endunless
-                        @isset($booking->refund)
+                        @isset($appointment->booking->refund)
                             <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-green-100 text-green-800">
-                            Canceled & Refunded {{ $booking->refund->moneyRefundedAmount }}
+                            Canceled & Refunded {{$appointment->booking->refund->moneyRefundedAmount }}
                             </span>
                         @endisset
                             
                         </x-table.cell>
 
                         <x-table.cell>
-                            <x-form-button method="GET" action="/bookings/{{ $booking->id }}" buttonType="secondary">
+                            <x-form-button method="GET" action="/appointments/{{ $appointment->id }}" buttonType="secondary">
                                 {{ __('details') }}
                             </x-form-button>                                
                         </x-table.cell>
@@ -126,7 +123,7 @@
                 @empty
                     <x-table.row>
                         <x-table.cell colspan="6" class="text-center ">
-                            <span class="text-gray-500">No bookings yet</span>
+                            <span class="text-gray-500">No appointment for you</span>
                         </x-table.cell>
                     </x-table.row>
                 @endforelse
@@ -134,47 +131,47 @@
         </x-table>
 
         <div class="mt-2">
-            {{ $bookings->links() }}
+            {{ $appointments->links() }}
         </div>
     </div>
 
     <div class="block sm:hidden px-2 py-4">
         <x-grid.list>
-            @forelse ($bookings as $booking)
+            @forelse ($appointments as $appointment)
                 <x-grid.list.card>
                     <x-slot name="information">
                         <div class="flex-1 truncate">
                             <p class="mt-1 text-gray-500 text-sm leading-5 truncate"> Cleaning date and time
                             </p>
                             <div class="text-gray-900 text-sm leading-5 font-medium truncate">
-                                {{ $booking->appointment->date }} {{ $booking->appointment->start_time }}
+                                {{$appointment->date }} {{$appointment->start_time }}
                             </div>
 
                             <p class="mt-2 text-gray-500 text-sm leading-5 truncate">Car
                             </p>
                             <div class="text-gray-900 text-sm leading-5 font-medium truncate">
-                                <span class="font-semibold">{{ $booking->bookingService->number_plate }}</span>
-                                {{ $booking->bookingService->vehicle_model }}
+                                <span class="font-semibold">{{$appointment->booking->bookingService->number_plate }}</span>
+                                {{$appointment->booking->bookingService->vehicle_model }}
                             </div>
 
                             <p class="mt-2 text-gray-500 text-sm leading-5 truncate">Car parking place
                             </p>
                             <div class="text-gray-900 text-sm leading-5 font-medium truncate">
-                                {{ $booking->bookingService->parking_route }} {{ $booking->bookingService->parking_street_number }}
+                                {{$appointment->booking->bookingService->parking_route }} {{$appointment->booking->bookingService->parking_street_number }}
                             </div>
 
                             <p class="mt-2 text-gray-500 text-sm leading-5 truncate"> Cleaning service</p>
                             <div class="text-gray-900 text-sm leading-5 font-medium truncate">
-                                {{ $booking->bookingService->service_type }}
+                                {{$appointment->booking->bookingService->service_type }}
                             </div>
 
                             <p class="mt-2 text-gray-500 text-sm leading-5 truncate">Price</p>
                             <div class="text-gray-900 text-sm leading-5 font-medium truncate">
-                                <span>{{ $booking->invoice->moneyPrice  }}</span>
+                                <span>{{$appointment->booking->invoice->moneyPrice  }}</span>
                             </div>
 
-                            @unless($booking->refund)
-                            @isset ($booking->paid_at )
+                            @unless($appointment->booking->refund)
+                            @isset ($appointment->booking->paid_at )
                                 <span
                                     class="ml-0 sm:ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-green-100 text-green-800">
                                     Paid
@@ -186,9 +183,9 @@
                                 </span>
                             @endisset
                         @endunless
-                        @isset($booking->refund)
+                        @isset($appointment->booking->refund)
                             <span class="ml-0 sm:ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-green-100 text-green-800">
-                            Canceled & Refunded {{ $booking->refund->moneyRefundedAmount }}
+                            Canceled & Refunded {{$appointment->booking->refund->moneyRefundedAmount }}
                             </span>
                         @endisset
 
@@ -197,7 +194,7 @@
                     <x-slot name="actions">
                         <div class="flex flex-no-wrap h-12 justify-center items-center w-full">                            
                             <div class="flex-none w-1/2 text-center">
-                                <x-form-button method="GET" action="/bookings/{{ $booking->id }}" buttonType="tertiary">
+                                <x-form-button method="GET" action="/appointments/{{ $appointment->id }}" buttonType="tertiary">
                                     {{ __('details') }}
                                 </x-form-button>
                             </div>
@@ -206,15 +203,13 @@
                 </x-grid.list.card>
             @empty
                 <div class="bg-white shadow-sm rounded-md text-center py-6">
-                    <span class="text-gray-500">No bookings yet</span>
+                    <span class="text-gray-500">No appointment for you</span>
                 </div>
                
             @endforelse
-            {{ $bookings->links() }}
+            {{ $appointments->links() }}
         </x-grid.list>
-       
-        
-       
+                      
     </div>
     <x-footer />
 </x-app-layout>

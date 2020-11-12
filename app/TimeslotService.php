@@ -9,17 +9,17 @@ use Illuminate\Support\Facades\DB;
 class TimeslotService
 {
 
-    public static function fetchSlots($date, $travelTime, $serviceDurationTime) {
+    public static function fetchSlots($date, $userId, $travelTime, $serviceDurationTime) {
       $bookedTimeslots = DB::table('timeslots')
       ->select('timeslots.id as takenTimeSlotId', 'timeslot')
-      ->crossJoin('booking_timeslots')
-      ->where([['booking_timeslots.date', $date],['booking_timeslots.canceled_at', null]])
+      ->crossJoin('appointments')
+      ->where([['appointments.date', $date],['appointments.canceled_at', null],['appointments.assigned_to', $userId]])      
       ->where(function ($query) use ($serviceDurationTime) {
-          $query->whereBetween('booking_timeslots.start_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL $serviceDurationTime minute)")])
-          ->orWhereBetween('booking_timeslots.end_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL $serviceDurationTime minute)")])
-          ->orWhereBetween('timeslots.timeslot', [DB::raw('booking_timeslots.start_time'), DB::raw('booking_timeslots.end_time')]);
+          $query->whereBetween('appointments.start_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL $serviceDurationTime minute)")])
+          ->orWhereBetween('appointments.end_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL $serviceDurationTime minute)")])
+          ->orWhereBetween('timeslots.timeslot', [DB::raw('appointments.start_time'), DB::raw('appointments.end_time')]);
       });
-
+     
       $availableTimeslots= DB::table('timeslots as availableSlots')->select('availableSlots.timeslot')->leftJoinSub($bookedTimeslots, 'disabledTimeSlots', function ($join) {
           $join->on('availableSlots.id', '=', 'disabledTimeSlots.takenTimeSlotId');
       })->whereNull('disabledTimeSlots.takenTimeSlotId')->get();
@@ -42,4 +42,6 @@ class TimeslotService
     public static function isSaturday($date) {
       return Carbon::parse($date)->dayOfWeek == 6;
     }
+    
+
 }

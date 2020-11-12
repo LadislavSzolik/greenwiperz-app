@@ -10,7 +10,7 @@ use App\Models\Invoice;
 use App\Models\SellerAddress;
 use App\Models\BillingAddress;
 use App\Models\BookingService;
-use App\Models\BookingTimeslot;
+use App\Models\Appointment;
 use Illuminate\Foundation\Testing\WithFaker;
 use Database\Factories\BillingAddressFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -24,8 +24,11 @@ class BookingModelTest extends TestCase
      * @return void
      */
     public function testBookingCreated_success()
-    {
-        $booking = Booking::factory()->for(User::factory())->create();
+    {        
+        $appointment = Appointment::factory()->create();
+        $booking = Booking::factory()->for(User::factory())->state([
+            'appointment_id' => $appointment->id,
+        ])->create();
         $this->assertDatabaseHas('bookings', ['id' => $booking->id]);
     }
 
@@ -57,13 +60,14 @@ class BookingModelTest extends TestCase
         $this->assertDatabaseHas('booking_services', ['id' => $bookingService->id]);
     }
 
-    public function testBookingTimeslotCreated_success()
+    public function testAppointmentCreated_success()
     {
-        $booking = Booking::factory()->for(User::factory())->create();
-        $timeslot = BookingTimeslot::factory()->create([
-            'booking_id' => $booking->id,
-        ]);
-        $this->assertDatabaseHas('booking_timeslots', ['id' => $timeslot->id]);
+        $timeslot = Appointment::factory()->create();
+        $booking = Booking::factory()->for(User::factory())->state([
+            'appointment_id' => $timeslot->id,
+        ])->create();
+        
+        $this->assertDatabaseHas('appointments', ['id' => $timeslot->id]);
     }
 
     public function testInvoiceCreated_success()

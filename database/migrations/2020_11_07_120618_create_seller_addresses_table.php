@@ -22,7 +22,7 @@ class CreateSellerAddressesTable extends Migration
             $table->string('city',100);
             $table->string('country',100);     
             $table->timestamps();
-            $table->foreign('booking_id')->references('id')->on('bookings');  
+            $table->foreign('booking_id')->references('id')->on('bookings')->onUpdate('cascade')->onDelete('cascade');  
         });
     }
 

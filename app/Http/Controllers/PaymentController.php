@@ -58,7 +58,7 @@ class PaymentController extends Controller
 
 
     public function handlePaymentSucceeded(Request $request)
-    {        
+    {         
         // TODO: add the signature check as middleware
         if (!Arr::exists($request, 'datatransTrxId')) {  
             abort(400, 'Transaction id not provided...');
@@ -144,6 +144,7 @@ class PaymentController extends Controller
             $booking->payment->forceDelete();
         }
        
+        /*
         Auth::user()->payments()->create([
             'booking_id' => $booking->id,
             'transaction_id' => $response['transactionId'],
@@ -155,7 +156,7 @@ class PaymentController extends Controller
             'detail_auth_amount' => $response['detail']['authorize']['amount'],              
             'detail_fail_reason' => $response['detail']['fail']['reason'],                              
             'detail_fail_msg' => $response['detail']['fail']['message'],                              
-        ]);    
+        ]);    */
         
         return redirect()->route('bookings.show',['booking'=> $booking]);
     }

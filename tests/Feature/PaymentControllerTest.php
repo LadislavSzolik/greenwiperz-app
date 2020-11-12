@@ -9,7 +9,7 @@ use App\Models\Booking;
 use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\BookingService;
-use App\Models\BookingTimeslot;
+use App\Models\Appointment;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -60,17 +60,19 @@ class PaymentControllerTest extends TestCase
             'email' => 'szolik.ladislav@gmail.com'
         ])->create();
 
-        $booking = Booking::factory()->state([
-            'user_id' => $user->id,
-            'transaction_id' => '201101103538422731',
-            'booking_nr' => '1234567890'
-        ])->create();
-
-        BookingTimeslot::factory()->state([
-            'booking_id' => $booking->id,
+        $appointment = Appointment::factory()->state([          
             'date' => '2020-12-12',
             'start_time' => '08:00:00',
         ])->create();
+        
+        $booking = Booking::factory()->state([
+            'user_id' => $user->id,
+            'transaction_id' => '201101103538422731',
+            'booking_nr' => '1234567890',
+            'appointment_id' => $appointment->id,
+        ])->create();
+
+       
 
         BookingService::factory()->state([
             'booking_id' => $booking->id,            
@@ -151,16 +153,7 @@ class PaymentControllerTest extends TestCase
      $booking = Booking::factory()->state([
          'booking_nr' => '1234567890',
         'transaction_id' => '201101103538422731',       
-        ])->create();
-        
-        Payment::factory()->for(User::factory())->state([
-            'transaction_id' => '201101103538422730',
-            'status' => 'failed',
-            'detail_fail_reason' => 'rejected',
-            'detail_fail_msg' => 'rejected',
-        ])->create([
-            'booking_id' => $booking->id,
-        ]);
+        ])->create();           
                 
         $payload = ['datatransTrxId'=> $transactionId];
         $response = $this->postJson('/payments/handlePaymentFailed', $payload);

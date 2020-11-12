@@ -64,7 +64,22 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Booking');
     }
 
-    public function payments() {
-        return $this->hasMany('App\Models\Payment');
+    public function roles() {
+        return $this->belongsToMany('App\Models\Role')->withTimestamps();
     }
+
+    public function assignRole($role)
+    {
+        if (is_string($role))
+        {
+            $role = Role::whereName($role)->firstOrFail();
+        }
+        $this->roles()->syncWithoutDetaching($role);
+    }
+
+    public function abilities()
+    {
+        return $this->roles->map->abilities->flatten()->pluck('name')->unique();
+    }
+    
 }

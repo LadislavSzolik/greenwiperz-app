@@ -5,11 +5,14 @@ namespace App\Http\Livewire\Booking;
 use Money\Money;
 use Carbon\Carbon;
 use Money\Currency;
+use App\Models\Role;
+use App\Models\User;
 use App\Models\Booking;
 use Livewire\Component;
 use App\Models\Services;
 use App\TimeslotService;
 use Carbon\CarbonInterval;
+use App\Models\Appointment;
 use Money\Currencies\ISOCurrencies;
 use Money\Formatter\IntlMoneyFormatter;
 use Illuminate\Support\Facades\Validator;
@@ -61,6 +64,8 @@ class Create extends Component
     public $listeners = ['placeChanged'];
     public $customValidator;
 
+    public $assignedGreenwiper;
+
     protected $rules = [
         'bookingDate' => 'required',
         'bookingTime' => 'required',
@@ -98,6 +103,10 @@ class Create extends Component
     public function mount()
     {        
         $this->priceList = Services::all();
+
+        //TODO: improve this       
+        $role = Role::whereName('greenwiper')->firstOrFail();
+        $this->assignedGreenwiper = $role->users->first();
     }
 
     // this helps when I use click inside of blade component
@@ -105,7 +114,7 @@ class Create extends Component
     {
         if (strtotime($this->bookingDate) && Carbon::parse($this->bookingDate)->greaterThanOrEqualTo(Carbon::now()) ) {
             $this->totalTimeRequired = 2 * $this->travelTimeNeeded + $this->serviceDuration - 1;            
-            $this->availableSlots = TimeslotService::fetchSlots($this->bookingDate, $this->travelTimeNeeded, $this->totalTimeRequired);  
+            $this->availableSlots = TimeslotService::fetchSlots($this->bookingDate, $this->assignedGreenwiper->id, $this->travelTimeNeeded, $this->totalTimeRequired);  
         }
     }
 
@@ -118,7 +127,7 @@ class Create extends Component
         $selectedDate = Carbon::parse($this->bookingDate);
         if ($selectedDate->greaterThanOrEqualTo(Carbon::now())) {
             $this->totalTimeRequired = 2 * $this->travelTimeNeeded + $this->serviceDuration - 1;            
-            $this->availableSlots = TimeslotService::fetchSlots($this->bookingDate, $this->travelTimeNeeded, $this->totalTimeRequired);                             
+            $this->availableSlots = TimeslotService::fetchSlots($this->bookingDate, $this->assignedGreenwiper->id, $this->travelTimeNeeded, $this->totalTimeRequired);                             
                     
             if ($this->availableSlots->count() > 0) {                  
                 $this->bookingTime =$this->availableSlots->first();
@@ -185,7 +194,7 @@ class Create extends Component
     public function submitBooking()
     {                        
         // recalculate timeslots        
-        $availableSlots = TimeslotService::fetchSlots($this->bookingDate, $this->travelTimeNeeded, $this->totalTimeRequired);   
+        $availableSlots = TimeslotService::fetchSlots($this->bookingDate, $this->assignedGreenwiper->id, $this->travelTimeNeeded, $this->totalTimeRequired);   
         
         if (!$availableSlots->contains($this->bookingTime)) {
             $this->bookingDate = null;
@@ -200,12 +209,18 @@ class Create extends Component
                 ['termsAndConditions' => 'accepted',]
             )->validate();
             $this->validate();
+            
+            $appointment = Appointment::create([
+                'date' => $this->bookingDate,
+                'start_time' => $this->bookingTime,
+                'end_time' => Carbon::parse($this->bookingTime)->addMinutes($this->serviceDuration - 1),
+                'assigned_to' => $this->assignedGreenwiper->id,
+            ]);
 
-         
             $baseNumber = $this->generateBaseNumber();
-
             $booking = auth()->user()->bookings()->create([
-                'booking_nr'                => 'GW'.$baseNumber,             
+                'booking_nr'                => 'GW'.$baseNumber,   
+                'appointment_id'       => $appointment->id,
                 'service_price'             => $this->servicePrice,
                 'tc_accepted_at'            => now(),
                 'notes'                     => $this->notes,            
@@ -247,11 +262,7 @@ class Create extends Component
                 'has_animal_hair'           => $this->hasAnimalHair,                              
             ]);
 
-            $booking->bookingTimeslot()->create([
-                'date' => $this->bookingDate,
-                'start_time' => $this->bookingTime,
-                'end_time' => Carbon::parse($this->bookingTime)->addMinutes($this->serviceDuration - 1),
-            ]);
+           
 
             $booking->invoice()->create([
                 'user_id'           => auth()->user()->id,

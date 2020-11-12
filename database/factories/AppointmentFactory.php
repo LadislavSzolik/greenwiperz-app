@@ -2,18 +2,19 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use App\Models\Booking;
-use App\Models\BookingTimeslot;
+use App\Models\Appointment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class BookingTimeslotFactory extends Factory
+class AppointmentFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = BookingTimeslot::class;
+    protected $model = Appointment::class;
 
     /**
      * Define the model's default state.
@@ -70,8 +71,8 @@ class BookingTimeslotFactory extends Factory
         $startTime = $timeslots[$indexOfSlot];
         $endTime = $timeslots[$indexOfSlot+4];
 
-        return [           
-            'booking_id' => Booking::factory(),
+        return [                   
+            'assigned_to' => User::factory(),
             'date' => $this->faker->dateTimeBetween('now','next month')->format('Y-m-d'),
             'start_time' => $startTime,
             'end_time' => $endTime,

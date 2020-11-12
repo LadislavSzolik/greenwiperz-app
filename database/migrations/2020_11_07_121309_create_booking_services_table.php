@@ -30,7 +30,7 @@ class CreateBookingServicesTable extends Migration
             $table->boolean('has_animal_hair');
             $table->timestamps();
 
-            $table->foreign('booking_id')->references('id')->on('bookings');  
+            $table->foreign('booking_id')->references('id')->on('bookings')->onUpdate('cascade')->onDelete('cascade');  
         });
     }
 

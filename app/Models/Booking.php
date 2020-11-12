@@ -20,6 +20,7 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'booking_nr', 
+        'appointment_id',
         'transaction_id',                      
         'notes',
         'internal_notes',
@@ -35,8 +36,8 @@ class Booking extends Model
     ];
     
 
-    public function bookingTimeslot() {
-        return $this->hasOne('App\Models\BookingTimeslot');
+    public function appointment() {
+        return $this->belongsTo('App\Models\Appointment');
     }
 
     public function bookingService() {
@@ -65,9 +66,5 @@ class Booking extends Model
 
     public function user() {
         return $this->belongsTo('App\Models\User');
-    }
-
-    public function payment() {
-        return $this->hasOne('App\Models\Payment');
     }
 }

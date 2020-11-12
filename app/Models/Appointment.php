@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class BookingTimeslot extends Model
+class Appointment extends Model
 {
-    protected $fillable = ['booking_id', 'date', 'start_time','end_time','canceled_at'];
+    protected $fillable = ['date', 'assigned_to', 'start_time','end_time','canceled_at'];
     protected $dates = ['canceled_at'];
 
     use HasFactory;
@@ -17,7 +17,7 @@ class BookingTimeslot extends Model
     
 
     public function booking() {
-        return $this->belongsTo('App\Models\Booking');
+        return $this->hasOne('App\Models\Booking');
     }    
 
     public function getCarbonDateAttribute() {    

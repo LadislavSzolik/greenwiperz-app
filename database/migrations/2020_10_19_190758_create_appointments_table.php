@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBookingTimeslotsTable extends Migration
+class CreateAppointmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,17 @@ class CreateBookingTimeslotsTable extends Migration
      */
     public function up()
     {
-        Schema::create('booking_timeslots', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('booking_id');
+        Schema::create('appointments', function (Blueprint $table) {
+            $table->id();                
             $table->date('date');
             $table->time('start_time');
             $table->time('end_time');
             $table->timestamp('canceled_at')->nullable();
+            $table->unsignedBigInteger('assigned_to')->nullable();
+            $table->boolean('is_vacation')->default(0);
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('booking_id')->references('id')->on('bookings')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('assigned_to')->references('id')->on('users')->onUpdate('cascade');
         });
     }
 
@@ -33,6 +34,6 @@ class CreateBookingTimeslotsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('booking_timeslots');
+        Schema::dropIfExists('appointments');
     }
 }

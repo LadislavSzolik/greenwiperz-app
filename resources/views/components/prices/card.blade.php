@@ -4,7 +4,7 @@
     'colorSelected' => 0
 ])
 
-<li class="col-span-1 bg-white rounded-lg shadow-md">
+<li class="col-span-1 bg-white rounded-lg shadow-lg border-t border-gray-100 ">
     <div class="w-full flex items-center justify-between p-6 space-x-6">
         <div class="flex-shrink-0 text-xl font-bold justify-center items-center text-center {{ $colors[$colorSelected] }} rounded px-4 py-2">
             {{ $size }}

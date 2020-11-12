@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Datatrans;
 use Carbon\Carbon;
 use App\Models\Booking;
@@ -20,7 +21,8 @@ class BookingController extends Controller
 
     public function index()
     {     
-        return view('bookings.index', ['bookings' => auth()->user()->bookings->whereNull('completed_at')->sortByDesc('id')]);
+        $bookings = Booking::where('user_id', auth()->user()->id )->whereNull('completed_at')->paginate(10);     
+        return view('bookings.index', ['bookings' => $bookings ]);
     }
 
 
@@ -40,12 +42,11 @@ class BookingController extends Controller
     public function cancel(Request $request, Booking $booking) {
 
         $response = Datatrans::checkTransactionStatus($booking->transaction_id);
-        
-       
+    
         
         if($response['status'] == 'authorized' || $response['status'] == 'settled' || $response['status'] == 'transmitted') {
 
-            $bookingTime = $booking->bookingTimeslot->carbonDate;
+            $bookingTime = $booking->appointment->carbonDate;
             $hoursBeforeCleaning = Carbon::now()->diffInMinutes($bookingTime);
             
             $settledAmount = $booking->receipt->settled_amount;
@@ -92,8 +93,8 @@ class BookingController extends Controller
         $booking->canceled_at = now();            
         $booking->canceled_by = auth()->user()->id;
         $booking->save();  
-        $booking->bookingTimeslot->canceled_at = now();
-        $booking->bookingTimeslot->save();
+        $booking->appointment->canceled_at = now();
+        $booking->appointment->save();
 
         event(new BookingCanceled($booking));
 
@@ -107,10 +108,9 @@ class BookingController extends Controller
     
     public function destroy(Request $request, Booking $booking)
     {              
-      $booking->BookingTimeslot()->forceDelete();
-      $booking->forceDelete();      
-      $request->session()->flash('deleted', 'The booking has been successfully deleted.');
-      return redirect()->route('bookings.index');
+        $booking->appointment()->forceDelete();    
+        $request->session()->flash('deleted', 'The booking has been successfully deleted.');
+        return redirect()->route('bookings.index');
     }
 
     

@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\Booking;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Booking;
 use Illuminate\Support\Str;
+use App\Models\Appointment;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BookingFactory extends Factory
 {
@@ -36,6 +37,7 @@ class BookingFactory extends Factory
     {
         return [
             'user_id' => User::factory(), 
+            'appointment_id' => Appointment::factory(),
             'booking_nr' =>  $this->faker->numerify('GW########-####'),             
             'transaction_id' => $this->faker->numerify('##################'),          
             'notes' => $this->faker->text(),
