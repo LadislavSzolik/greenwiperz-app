@@ -21,7 +21,7 @@ return [
 
     'howWorksMainTitle' => 'How it works?',
     'howWorksParagrph1' => 'When your car is dirty and parked in our area of service in Zürich for at least 60 to 90 minutes why not have it cleaned on the spot in an eco-friendly way?',
-    'howWorksParagrph2' => 'When you decided to have your car cleaned by us, contact us via xxxx and we make an appointment. If one of our Wiperz is available we can be there in 20 to 40 minutes.',
+    'howWorksParagrph2' => 'When you decided to have your car cleaned by us, contact us via our website and we make an appointment. If one of our Wiperz is available we can be there within 20 to 40 minutes.',
     'howWorksParagrph3' => 'We send you a Twint about the cleaning fee, your order is finalised when we receive the payment.',
     'howWorksParagrph4' => 'We travel to your car by our e-bikes and get to work.',
     'howWorksParagrph5' => 'If you ordered only the exterior cleaning there is no need for you to even unlock the car.',
@@ -47,7 +47,7 @@ return [
     'closed'  => 'Closed',   
 
     //service area
-    'serviceAreaTitle' => 'Servicebereich',
+    'serviceAreaTitle' => 'Service area',
     'serviceAreaText1' => 'Our service area is the city of Zürich in the highlighet area.',
     'serviceAreaText2' => 'We cover the following postal codes:',
     'serviceAreaText3' => 'Living outside, but on the edge of our service area? Give us a call and we see what we can do.',

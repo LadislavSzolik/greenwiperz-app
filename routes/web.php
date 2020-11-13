@@ -35,6 +35,7 @@ Route::middleware(['auth:sanctum', 'verified','can:update_appointments'])->get('
 // 
 
 // AUTH USER ZONE
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
 Route::middleware(['auth:sanctum', 'verified'])->get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
 Route::middleware(['auth:sanctum', 'verified'])->get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
