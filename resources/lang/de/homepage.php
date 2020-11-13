@@ -51,7 +51,7 @@ return [
     'serviceAreaTitle' => 'Servicebereich',
     'serviceAreaText1' => 'Unser Servicebereich ist die Stadt Zürich, im hervorgehobenen Bereich.',
     'serviceAreaText2' => 'Wir decken die folgenden Postleitzahlen ab:',
-    'serviceAreaText3' => 'Sio wohnen ausserhalb, aber gerade am Rande unseres Servicebereichs? Rufen Sie uns an und wir sehen, was wir für Sie tun können.',
+    'serviceAreaText3' => 'Sie wohnen ausserhalb, aber gerade am Rande unseres Servicebereichs? Rufen Sie uns an und wir sehen, was wir für Sie tun können.',
 
     //contact information
     'contactInformation' => 'Kontakt',
