@@ -8,13 +8,16 @@ return [
 
     'carcategory1type' => 'Kleineautos',
     'carcategory1examples' => 'z.B. Smart, Mini, Fiat500',
+
     'carcategory2type' => 'Mittelgroße Autos',
     'carcategory2examples' => 'z.B. VW Golf, VW Passat, Ford Focus',
     'carcategory2desc' => '(Die meisten Autos gehören zu dieser Kategorie)',
+
     'carcategory3type' => 'Große Autos',
     'carcategory3examples' => 'z.B. SUV',
-    'carcategory3type' => 'Extra große Autos',
-    'carcategory3examples' => 'z.B. Transporter, Kleinbus, Minivan',
+
+    'carcategory4type' => 'Extra große Autos',
+    'carcategory4examples' => 'z.B. Transporter, Kleinbus, Minivan',
     
 
     'duractionDesc' => '* Die oben genannten Dauern dienen als ungefähre Schätzung, basierend auf unseren Erfahrungen.',

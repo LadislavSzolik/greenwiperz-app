@@ -3,14 +3,14 @@
 
         <div class="text-sm ">
             <h4 class="text-center tleading-5 font-semibold text-gray-400 tracking-wider uppercase">
-                Opening hours
+                {{ __('homepage.openingHours')}}
             </h4>
             <div class="flex justify-center mt-4 text-gray-400">
                 <div>
                     <ul class="">
-                        <li>Monday - Friday</li>
-                        <li>Saturday</li>
-                        <li>Sunday</li>
+                        <li>{{ __('homepage.monday')}} - {{ __('homepage.friday')}}</li>
+                        <li>{{ __('homepage.saturday')}}</li>
+                        <li>{{ __('homepage.sunday')}}</li>
                     </ul>
                 </div>
 
@@ -18,7 +18,7 @@
                     <ul class="ml-8">
                         <li>09:00 - 17:00</li>
                         <li>09:00 - 12:00</li>
-                        <li>Closed</li>
+                        <li>{{ __('homepage.closed')}}</li>
                     </ul>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'Our Prices',   
+    'title' => 'Our prices',   
     'carcategories' => 'Car categories',   
     'exterior' => 'Exterior only',
     'intexterior' => 'Interior & Exterior',
@@ -13,8 +13,8 @@ return [
     'carcategory2desc' => '(most cars belong to this category)',
     'carcategory3type' => 'Big cars',
     'carcategory3examples' => 'e.g. SUV',
-    'carcategory3type' => 'Extra-large cars',
-    'carcategory3examples' => 'e.g. transporter, minibus, minivan',
+    'carcategory4type' => 'Extra-large cars',
+    'carcategory4examples' => 'e.g. transporter, minibus, minivan',
 
     'duractionDesc' => '*The durations above serve as an approximate estimation based on our experience.',
 
