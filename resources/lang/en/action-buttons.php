@@ -8,5 +8,5 @@ return [
     'about' => 'About us',
     'contact' => 'Contact',
     'bookACleaningCTA' => 'Book a car cleaning today', 
-    'notifyMe' => 'Notify me',   
+    'notifyMe' => 'Pre-Register',   
 ];
