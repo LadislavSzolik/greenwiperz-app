@@ -1,24 +1,24 @@
 <x-guest-layout>
-    <div class="max-w-7xl mx-auto py-16 sm:px-6 lg:px-8">
 
-        <x-guest-navigation />
+    <x-guest-navigation />
+    <main class="relative pt-16">   
+        
+        <div class="bg-white py-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6">
 
-        <div class="sm:pb-6 bg-white rounded">
-            <div class="my-8 max-w-screen-xl mx-auto py-6 px-4 sm:px-16 lg:px-20">
-
-                <h1 class="font-black text-2xl text-gray-800 leading-tight my-4">{{ __('Contact Information') }}</h1>
+                <h1 class="ext-4xl tracking-tight leading-10 font-extrabold text-gray-800 sm:text-5xl sm:leading-none">{{ __('homepage.contactInformation') }}</h1>
 
                 <dl class="mt-8 text-base leading-6 text-gray-500">
                     <div>
-                        <dt class="sr-only">Postal address</dt>
+                        <dt class="sr-only">{{ __('homepage.postalAddress') }}</dt>
                         <dd>
                             <p>{{ config('greenwiperz.company.name') }}</p>
-                            <p>{{ config('greenwiperz.company.address_1') }}</p>
-                            <p>{{ config('greenwiperz.company.address_2') }}</p>                            
+                            <p>{{ config('greenwiperz.company.street') }} </p>
+                            <p>{{ config('greenwiperz.company.postal_code') }} {{ config('greenwiperz.company.country') }}</p>                            
                         </dd>
                     </div>
                     <div class="mt-6">
-                        <dt class="sr-only">Phone number</dt>
+                        <dt class="sr-only">{{ __('homepage.phoneNumber') }}</dt>
                         <dd class="flex"> 
                             <svg class="flex-shrink-0 h-6 w-6 text-gray-400"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -32,7 +32,7 @@
                         </dd>
                     </div>
                     <div class="mt-3">
-                        <dt class="sr-only">Email</dt>
+                        <dt class="sr-only">{{ __('homepage.email') }}  </dt>
                         <dd class="flex">                            
                             <svg class="flex-shrink-0 h-6 w-6 text-gray-400"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -46,10 +46,9 @@
                         </dd>
                     </div>
                 </dl>
-
             </div>
         </div>
-    </div>
 
+    </main>
     <x-footer />
 </x-guest-layout>

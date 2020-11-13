@@ -1,13 +1,13 @@
-<nav x-data="{ open: false }" class="fixed top-0 right-0 w-full bg-white border-b border-gray-100 z-40">
+<nav x-data="{ open: false }" class="fixed top-0 right-0 w-full bg-white shadow z-40">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="flex justify-between md:space-x-6 h-16">
+
             <div class="flex">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
                     <a class="inline-flex items-center" href="{{ route('home') }}">
-                        <x-application-logo class="h-10 text-green-500 " />
-                        <span class="block sm:hidden ml-2 font-extrabold uppercase text-green-600">Greenwiperz</span>
+                        <x-application-logo class="h-10 text-green-500 " />                       
                     </a>
                 </div>
 
@@ -57,7 +57,7 @@
                         @endif
                     @endif
                 @else
-                    <a href="{{ route('coming.soon') }}" class="text-gray-700 underline">{{ __('action-buttons.notifyMe') }}</a>
+                    <a href="{{ route('waitingvisitors.create') }}" class="text-gray-700 underline">{{ __('action-buttons.notifyMe') }}</a>
                 @endif
 
                 </div>
@@ -108,7 +108,7 @@
 
                         @endif                           
                     @else
-                    <x-jet-responsive-nav-link href="{{ route('coming.soon') }}">{{ __('action-buttons.notifyMe') }}</x-jet-responsive-nav-link>
+                    <x-jet-responsive-nav-link href="{{ route('waitingvisitors.create') }}">{{ __('action-buttons.notifyMe') }}</x-jet-responsive-nav-link>
                     @endif                    
                 </div>
             </div>

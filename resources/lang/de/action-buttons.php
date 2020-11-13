@@ -8,5 +8,5 @@ return [
     'about' => 'Über uns',
     'contact' => 'Kontakt',
     'bookACleaningCTA' => 'Reinigung buchen',
-    'notifyMe' => 'Mich benachrichtigen',  
+    'notifyMe' => 'Pre-Registrieren',  
 ];

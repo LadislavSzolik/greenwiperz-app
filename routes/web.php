@@ -9,6 +9,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\LocalizationController;
+use App\Http\Controllers\WaitingVisitorController;
 
 // GUEST ZONE
 Route::get('lang/{locale}', LocalizationController::class)->name('language');
@@ -19,12 +20,12 @@ Route::get('/service-area', function () { return view('service-area');})->name('
 Route::get('/about', function () {return view('about');})->name('about');
 Route::get('/contact', function () {return view('contact');})->name('contact');
 Route::get('/terms', function () {return view('terms');})->name('terms');
-// temporary solution
-Route::get('/comingsoon', function () {return view('coming-soon');})->name('coming.soon');
+
+// sign up for waitinglist
+Route::get('/waitingvisitors/create', [WaitingVisitorController::class, 'create'])->name('waitingvisitors.create');
+Route::post('/waitingvisitors/store', [WaitingVisitorController::class, 'store'])->name('waitingvisitors.store');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/termsinapp', function () {return view('terms-inapp');})->name('terms.inapp');
-
-
 Route::middleware(['auth:sanctum', 'verified','can:view_appointments'])->get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
 Route::middleware(['auth:sanctum', 'verified','can:view_appointments'])->get('/appointments/{appointment}', [AppointmentController::class, 'show'])->name('appointments.show');
 Route::middleware(['auth:sanctum', 'verified','can:update_appointments'])->get('/appointments/{appointment}/edit', [AppointmentController::class, 'edit'])->name('appointments.edit');

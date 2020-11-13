@@ -1,27 +1,28 @@
 <x-guest-layout>
-    <div class="max-w-7xl mx-auto py-16 sm:px-6 lg:px-8">
+    <x-guest-navigation />
+    <main class="relative pt-16">
+        <section class="bg-white py-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 mb-8">
+                <div class="mb-6">
+                    <h3 class="text-4xl tracking-tight leading-10 font-extrabold text-gray-800 sm:text-5xl sm:leading-none">
+                        {{ __('homepage.serviceAreaTitle') }}
+                    </h3>
+                </div>
 
-        <x-guest-navigation />
-
-        <div class="sm:pb-6 bg-white rounded">
-            <div class="my-8 max-w-screen-xl mx-auto py-6 px-4 sm:px-16 lg:px-20">
-
-                <h3 class="font-black text-2xl text-gray-800 leading-tight my-4">{{ __('Our service area') }}</h3>
-
-                <div class="text-gray-600 leading-7"> 
-                    <p class="">Our service area is the city of Zürich in the highlighet area.</p>
-                    <p class="">We cover the following postal codes: 
+                <div class="text-gray-600 leading-7 ">
+                    <p class="">{{ __('homepage.serviceAreaText1') }}</p>
+                    <p class="">{{ __('homepage.serviceAreaText2') }}
                         <span class="text-green-800 font-bold">8001, 8002, 8003, 8004, 8005, 8006</span>
                     </p>
-                    <p class="">Living outside, but on the edge of our service area? Give us a call and we see what we can do.</p>
+                    <p class="">{{ __('homepage.serviceAreaText3') }}</p>
                 </div>
-            
-                <div class="mt-6">
-                    <img class="shadow rounded-lg"  src="{{ asset('img/service-area.png') }}" alt="Service area" />
-                </div>
-            </div>
-        </div>
-    </div>
 
+                <div class="mt-6">
+                    <img class="shadow rounded-lg" src="{{ asset('img/service-area.png') }}" alt="Service area" />
+                </div>
+
+            </div>
+        </section>
+    </main>
     <x-footer />
 </x-guest-layout>

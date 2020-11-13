@@ -37,4 +37,25 @@ return [
 
     'exclConditionMainTitle' => 'Ausnahmen',
     'exclConditionParagrph1' => 'Autos mit einer dicken Schlammschicht können nicht mit wasserloser Technologie gereinigt werden.',
+
+    // footer
+    'openingHours' => 'Öffnungszeiten',
+    'monday'  => 'Montag',
+    'friday'  => 'Freitag',
+    'saturday'  => 'Samstag',
+    'sunday'  => 'Sonntag',
+    'closed'  => 'Geschlossen',
+
+
+    //service area
+    'serviceAreaTitle' => 'Servicebereich',
+    'serviceAreaText1' => 'Unser Servicebereich ist die Stadt Zürich, im hervorgehobenen Bereich.',
+    'serviceAreaText2' => 'Wir decken die folgenden Postleitzahlen ab:',
+    'serviceAreaText3' => 'Sio wohnen ausserhalb, aber gerade am Rande unseres Servicebereichs? Rufen Sie uns an und wir sehen, was wir für Sie tun können.',
+
+    //contact information
+    'contactInformation' => 'Kontakt',
+    'postalAddress' => 'Addresse',
+    'phoneNumber' => 'Handynummer',
+    'email' => 'Email',
 ];
