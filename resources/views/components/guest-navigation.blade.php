@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="fixed top-0 right-0 w-full bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="fixed top-0 right-0 w-full bg-white border-b border-gray-100 z-40">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -7,49 +7,59 @@
                 <div class="flex-shrink-0 flex items-center">
                     <a class="inline-flex items-center" href="{{ route('home') }}">
                         <x-application-logo class="h-10 text-green-500 " />
-                        <span class="ml-2 font-extrabold uppercase text-green-600">Greenwiperz</span>
+                        <span class="block sm:hidden ml-2 font-extrabold uppercase text-green-600">Greenwiperz</span>
                     </a>
-
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden md:flex space-x-8 sm:-my-px sm:ml-10">
+                <div class="hidden md:flex space-x-6 sm:-my-px sm:ml-6">
                     <x-jet-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
                         {{ __('Home') }}
                     </x-jet-nav-link>
 
                     <x-jet-nav-link href="{{ route('how.it.works') }}" :active="request()->routeIs('how.it.works')">
-                        {{ __('How it works') }}
+                        {{ __('action-buttons.how-it-works') }}
                     </x-jet-nav-link>
 
                     <x-jet-nav-link href="{{ route('prices') }}" :active="request()->routeIs('prices')">
-                        {{ __('Prices') }}
+                        {{ __('action-buttons.prices') }}
                     </x-jet-nav-link>
 
                     <x-jet-nav-link href="{{ route('service.area') }}" :active="request()->routeIs('service.area')">
-                        {{ __('Service area') }}
+                        {{ __('action-buttons.serviceArea') }}
+                    </x-jet-nav-link>
+
+                    <x-jet-nav-link href="{{ route('terms') }}" :active="request()->routeIs('terms')">
+                        {{ __('action-buttons.termsAndConditions') }}
                     </x-jet-nav-link>
 
                     <x-jet-nav-link href="{{ route('about') }}" :active="request()->routeIs('about')">
-                        {{ __('About us') }}
+                        {{ __('action-buttons.about') }}
                     </x-jet-nav-link>
 
                     <x-jet-nav-link href="{{ route('contact') }}" :active="request()->routeIs('contact')">
-                        {{ __('Contact') }}
+                        {{ __('action-buttons.contact') }}
                     </x-jet-nav-link>
                 </div>
             </div>
 
             <div class="hidden sm:flex items-center">
-                @auth
-                    <a href="{{ route('bookings.create') }}" class="text-gray-700 underline">Book a car
-                        cleaning</a>
+                 
+                <x-app-language-switcher />
+
+                @if(config('greenwiperz.registration_enabled'))   
+                    @auth
+                        <a href="{{ route('bookings.index') }}" class="text-gray-700 underline">My Bookings</a>
+                    @else
+                        <a href="{{ route('login') }}" class="text-gray-700 underline">Login</a>
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="ml-4 text-gray-700 underline">Register</a>
+                        @endif
+                    @endif
                 @else
-                    <a href="{{ route('login') }}" class="text-gray-700 underline">Login</a>
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="ml-4 text-gray-700 underline">Register</a>
-                    @endif
-                    @endif
+                    <a href="{{ route('coming.soon') }}" class="text-gray-700 underline">{{ __('action-buttons.notifyMe') }}</a>
+                @endif
+
                 </div>
                 <!-- Hamburger -->
                 <div class="-mr-2 flex items-center md:hidden">
@@ -67,24 +77,44 @@
             </div>
         </div>
 
-        <!-- Responsive Navigation Menu -->
+    <!-- Responsive Navigation Menu -->
         <div :class="{'block': open, 'hidden': ! open}" class="block md:hidden">
 
             <div class="pt-4 pb-1 border-t border-gray-200">
                 <div class="mt-3 space-y-1">
 
-                    <x-jet-responsive-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')">
-                        {{ __('Register') }}
-                    </x-jet-responsive-nav-link>
+                    <x-app-language-switcher />
 
-                    <x-jet-responsive-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')">
-                        {{ __('Login') }}
-                    </x-jet-responsive-nav-link>
+                    @if(config('greenwiperz.registration_enabled'))     
+                        @auth
+                            <x-jet-responsive-nav-link 
+                                href="{{ route('bookings.index') }}" 
+                                :active="request()->routeIs('bookings.index')">
+                                    {{ __('My Bookings') }}
+                            </x-jet-responsive-nav-link> 
+                        @else
+                            <x-jet-responsive-nav-link 
+                                href="{{ route('login') }}" 
+                                :active="request()->routeIs('login')">
+                                    {{ __('Login') }}
+                            </x-jet-responsive-nav-link> 
+                            @if(Route::has('register'))
+                                <x-jet-responsive-nav-link 
+                                    href="{{ route('register') }}" 
+                                    :active="request()->routeIs('register')">
+                                        {{ __('Register') }}
+                                </x-jet-responsive-nav-link>
+                            @endif
+
+                        @endif                           
+                    @else
+                    <x-jet-responsive-nav-link href="{{ route('coming.soon') }}">{{ __('action-buttons.notifyMe') }}</x-jet-responsive-nav-link>
+                    @endif                    
                 </div>
             </div>
 
 
-
+            <!-- Mobile menu -->
             <div class="pt-2 pb-3 space-y-1">
                 <div class="pt-2 pb-3 space-y-1">
                     <x-jet-responsive-nav-link href="{{ route('home') }}"
@@ -93,26 +123,31 @@
                     </x-jet-responsive-nav-link>
                     <x-jet-responsive-nav-link href="{{ route('how.it.works') }}"
                         :active="request()->routeIs('how.it.works')">
-                        {{ __('How it works') }}
+                        {{ __('action-buttons.how-it-works') }}
                     </x-jet-responsive-nav-link>
 
                     <x-jet-responsive-nav-link href="{{ route('prices') }}" :active="request()->routeIs('prices')">
-                        {{ __('Prices') }}
+                        {{ __('action-buttons.prices') }}
                     </x-jet-responsive-nav-link>
 
                     <x-jet-responsive-nav-link href="{{ route('service.area') }}"
                         :active="request()->routeIs('service.area')">
-                        {{ __('Service area') }}
+                        {{ __('action-buttons.serviceArea') }}
                     </x-jet-responsive-nav-link>
-
+                    
+                    <x-jet-responsive-nav-link href="{{ route('terms') }}"
+                        :active="request()->routeIs('terms')">
+                        {{ __('action-buttons.termsAndConditions') }}
+                    </x-jet-responsive-nav-link>
+                   
                     <x-jet-responsive-nav-link href="{{ route('about') }}"
                         :active="request()->routeIs('about')">
-                        {{ __('About us') }}
+                        {{ __('action-buttons.about') }}
                     </x-jet-responsive-nav-link>
 
                     <x-jet-responsive-nav-link href="{{ route('contact') }}"
                         :active="request()->routeIs('contact')">
-                        {{ __('Contact') }}
+                        {{ __('action-buttons.contact') }}
                     </x-jet-responsive-nav-link>
                 </div>
             </div>

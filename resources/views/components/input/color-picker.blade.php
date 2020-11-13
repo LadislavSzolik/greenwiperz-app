@@ -44,11 +44,11 @@
                     selected: false
                 },
                 {
-                name: 'gray',
+                    name: 'gray',
                     selected: false
                 },
                 {
-                name: 'silver',
+                    name: 'silver',
                     selected: false
                 },
                 {

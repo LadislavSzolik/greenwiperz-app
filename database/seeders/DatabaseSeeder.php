@@ -3,6 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Database\Seeders\RoleSeeder;
+use Database\Seeders\UserSeeder;
+use Database\Seeders\ServiceSeeder;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +17,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+      $this->call([
+      TimeslotSeeder::class,
+      ServiceSeeder::class,
+      RoleSeeder::class,
+      UserSeeder::class,
+
+    ]);
     }
 }

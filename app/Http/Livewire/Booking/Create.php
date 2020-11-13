@@ -2,13 +2,19 @@
 
 namespace App\Http\Livewire\Booking;
 
+use Money\Money;
 use Carbon\Carbon;
+use Money\Currency;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Booking;
 use Livewire\Component;
 use App\Models\Services;
-use Illuminate\Http\Request;
-use App\Mail\BookingConfirmed;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
+use App\TimeslotService;
+use Carbon\CarbonInterval;
+use App\Models\Appointment;
+use Money\Currencies\ISOCurrencies;
+use Money\Formatter\IntlMoneyFormatter;
 use Illuminate\Support\Facades\Validator;
 
 class Create extends Component
@@ -46,16 +52,19 @@ class Create extends Component
 
     public $billingFirstName = '';
     public $billingLastName = '';
+    public $billingCompanyName = '';
     public $billingStreet = '';
     public $billingPostalCode = '';
     public $billingCity = '';
-    public $billingCountry = '';
+    public $billingCountry = 'Schweiz';
 
-    public $contactEmail;
+
     public $termsAndConditions = false;
 
     public $listeners = ['placeChanged'];
     public $customValidator;
+
+    public $assignedGreenwiper;
 
     protected $rules = [
         'bookingDate' => 'required',
@@ -90,69 +99,78 @@ class Create extends Component
         'billingCountry' => 'required',
     ];
 
+
     public function mount()
-    {
-        $this->bookingDate = null;
+    {        
         $this->priceList = Services::all();
-        $this->updateService();
+
+        //TODO: improve this       
+        $role = Role::whereName('greenwiper')->firstOrFail();
+        $this->assignedGreenwiper = $role->users->first();
     }
 
     // this helps when I use click inside of blade component
     public function hydrate()
     {
-        if (strtotime($this->bookingDate)) {
-            $this->totalTimeRequired = 2 * $this->travelTimeNeeded + $this->serviceDuration - 1;
-            $this->availableSlots = $this->getAvailableTimeSlotsFor($this->bookingDate);
+        if (strtotime($this->bookingDate) && Carbon::parse($this->bookingDate)->greaterThanOrEqualTo(Carbon::now()) ) {
+            $this->totalTimeRequired = 2 * $this->travelTimeNeeded + $this->serviceDuration - 1;            
+            $this->availableSlots = TimeslotService::fetchSlots($this->bookingDate, $this->assignedGreenwiper->id, $this->travelTimeNeeded, $this->totalTimeRequired);  
         }
-    }
-
-    public function getAvailableTimeSlotsFor($date)
-    {
-        $timeslots = DB::table('timeslots')->select('timeslots.id as takenTimeSlotId', 'timeslot')->crossJoin('booking_timeslots')->where([['booking_timeslots.date', $date],['booking_timeslots.deleted_at', null]])->where(function ($query) {
-            $query->whereBetween('booking_timeslots.start_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL '$this->totalTimeRequired' minute)")])->orWhereBetween('booking_timeslots.end_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL '$this->totalTimeRequired' minute)")])->orWhereBetween('timeslots.timeslot', [DB::raw('booking_timeslots.start_time'), DB::raw('booking_timeslots.end_time')]);
-        });
-
-        return DB::table('timeslots as availableSlots')->select('availableSlots.timeslot')->leftJoinSub($timeslots, 'disabledTimeSlots', function ($join) {
-            $join->on('availableSlots.id', '=', 'disabledTimeSlots.takenTimeSlotId');
-        })->whereNull('disabledTimeSlots.takenTimeSlotId')->get();
     }
 
     // this is live:wire event hook
     public function updatedBookingDate()
-    {
-        $selectedDate = Carbon::parse($this->bookingDate);
+    {      
+        $this->availableSlots = [];
+        $this->bookingTime = null;
 
-        if ($selectedDate->lt(Carbon::now())) {
-            $availableSlots = null;
-            $this->bookingTime = null;
-        } else {
-            $this->totalTimeRequired = 2 * $this->travelTimeNeeded + $this->serviceDuration - 1;
-            $availableSlots = $this->getAvailableTimeSlotsFor($this->bookingDate);
-            if ($availableSlots->count() > 0) {
-                $this->bookingTime = $availableSlots->first()->timeslot;
-            }
-        }
-        $this->availableSlots = $availableSlots;
+        $selectedDate = Carbon::parse($this->bookingDate);
+        if ($selectedDate->greaterThanOrEqualTo(Carbon::now())) {
+            $this->totalTimeRequired = 2 * $this->travelTimeNeeded + $this->serviceDuration - 1;            
+            $this->availableSlots = TimeslotService::fetchSlots($this->bookingDate, $this->assignedGreenwiper->id, $this->travelTimeNeeded, $this->totalTimeRequired);                             
+                    
+            if ($this->availableSlots->count() > 0) {                  
+                $this->bookingTime =$this->availableSlots->first();
+            }             
+        }               
+       
+        
     }
     // this is live:wire event hook
     public function updatedServiceType()
     {
-        $this->updateService();
         $this->resetDateAndTime();
     }
     // this is live:wire event hook
     public function updatedVehicleSize()
     {
-        $this->updateService();
         $this->resetDateAndTime();
+    }
+  
+
+    // CALCULATED LIVE WIRE property
+    public function getMoneyPriceProperty() {
+        
+        $this->servicePrice =  $this->priceList->where('type', $this->serviceType)->where('vehicle_size', $this->vehicleSize)->first()->price;
+        
+        if($this->hasAnimalHair == 1 || $this->hasExtraDirt == 1) {
+            $this->servicePrice +=config('greenwiperz.company.dirty_surcharge');
+        }
+
+        $money = new Money($this->servicePrice, new Currency('CHF'));
+        $currencies = new ISOCurrencies();
+        $numberFormatter = new \NumberFormatter('de_CH', \NumberFormatter::CURRENCY);
+        $moneyFormatter = new IntlMoneyFormatter($numberFormatter, $currencies);
+        
+        return $moneyFormatter->format($money);
     }
 
 
-    public function updateService()
+    public function getFormatedServiceDurationProperty()
     {
         $actualPriceData =  $this->priceList->where('type', $this->serviceType)->where('vehicle_size', $this->vehicleSize)->first();
-        $this->servicePrice  = $actualPriceData->price;
         $this->serviceDuration = $actualPriceData->duration;
+        return CarbonInterval::minutes($this->serviceDuration);
     }
 
     public function resetDateAndTime()
@@ -162,49 +180,76 @@ class Create extends Component
         $this->availableSlots = null;
     }
 
-    // google maps
-    public function placeChanged($placeData)
-    {
-        $customValidator = Validator::make(
-            $placeData,
-            [
-                'street_number' => 'required',
-                'route' => 'required',
-                'locality' => 'required',
-                'postal_code' => 'required | in:8001,8002,8003,8004,8005,8006,8037,8046',
-            ]
-        )->validate();
+  
 
-        $this->parkingStreetNumber = $placeData['street_number'];
-        $this->parkingRoute = $placeData['route'];
-        $this->parkingCity = $placeData['locality'];
-        $this->parkingPostalCode = $placeData['postal_code'];
-    }
-
-    public function toggleCheckoutVisibility()
-    {
+    public function goToReviewPage() {
         $this->validate();
-        $this->checkoutVisibility = !$this->checkoutVisibility;
+        $this->checkoutVisibility = true;
     }
 
-    public function submitBooking(Request $request)
-    {
-        $availableSlots = $this->getAvailableTimeSlotsFor($this->bookingDate);
-        if (!$availableSlots->contains('timeslot', $this->bookingTime)) {
+    public function goBackToEdit() {
+        $this->checkoutVisibility = false;
+    }
+
+    public function submitBooking()
+    {                        
+        // recalculate timeslots        
+        $availableSlots = TimeslotService::fetchSlots($this->bookingDate, $this->assignedGreenwiper->id, $this->travelTimeNeeded, $this->totalTimeRequired);   
+        
+        if (!$availableSlots->contains($this->bookingTime)) {
             $this->bookingDate = null;
             $this->bookingTime = null;
+            $this->availableSlots = null;
+
             session()->flash('message', 'Unfortunately in a meanwhile the timeslot has been taken. Please select a new one.');
-            $this->toggleCheckoutVisibility();
+            $this->checkoutVisibility = false;
         } else {
             Validator::make(
                 ['termsAndConditions' => $this->termsAndConditions,],
                 ['termsAndConditions' => 'accepted',]
             )->validate();
             $this->validate();
+            
+            $appointment = Appointment::create([
+                'date' => $this->bookingDate,
+                'start_time' => $this->bookingTime,
+                'end_time' => Carbon::parse($this->bookingTime)->addMinutes($this->serviceDuration - 1),
+                'assigned_to' => $this->assignedGreenwiper->id,
+            ]);
 
-            $refno = $this->generateInvoiceReferenceNumber();
-            $bookingData = [
-                'refno'                     => $refno,
+            $baseNumber = $this->generateBaseNumber();
+            $booking = auth()->user()->bookings()->create([
+                'booking_nr'                => 'GW'.$baseNumber,   
+                'appointment_id'       => $appointment->id,
+                'service_price'             => $this->servicePrice,
+                'tc_accepted_at'            => now(),
+                'notes'                     => $this->notes,            
+            ]);
+
+            $booking->billingAddress()->create([
+                'user_id'           => auth()->user()->id,
+                'first_name'        => $this->billingFirstName,
+                'last_name'         => $this->billingLastName,
+                'company_name'      => $this->billingCompanyName,
+                'street'            => $this->billingStreet,
+                'postal_code'       => $this->billingPostalCode,
+                'city'              => $this->billingCity,
+                'country'           => $this->billingCountry,
+            ]);
+
+            $booking->sellerAddress()->create([                                 
+                'company_name'      => config('greenwiperz.company.name'),
+                'street'            => config('greenwiperz.company.street'),
+                'postal_code'       => config('greenwiperz.company.postal_code'),
+                'city'              => config('greenwiperz.company.city'),
+                'country'           => config('greenwiperz.company.country'),
+            ]);
+
+
+            $booking->bookingService()->create([
+                'parking_street_number'     => $this->parkingStreetNumber,
+                'service_type'              => $this->serviceType,
+                'service_duration'          => $this->serviceDuration,
                 'parking_street_number'     => $this->parkingStreetNumber,
                 'parking_route'             => $this->parkingRoute,
                 'parking_city'              => $this->parkingCity,
@@ -214,68 +259,62 @@ class Create extends Component
                 'vehicle_size'              => $this->vehicleSize,
                 'vehicle_color'             => $this->vehicleColor,
                 'has_extra_dirt'            => $this->hasExtraDirt,
-                'has_animal_hair'           => $this->hasAnimalHair,
-                'service_type'              => $this->serviceType,
-                'service_duration'          => $this->serviceDuration,
-                'service_price'             => $this->servicePrice,
-                'notes'                     => $this->notes,
-                'billing_first_name'        => $this->billingFirstName,
-                'billing_last_name'         => $this->billingLastName,
-                'billing_street'            => $this->billingStreet,
-                'billing_postal_code'       => $this->billingPostalCode,
-                'billing_city'              => $this->billingCity,
-                'billing_country'           => $this->billingCountry,
-            ];
-            $booking = auth()->user()->bookings()->create($bookingData);
-
-            $startTime = Carbon::parse($this->bookingTime)->addMinutes($this->travelTimeNeeded)->format('H:i');
-            $endTime = Carbon::parse($this->bookingTime)->addMinutes($this->travelTimeNeeded + $this->serviceDuration - 1)->format('H:i');
-            $booking->bookingTimeslot()->create([
-                'date' => $this->bookingDate,
-                'start_time' => $startTime,
-                'end_time' => $endTime
+                'has_animal_hair'           => $this->hasAnimalHair,                              
             ]);
 
-            $paymentDetails = $this->getPaymentDetails($this->servicePrice, $refno);
-            return redirect('https://pay.sandbox.datatrans.com/upp/jsp/upStart.jsp?sign=' . $paymentDetails['sign'] . '&merchantId=' . $paymentDetails['merchantId'] . '&refno=' . $paymentDetails['refno'] . '&amount=' . $paymentDetails['amount'] . '&currency=' . $paymentDetails['currency'] . '&theme=DT2015');
+           
+
+            $booking->invoice()->create([
+                'user_id'           => auth()->user()->id,
+                'invoice_nr'        => 'INV'.$baseNumber,
+                'price'             => $this->servicePrice,
+                'netto_price'       => intval(round(floatval($this->servicePrice) / (1 + floatval(config('greenwiperz.mwst_percent'))))),
+                'mwst_percent'      => $this->servicePrice - intval(round(floatval($this->servicePrice) / (1 + floatval(config('greenwiperz.mwst_percent'))))),
+                'mwst_id'       => config('greenwiperz.company.mwst_id'),              
+            ]);
+
+
+
+            return redirect()->route('payments.redirect', ['id' => $booking->id]);           
         }
     }
 
-    protected function generateInvoiceReferenceNumber()
-    {
 
-        $refnoStructure = [
-            'prefix' => 'GW',
-            'date' => Carbon::now('GMT+2')->format('d'),
-            'random' => strtoupper(bin2hex(random_bytes(4))),
+
+    protected function generateBaseNumber()
+    {       
+   
+        $baseNumberStructure = [            
+            'date' => Carbon::now('GMT+2')->format('U'),
             'divider2' => '-',
             'userid' => str_pad(auth()->user()->id, 4, "0", STR_PAD_LEFT),
         ];
-        return implode($refnoStructure);
+        return implode($baseNumberStructure);
     }
 
+      // google maps
+      public function placeChanged($placeData)
+      {
+          Validator::make(
+              $placeData,
+              [
+                  'street_number' => 'required',
+                  'route' => 'required',
+                  'locality' => 'required',
+                  'postal_code' => 'required | in:8001,8002,8003,8004,8005,8006,8037,8046',
+              ]
+          )->validate();
+  
+          $this->parkingStreetNumber = $placeData['street_number'];
+          $this->parkingRoute = $placeData['route'];
+          $this->parkingCity = $placeData['locality'];
+          $this->parkingPostalCode = $placeData['postal_code'];
+      }
 
-    protected function getPaymentDetails($servicePrice, $refno)
-    {
-        $paymentDetails = [
-            'merchantId' => 1100026445,
-            'amount' => $servicePrice,
-            'currency' => 'CHF',
-            'refno' => $refno,
-        ];
-        $binaryKey = hex2bin('c8c468f12382a4eac3fd1f536157af70d2a97b952b4ff8d1122fba82a1e5d739660fae58ef8afdb0b670301822598077f812cd99e0a7690ab7a439c41c0892f0');
-        $sign = hash_hmac('sha256', implode($paymentDetails), $binaryKey);
-        $paymentDetails['sign'] =  $sign;
-        return $paymentDetails;
-    }
 
     public function render()
     {
         return view('livewire.booking.create');
     }
 
-
-    public function sendMail() {
-        Mail::to(auth()->user())->send(new BookingConfirmed());
-    }
 }

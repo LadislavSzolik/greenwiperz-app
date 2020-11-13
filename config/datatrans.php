@@ -18,7 +18,7 @@ return [
     |
     */
 
-    'datatrans_sign' => env('DATATRANS_SIGN'),
+    'sign2' => env('DATATRANS_SIGN2'),
 
   /*
     |--------------------------------------------------------------------------
@@ -30,24 +30,10 @@ return [
     |
     */
 
-    'api_username' => env('DATATRANS_API_USERNAME'),
+    'merchant_id' => env('DATATRANS_MERCHANTID', null),
 
-    'api_password' => env('DATATRANS_API_PASSWORD'),
+    'api_password' => env('DATATRANS_PASSW', null),
 
-    /*
-    |--------------------------------------------------------------------------
-    | Datatrans base URLs
-    |--------------------------------------------------------------------------
-    |
-    | These are the base URLs used by datatrans
-    |
-    */
-
-    'payment_pages_URL' => env('DATATRANS_PAYMENT_PAGES', 'https://pay.sandbox.datatrans.com'),
-
-    'server_to_server_url' => env('DATATRANS_SERVER_TO_SERVER_URL', 'https://api.sandbox.datatrans.com'),
-
- 
     /*
     |--------------------------------------------------------------------------
     | Currency

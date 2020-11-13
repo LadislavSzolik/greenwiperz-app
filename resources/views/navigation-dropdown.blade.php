@@ -5,14 +5,17 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
-                    <a href="{{ route('bookings.index') }}">
+                    <a href="/">
                         <x-application-logo class="h-10 text-green-600 " />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-jet-nav-link href="{{ route('bookings.index') }}" :active="request()->routeIs('bookings.index')">
+
+                    @cannot('view_appointments') 
+                    <x-jet-nav-link href="{{ route('bookings.index') }}" 
+                    :active="request()->routeIs('bookings.index')">
                         {{ __('Bookings') }}
                     </x-jet-nav-link>
 
@@ -20,11 +23,31 @@
                         :active="request()->routeIs('bookings.create')">
                         {{ __('New booking') }}
                     </x-jet-nav-link>
+                    @endcannot
+
+                    @can('view_appointments')
+                    <x-jet-nav-link href="{{ route('appointments.index') }}"
+                        :active="request()->routeIs('appointments.index')">
+                        {{ __('My appointments') }}
+                    </x-jet-nav-link>
+                    @endcan
+
+                    <x-jet-nav-link href="{{ route('terms.inapp') }}"
+                        :active="request()->routeIs('terms.inapp')">
+                        {{ __('Terms & Conditions') }}
+                    </x-jet-nav-link>
+
+                   
+
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
+               
+                
+                <x-app-language-switcher />
+
                 <x-jet-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
@@ -131,6 +154,8 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+
+            @cannot('view_appointments') 
             <x-jet-responsive-nav-link href="{{ route('bookings.index') }}"
                 :active="request()->routeIs('bookings.index')">
                 {{ __('Bookings') }}
@@ -140,8 +165,25 @@
                 :active="request()->routeIs('bookings.create')">
                 {{ __('New Booking') }}
             </x-jet-responsive-nav-link>
-        </div>
+            @endcannot
 
+            <x-jet-responsive-nav-link href="{{ route('terms.inapp') }}"
+                :active="request()->routeIs('terms.inapp')">
+                {{ __('Terms & Conditions') }}
+            </x-jet-responsive-nav-link>
+
+            @can('view_appointments') 
+            <x-jet-responsive-nav-link href="{{ route('appointments.index') }}"
+                :active="request()->routeIs('appointments.index')">
+                {{ __('My appointments') }}
+            </x-jet-responsive-nav-link>
+            @endcan
+
+            
+        </div>
+        <div class="pt-2 pb-1 border-t border-gray-200">
+            <x-app-language-switcher />
+        </div>
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="flex items-center px-4">

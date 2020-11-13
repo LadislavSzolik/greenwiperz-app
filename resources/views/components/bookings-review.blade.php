@@ -111,7 +111,7 @@
                             <x-input.flexible-group class="col-span-6 sm:col-span-3" for="bookingDate"
                                 label="{{ __('Day of the cleaning') }}">
                                 <x-input.readonly>
-                                    {{ $newBooking['bookingTimeslot']['date'] }}
+                                    {{ $newBooking['Appointment']['date'] }}
                                 </x-input.readonly>
                             </x-input.flexible-group>
 
@@ -119,7 +119,7 @@
                             <x-input.flexible-group class="col-span-6 sm:col-span-3" for="bookingTime"
                                 label="{{ __('Starting time') }}">
                                 <x-input.readonly>
-                                    {{  $newBooking['bookingTimeslot']['start_time'] }}
+                                    {{  $newBooking['Appointment']['start_time'] }}
                                     <span class="text-gray-500"> (c.a. {{ $newBooking['service_duration'] }}
                                         min)
                                 </x-input.readonly>
