@@ -1,0 +1,42 @@
+name: PRODDEPLOY
+
+on:
+  push:
+    branches: [ production ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of th
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - run: npm install
+      - run: npm run production
+      - name: Commit built assets
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git checkout -B deploy-prod
+          git add -f public/
+          git commit -m "Build front-end assets"
+          git push -f origin deploy-prod
+      - name: Connect to server with SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: 's19.server.hostpoint.ch'
+          username: 'lifiluzi'
+          passphrase: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: '22'
+          script: |
+            cd ~/www/greenwiperz.ch/greenwiperz-app/
+            ./server_deploy.sh
+          script_stop: true
