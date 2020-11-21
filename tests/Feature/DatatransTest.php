@@ -60,9 +60,7 @@ class DatatransTest extends TestCase
                 
         $this->assertSame($response->status(), 201);
         $this->assertSame($response['transactionId'],'201026110404967343');
-    }
-
-
+    }    
 
 
     public function testCheckTransactionStatus_success() {

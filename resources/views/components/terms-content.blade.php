@@ -11,7 +11,7 @@
 <ol class="list-decimal font-bold ">
     <li>Geltungsbereich
         <ol class="list-decimal font-normal ">
-            <li>Die Greenwiperz by Györgi Bansagi (nachfolgend <strong>"Greenwiperz"</strong> genannt) bietet einen ökologischen – fast wasserfreien – Reinigungsservice mit Spezialpflegemitteln aus der Nanotechnologie für Fahrzeuge an. Die Reinigungen erfolgen am gewünschten Standort des Kunden. Die vorliegenden Allgemeinen Geschäftsbedingungen (nachfolgend <strong>"AGB"</strong> genannt) dienen einer klaren Regelung der gegenseitigen Beziehung zwischen Kunden und der Greenwiperz und bilden integrierenden Bestandteil des jeweiligen individuellen Vertragsverhältnisses.</li>    
+            <li>Die Greenwiperz by Bansagi (nachfolgend <strong>"Greenwiperz"</strong> genannt) bietet einen ökologischen – fast wasserfreien – Reinigungsservice mit Spezialpflegemitteln aus der Nanotechnologie für Fahrzeuge an. Die Reinigungen erfolgen am gewünschten Standort des Kunden. Die vorliegenden Allgemeinen Geschäftsbedingungen (nachfolgend <strong>"AGB"</strong> genannt) dienen einer klaren Regelung der gegenseitigen Beziehung zwischen Kunden und der Greenwiperz und bilden integrierenden Bestandteil des jeweiligen individuellen Vertragsverhältnisses.</li>    
             <li>Die AGB haben Geltung, sofern zwischen dem Kunden und der Greenwiperz keine ausdrückliche anderslautende schriftliche Abrede getroffen wurde.</li>    
             <li>Im Übrigen gelten die Bestimmungen des Schweizerischen Obligationenrechts insbesondere über den Werkvertrag (Art.363 ff. OR). </li>                        
         </ol>

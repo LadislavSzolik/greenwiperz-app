@@ -1,4 +1,4 @@
-<input {!! $attributes->merge(['class' => 'mt-1 block w-full form-input rounded-md shadow-sm']) !!} >
+<input {{ $attributes->merge(['class' => 'mt-1 block w-full form-input rounded-md shadow-sm']) }}  />
 
 
 <!-- order is important, first my script after that the google -->
@@ -24,6 +24,7 @@
         );
         autocomplete.setFields(["address_component"]);
         autocomplete.addListener("place_changed", fillInAddress);
+        document.getElementById("parkingStreet").value = '';
     }
 
 

@@ -12,17 +12,10 @@ class Receipt extends Model
 
     protected $fillable = [
         'booking_id',
-        'user_id', 
         'receipt_nr',
-        'price',
-        'currency',
-        'netto_price',
-        'mwst_percent',
-        'mwst_id',
-        'transaction_id',
-        'settled_amount',
+        'paid_amount',
         'paid_with',
-        'quantity',
+        'transaction_id',
     ];
 
 

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Booking;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentController extends Controller
 {
@@ -13,9 +16,9 @@ class AppointmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $appointments = Appointment::where('assigned_to', auth()->user()->id)->whereNull('canceled_at')->paginate(10);
-        return view('appointments.index', ['appointments' => $appointments ]);
+    {            
+        //$appointments = Appointment::where('is_vacation', 1)->paginate(10);
+        return view('appointments.index');
     }
 
     /**
@@ -36,7 +39,7 @@ class AppointmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Appointment::create([]);
     }
 
     /**
@@ -45,9 +48,9 @@ class AppointmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Booking $booking)
     {
-        //
+        return view('appointments.show', ['booking' => $booking]);
     }
 
     /**

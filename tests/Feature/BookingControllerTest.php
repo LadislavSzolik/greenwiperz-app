@@ -18,44 +18,86 @@ use App\Models\Appointment;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Event;
 use App\Http\Controllers\BookingController;
+use App\Models\Car;
+use Database\Seeders\RoleSeeder;
+use Database\Seeders\TimeslotSeeder;
+use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Facades\Session;
 
 class BookingControllerTest extends TestCase
 {
-
+    
     use WithFaker;
     use RefreshDatabase;
 
+    public function testCheckoutStore()
+    {               
+        $this->seed(TimeslotSeeder::class);
+        $user2 = User::factory()->create();
+
+        $request = [                     
+            'assignedTo' => $user2->id,                       
+
+            'bookingDate' => '2020-11-12',
+            'bookingTime' => '11:30',
+            'locStreetNumber' => $this->faker->numberBetween(123,543),
+            'locRoute' =>  $this->faker->streetName,
+            'locCity' => $this->faker->city,
+            'locPostalCode' => $this->faker->postcode,
+            'serviceType' => 'outside',
+            'duration' => $this->faker->numberBetween(45,120),
+
+            'baseCost' => $this->faker->numberBetween(5500,12000),
+            'extraCost' => $this->faker->numberBetween(0,300),
+            'bruttoTotalAmount' => $this->faker->numberBetween(5500,12000),
+
+            'carModel' =>  $this->faker->name,
+            'numberPlate' => $this->faker->numerify('ZH########'),           
+            'carColor' => $this->faker->colorName,
+            'carSize' => 'small',
+
+            'hasExtraDirt' => 0,
+            'hasAnimalHair' => 0,
+
+            'billFirstName' =>  $this->faker->firstName,
+            'billLastName' =>  $this->faker->lastName,            
+            'billCompanyName' =>  $this->faker->company,
+            'billStreet' =>  $this->faker->streetName,
+            'billPostalCode' =>  $this->faker->postcode,
+            'billCity' =>  $this->faker->city,
+            'billCountry' =>  $this->faker->country,
+            'phone' => $this->faker->phoneNumber,
+            'notes' => $this->faker->text(),
+            '_token' => Session::token(),  
+        ];
+                          
+        $response = $this->actingAs(User::factory()->create())->post('bookings/store', $request);
+        $response->assertStatus(200);
+        
+        $this->assertDatabaseCount('bookings',1);
+        $this->assertDatabaseCount('billing_addresses',2);
+        $this->assertDatabaseCount('cars',2);
+    }
 
 
-    public function testForcedBookingFullDeletion_success() {              
-        $user = User::factory()->create();
-        $appointment = Appointment::factory()->create();
-        $booking = Booking::factory()->state([
-            'user_id' => $user->id,
-            'appointment_id' =>  $appointment->id,
-        ])->create();
 
-        $billingAddress = BillingAddress::factory()->state([
-            'booking_id' => $booking->id,
-        ])->create();
+    public function testBookingCompleteDeletion_success() {       
+        $this->seed(UserSeeder::class);
 
-        $sellerAddress = SellerAddress::factory()->state([
-            'booking_id' => $booking->id,
-        ])->create();
-
-        $bookingService = BookingService::factory()->state([
-            'booking_id' => $booking->id,
-        ])->create();
-            
-        $response = $this->actingAs($user)->post('/bookings/'.$booking->id.'/delete', ['id' => $booking->id]);
+        $user = User::factory()->create();       
+      
+        $booking = Booking::factory()->for(Appointment::factory())->has(BillingAddress::factory())->has(Car::factory())->create([
+            'customer_id' => $user->id,
+        ]);       
+        
+        $response = $this->actingAs($user)->delete('/bookings/'.$booking->id);
         $response->assertStatus(302);
-        $this->assertDatabaseMissing('appointments', ['id' => $appointment->id]);
+        $this->assertDatabaseCount('appointments', 0);
         $this->assertDatabaseMissing('bookings', ['id' => $booking->id]);
-        $this->assertDatabaseMissing('billing_addresses', ['id' => $billingAddress->id]);
-        $this->assertDatabaseMissing('seller_addresses', ['id' => $sellerAddress->id]);
-        $this->assertDatabaseMissing('booking_services', ['id' => $bookingService->id]);
+        $this->assertDatabaseCount('billing_addresses',0);       
     }
 
 
@@ -115,16 +157,11 @@ class BookingControllerTest extends TestCase
             'date' => '2020-11-03'
         ]);
         $booking = Booking::factory()->state([
-            'user_id' => $user->id,
+            'customer_id' => $user->id,
             'appointment_id' => $Appointment->id,
-            'transaction_id' => $transactionId,
-            'paid_at' => now(),
+            'transaction_id' => $transactionId,            
         ])->create();
-
-        $invoice = Invoice::factory()->create([
-            'user_id' => $user->id,
-            'booking_id' => $booking->id,
-        ]);
+       
 
         $receipt = Receipt::factory()->create([
             'booking_id' => $booking->id,
@@ -134,6 +171,7 @@ class BookingControllerTest extends TestCase
        
                 
         $response = $this->actingAs($user)->post('/bookings/'.$booking->id.'/cancel');
+       
         $response->assertStatus(302);        
 
         // does the new transaction id saved on booking?
@@ -141,6 +179,7 @@ class BookingControllerTest extends TestCase
          
         // does the timeslot freed up?
         $Appointment->refresh();
+       
         $this->assertNotNull($Appointment->canceled_at);       
         $this->assertDatabaseCount('refunds',1);
         $this->assertDatabaseHas('refunds', ['refunded_amount' => 5500  ]);

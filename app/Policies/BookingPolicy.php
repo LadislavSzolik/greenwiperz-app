@@ -17,7 +17,7 @@ class BookingPolicy
      * @return mixed
      */
     public function viewAny(User $user)
-    {
+    {        
         return true;
     }
 
@@ -30,7 +30,7 @@ class BookingPolicy
      */
     public function view(User $user, Booking $booking)
     {
-        return $user->id === $booking->user_id;
+        return $user->isGreenwiper() || $user->id === $booking->customer_id;
     }
 
     /**
@@ -44,6 +44,7 @@ class BookingPolicy
         return true;
     }
 
+
     /**
      * Determine whether the user can update the model.
      *
@@ -53,7 +54,7 @@ class BookingPolicy
      */
     public function update(User $user, Booking $booking)
     {
-        return $user->id === $booking->user_id;
+       return $user->isGreenwiper() || $user->id === $booking->customer_id;
     }
 
     /**
@@ -65,7 +66,7 @@ class BookingPolicy
      */
     public function delete(User $user, Booking $booking)
     {
-        return $user->id === $booking->user_id;
+        return $user->isGreenwiper() || ($user->id == $booking->customer_id && $booking->status == 'draft' || $booking->status == 'pending') ;
     }
 
     /**
@@ -77,7 +78,8 @@ class BookingPolicy
      */
     public function restore(User $user, Booking $booking)
     {
-        //
+ 
+        return true;
     }
 
     /**
@@ -89,6 +91,12 @@ class BookingPolicy
      */
     public function forceDelete(User $user, Booking $booking)
     {
-        return $user->id === $booking->user_id;
+       return $user->isGreenwiper() || ($user->id == $booking->customer_id && ($booking->status == 'draft' || $booking->status == 'pending')) ;
+    }
+
+
+    public function complete(User $user, Booking $booking)
+    {
+        return $user->isGreenwiper();
     }
 }

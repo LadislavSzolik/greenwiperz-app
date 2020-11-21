@@ -4,7 +4,7 @@
     'helpText' => false,
 ])
 
-<div class="col-span-6">
+<div {{ $attributes }} >
 
     <label for="{{ $for }}" class='block font-medium text-sm text-gray-700'>
         {{ $label }}

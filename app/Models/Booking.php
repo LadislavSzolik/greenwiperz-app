@@ -2,59 +2,41 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use Money\Money;
 use Money\Currency;
 use Money\Currencies\ISOCurrencies;
 use Illuminate\Database\Eloquent\Model;
 use Money\Formatter\IntlMoneyFormatter;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Booking extends Model
-{
-    protected $dates = ['tc_accepted_at', 'canceled_at', 'paid_at', 'completed_at' ];
-    
+{   
     use HasFactory;
-    use SoftDeletes;
 
-    protected $fillable = [
-        'user_id',
-        'booking_nr', 
-        'appointment_id',
-        'transaction_id',                      
-        'notes',
-        'internal_notes',
-        'failed_at',
-        'failed_reason',
-        'tc_accepted_at',
-        'paid_at',
-        'completed_at',
-        'completed_by',
-        'canceled_at',
-        'canceled_by',
-        'internal_notes',
-    ];
+    protected $guarded = [];
     
+    const STATUSES = [
+        'pending' => 'Pending',
+        'paid' => 'Paid',
+        'canceled' => 'Canceled',
+        'completed' => 'Completed',
+        'draft' => 'Draft',
+    ];
 
     public function appointment() {
         return $this->belongsTo('App\Models\Appointment');
     }
 
-    public function bookingService() {
-        return $this->hasOne('App\Models\BookingService');
+    public function car() {
+        return $this->morphOne('App\Models\Car','carable');
     }
 
     public function billingAddress() {
-        return $this->hasOne('App\Models\BillingAddress');
+        return $this->morphOne('App\Models\BillingAddress','billingable');
     }
 
-    public function sellerAddress() {
-        return $this->hasOne('App\Models\SellerAddress');
-    }
-
-    public function invoice() {
-        return $this->hasOne('App\Models\Invoice');
-    }
 
     public function receipt() {
         return $this->hasOne('App\Models\Receipt');
@@ -64,7 +46,125 @@ class Booking extends Model
         return $this->hasOne('App\Models\Refund');
     }
 
-    public function user() {
-        return $this->belongsTo('App\Models\User');
+    public function customer() 
+    {
+        return $this->belongsTo('App\Models\User', 'customer_id');
     }
+
+    public function assignedTo() 
+    {
+        return $this->belongsTo('App\Models\User', 'assigned_to');
+    }
+
+    
+    public function getParkingLocationAddressAttribute()
+    {
+        return $this->loc_street_number.', '.$this->loc_route.',<br />'.$this->loc_postal_code.', '.$this->loc_city;
+    }
+
+    public function getFormatedDurationAttribute()
+    {
+        return CarbonInterval::minutes($this->duration);
+    }
+
+    public function getDisplayCreationDateAttribute() {
+        return Carbon::parse($this->created_at)->format('d.m.Y');
+    }
+
+    public function getFormatedTotalCostAttribute()
+    {
+        $money = new Money($this->brutto_total_amount, new Currency('CHF'));
+        $currencies = new ISOCurrencies();
+        $numberFormatter = new \NumberFormatter('de_CH', \NumberFormatter::CURRENCY);
+        $moneyFormatter = new IntlMoneyFormatter($numberFormatter, $currencies);
+        return $moneyFormatter->format($money); 
+    }
+
+    public function getFormatedBaseCostAttribute()
+    {
+        $money = new Money( $this->base_cost, new Currency('CHF'));
+        $currencies = new ISOCurrencies();
+        $numberFormatter = new \NumberFormatter('de_CH', \NumberFormatter::CURRENCY);
+        $moneyFormatter = new IntlMoneyFormatter($numberFormatter, $currencies);        
+        return $moneyFormatter->format($money);
+    }
+
+    public function getFormatedExtraCostAttribute()
+    {
+        $money = new Money( $this->extra_cost, new Currency('CHF'));
+        $currencies = new ISOCurrencies();
+        $numberFormatter = new \NumberFormatter('de_CH', \NumberFormatter::CURRENCY);
+        $moneyFormatter = new IntlMoneyFormatter($numberFormatter, $currencies);        
+        return $moneyFormatter->format($money);
+    }
+
+    public function getCompleteBillingAddressAttribute()
+    {
+        return $this->billingAddress->first_name.' '.$this->billingAddress->last_name.', '.$this->billingAddress->company_name.'<br>'.$this->billingAddress->street.'<br/>'.$this->billingAddress->postal_code.' '.$this->billingAddress->city.'<br/>'.$this->billingAddress->country;
+    }
+
+    public function getCustomerMailAttribute()
+    {
+        return $this->customer->email;
+    }
+
+    /*
+    public function getBookingTimestampAttribute()
+    {
+        return new Carbon($this->appointment->date.' '.$this->appointment->start_time);
+    }
+
+    public function bookingStatus()
+    {
+        if(filled($this->appointment->completed_at)) 
+        {
+            return 'completed';
+        }
+
+        if(filled($this->appointment->canceled_at)) 
+        {
+            return 'canceled';
+        }
+
+        if(filled($this->paid_at)) 
+        {
+            return 'paid';
+        }
+
+        return 'not_paid';
+    } */
+
+    public function getRefundableAmountAttribute()
+    {
+        
+        $hoursBeforeCleaning = Carbon::now()->diffInMinutes($this->booking_datetime);
+        $settledAmount = $this->brutto_total_amount;
+            
+        if( $hoursBeforeCleaning < 60) {
+            $amountToRefund = 0;
+        } else if($hoursBeforeCleaning < 120 && $hoursBeforeCleaning >= 60){
+            $amountToRefund = $settledAmount * 0.2;
+        } else if($hoursBeforeCleaning < 180  && $hoursBeforeCleaning >= 120){
+            $amountToRefund = $settledAmount * 0.5;
+        } else if($hoursBeforeCleaning >= 180){
+            $amountToRefund = $settledAmount;
+        } else {
+            $amountToBeRefund = 0;
+        }
+
+        return intval($amountToRefund);
+    }
+
+    /*
+    public function isCancelAllowed() 
+    {
+       
+        return filled($this->paid_at) && blank($this->appointment->completed_at) && blank($this->appointment->canceled_at);
+    }
+    
+    public function isCompletionAllowed()
+    {
+        return filled($this->paid_at) && blank($this->appointment->completed_at) && blank($this->appointment->canceled_at);
+    }
+    */
 }

@@ -9,14 +9,18 @@ use Illuminate\Support\Facades\DB;
 class TimeslotService
 {
 
-    public static function fetchSlots($date, $userId, $travelTime, $serviceDurationTime) {
+    public static function fetchSlots($date, $userId, $serviceDuration) {
+
+      $travelTime = config('greenwiperz.tranvel_time');
+      $totalTimeRequired = 2 * $travelTime  + $serviceDuration - 1;   
+
       $bookedTimeslots = DB::table('timeslots')
       ->select('timeslots.id as takenTimeSlotId', 'timeslot')
       ->crossJoin('appointments')
       ->where([['appointments.date', $date],['appointments.canceled_at', null],['appointments.assigned_to', $userId]])      
-      ->where(function ($query) use ($serviceDurationTime) {
-          $query->whereBetween('appointments.start_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL $serviceDurationTime minute)")])
-          ->orWhereBetween('appointments.end_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL $serviceDurationTime minute)")])
+      ->where(function ($query) use ($totalTimeRequired) {
+          $query->whereBetween('appointments.start_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL $totalTimeRequired minute)")])
+          ->orWhereBetween('appointments.end_time', [DB::raw('timeslots.timeslot'), DB::raw("DATE_ADD(timeslots.timeslot, INTERVAL $totalTimeRequired minute)")])
           ->orWhereBetween('timeslots.timeslot', [DB::raw('appointments.start_time'), DB::raw('appointments.end_time')]);
       });
      

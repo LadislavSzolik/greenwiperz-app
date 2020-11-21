@@ -13,28 +13,40 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
 
-                    @cannot('view_appointments') 
+                    
                     <x-jet-nav-link href="{{ route('bookings.index') }}" 
                     :active="request()->routeIs('bookings.index')">
-                        {{ __('Bookings') }}
+                        {{ __('app.bookings') }}
                     </x-jet-nav-link>
-
+                    
+                    @cannot('manage_bookings') 
                     <x-jet-nav-link href="{{ route('bookings.create') }}"
                         :active="request()->routeIs('bookings.create')">
-                        {{ __('New booking') }}
+                        {{ __('app.new_booking') }}
                     </x-jet-nav-link>
                     @endcannot
 
-                    @can('view_appointments')
+                    @can('manage_bookings') 
                     <x-jet-nav-link href="{{ route('appointments.index') }}"
                         :active="request()->routeIs('appointments.index')">
-                        {{ __('My appointments') }}
+                        {{ __('app.vacations') }}
                     </x-jet-nav-link>
+
+                    <x-jet-nav-link href="{{ route('users.index') }}"
+                        :active="request()->routeIs('users.index')">
+                        {{ __('app.users') }}
+                    </x-jet-nav-link>
+
+                    <x-jet-nav-link href="{{ route('ratings.index') }}"
+                        :active="request()->routeIs('ratings.index')">
+                        {{ __('app.ratings') }}
+                    </x-jet-nav-link>
+
                     @endcan
 
                     <x-jet-nav-link href="{{ route('terms.inapp') }}"
                         :active="request()->routeIs('terms.inapp')">
-                        {{ __('Terms & Conditions') }}
+                        {{ __('app.terms_conditions') }}
                     </x-jet-nav-link>
 
                    
@@ -76,11 +88,11 @@
                     <x-slot name="content">
                         <!-- Account Management -->
                         <div class="block px-4 py-2 text-xs text-gray-400">
-                            {{ __('Manage Account') }}
+                            {{ __('app.manage_account') }}
                         </div>
 
                         <x-jet-dropdown-link href="{{ route('profile.show') }}">
-                            {{ __('Profile') }}
+                            {{ __('app.profile') }}
                         </x-jet-dropdown-link>
 
                         @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
@@ -128,7 +140,7 @@
 
                             <x-jet-dropdown-link href="{{ route('logout') }}" onclick="event.preventDefault();
                                                             this.closest('form').submit();">
-                                {{ __('Logout') }}
+                                {{ __('app.logout') }}
                             </x-jet-dropdown-link>
                         </form>
                     </x-slot>
@@ -155,30 +167,40 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
 
-            @cannot('view_appointments') 
+             
             <x-jet-responsive-nav-link href="{{ route('bookings.index') }}"
                 :active="request()->routeIs('bookings.index')">
-                {{ __('Bookings') }}
+                {{ __('app.bookings') }}
             </x-jet-responsive-nav-link>
-
+            @cannot('manage_bookings')
             <x-jet-responsive-nav-link href="{{ route('bookings.create') }}"
                 :active="request()->routeIs('bookings.create')">
-                {{ __('New Booking') }}
+                {{ __('app.new_booking') }}
             </x-jet-responsive-nav-link>
             @endcannot
 
-            <x-jet-responsive-nav-link href="{{ route('terms.inapp') }}"
-                :active="request()->routeIs('terms.inapp')">
-                {{ __('Terms & Conditions') }}
-            </x-jet-responsive-nav-link>
-
-            @can('view_appointments') 
+            @can('manage_bookings') 
             <x-jet-responsive-nav-link href="{{ route('appointments.index') }}"
                 :active="request()->routeIs('appointments.index')">
-                {{ __('My appointments') }}
+                {{ __('app.vacations') }}
             </x-jet-responsive-nav-link>
+
+            <x-jet-responsive-nav-link href="{{ route('users.index') }}"
+                :active="request()->routeIs('users.index')">
+                {{ __('app.users') }}
+            </x-jet-responsive-nav-link>
+
+            <x-jet-responsive-nav-link href="{{ route('ratings.index') }}"
+                :active="request()->routeIs('ratings.index')">
+                {{ __('app.ratings') }}
+            </x-jet-responsive-nav-link>
+
             @endcan
 
+            <x-jet-responsive-nav-link href="{{ route('terms.inapp') }}"
+                :active="request()->routeIs('terms.inapp')">
+                {{ __('app.terms_conditions') }}
+            </x-jet-responsive-nav-link>
             
         </div>
         <div class="pt-2 pb-1 border-t border-gray-200">
@@ -218,7 +240,7 @@
 
                     <x-jet-responsive-nav-link href="{{ route('logout') }}" onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                        {{ __('Logout') }}
+                        {{ __('app.logout') }}
                     </x-jet-responsive-nav-link>
                 </form>
 

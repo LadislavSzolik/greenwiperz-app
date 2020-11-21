@@ -24,17 +24,15 @@ class BookingConfirmedMail extends Mailable
     {                
         return $this->subject('Greenwiperz cleaning confirmed')->markdown('emails.bookings.confirmed')->with([
             'bookingNumber' => $this->booking->booking_nr,
-            'bookingDate' => $this->booking->appointment->date,
-            'bookingTime' => $this->booking->appointment->start_time,
-            'bookingPrice' => $this->booking->service_price,
-            'bookingVehicle' => $this->booking->bookingService->vehicle_model,
-            'bookingNumberPlate' => $this->booking->bookingService->number_plate,
-            'bookingColor' => $this->booking->bookingService->vehicle_color,
-            'bookingStreet' => $this->booking->bookingService->parking_street_number,
-            'bookingRoute' => $this->booking->bookingService->parking_route,
-            'bookingCity' => $this->booking->bookingService->parking_city,
-            'bookingPostalCode' => $this->booking->bookingService->parking_postal_code,
-            'bookingPrice' => $this->booking->invoice->moneyPrice,
+            'bookingDateTime' => $this->booking->appointment->date,
+            'bookingPrice' => $this->booking->brutto_total_amount,
+            'bookingVehicle' => $this->booking->car->car_model,
+            'bookingNumberPlate' => $this->booking->car->number_plate,
+            'bookingColor' => $this->booking->car->car_color,
+            'bookingStreet' => $this->booking->loc_street_number,
+            'bookingRoute' => $this->booking->loc_route,
+            'bookingCity' => $this->booking->loc_city,
+            'bookingPostalCode' => $this->booking->loc_postal_code,            
             'url' => url('/').'/bookings',
         ]);
     }

@@ -4,24 +4,33 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Appointment extends Model
 {
-    protected $fillable = ['date', 'assigned_to', 'start_time','end_time','canceled_at'];
-    protected $dates = ['canceled_at'];
-
-    use HasFactory;
-    use SoftDeletes;
+    protected $guarded = [];
+    protected $casts = ['date' => 'date'];
+    protected $appends = ['date_for_editing'];
     
-
+    use HasFactory;    
+    
     public function booking() {
         return $this->hasOne('App\Models\Booking');
     }    
 
-    public function getCarbonDateAttribute() {    
-       return new Carbon($this->date.' '.$this->start_time);
+    public function assignedTo()
+    {
+        return $this->belongsTo('App\Models\User', 'assigned_to');
+    }
+
+    public function getDateForEditingAttribute()
+    {       
+        return $this->date->format('Y-m-d');
+    }
+
+    public function setDateForEditingAttribute($value)
+    {            
+        $this->date = Carbon::parse($value);
     }
    
 }

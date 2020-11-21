@@ -9,6 +9,7 @@ use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 class LoginResponse implements LoginResponseContract
 {
 
+    //TODO: delete or use it!!!!
     public function toResponse($request)
     {
         $flattenRoles = Auth::user()->roles->flatten()->pluck('name')->unique();      

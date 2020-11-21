@@ -48,7 +48,7 @@
             </h3>
             <div class="mt-2">
               <p class="text-sm leading-5 text-gray-500">
-                Cancelling the booking....
+                We will cancel the booking date and transfer you back the funds based on our cancelation policity.
               </p>
             </div>
           </div>
@@ -58,7 +58,7 @@
             <form method="POST" action="{{$actionLink}}" class="w-full">
                 @csrf
                 <button type="submit" class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150 sm:text-sm sm:leading-5">
-                    Cancel
+                    Yes, cancel
                 </button>  
             </form> 
             
@@ -66,7 +66,7 @@
           </span>
           <span class="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
             <button x-on:click="open=false" type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5">
-              Nevermind
+              No, go back
             </button>
           </span>
         </div>

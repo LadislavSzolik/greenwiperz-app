@@ -64,17 +64,17 @@
                 <img height="60" width="60" src="{{ public_path('img/logo-500px.png') }}" />
             </td>
             <td class="text-left align-top">
-                <p>{{ $booking->sellerAddress->company_name }}</p>
-                <p>{{ $booking->sellerAddress->street }}</p>
-                <p>{{ $booking->sellerAddress->postal_code }} {{ $booking->sellerAddress->city }}</p>
+                <p>{{ $booking->gw_company_name }}</p>
+                <p>{{ $booking->gw_street }}</p>
+                <p>{{ $booking->gw_postal_code }} {{ $booking->gw_city }}</p>
             </td>
             <td></td>
             <td></td>
             <td colspan="2" class="text-right align-top slim-font text-muted">
                 <p>Telefon: {{ config('greenwiperz.company.telefon') }}</p>
                 <p>email: {{ config('greenwiperz.company.email') }}</p>
-                <p>Web: {{ config('greenwiperz.company.web') }}</p>
-                <p>{{ $booking->invoice->mwst_id }} MWST</p>
+                <p>Web: {{ config('greenwiperz.company.web') }}</p>   
+                <p>Keine MwSt-Pflicht</p>            
             </td>
         </tr>
     
@@ -111,7 +111,7 @@
         </tr>
         <tr>
             <td>Leistung</td>
-            @if($booking->bookingService->service_type == 'outside')
+            @if($booking->service_type == 'outside')
             <td class="text-right">Aussen Autoinnenreinigung</td>
             @else
             <td class="text-right">Inner und aussen Autoinnenreinigung</td>
@@ -120,15 +120,15 @@
         </tr>
         <tr>
             <td>Auto</td>
-            <td class="text-right">{{ $booking->bookingService->vehicle_model }}, {{ $booking->bookingService->number_plate }}, {{ $booking->bookingService->vehicle_color }}</td>
+            <td class="text-right">{{ $booking->car->car_model }}, {{ $booking->car->number_plate }}, {{ $booking->car->car_color }}</td>
         </tr>
         <tr>
             <td>Leistungsort </td>
-            <td class="text-right">{{ $booking->bookingService->parking_route }} {{ $booking->bookingService->parking_street_number }}, {{ $booking->bookingService->parking_postal_code }} {{ $booking->bookingService->parking_city }}</td>
+            <td class="text-right">{{ $booking->loc_route }} {{ $booking->loc_street_number }}, {{ $booking->loc_postal_code }} {{ $booking->loc_city }}</td>
         </tr>
         <tr>
             <td >Leistungszeitraum</td>
-            <td class="text-right">{{ $booking->appointment->date }} {{ $booking->appointment->start_time }}</td>
+            <td class="text-right">{{ $booking->booking_datetime }}</td>
         </tr>
     </table>
 
@@ -139,15 +139,15 @@
         </tr>
         <tr>
             <td>Leistung betrag</td>
-            <td class="text-right">{{ $booking->invoice->displayNettoPrice }} </td>
+            <td class="text-right">{{ $booking->formatedBaseCost }} </td>
         </tr>
         <tr>
-            <td>MwSt. 7.70%</td>
-            <td class="text-right">{{ $booking->invoice->displayMwstPercent }}</td>
+            <td>Extra Leistung</td>
+            <td class="text-right">{{ $booking->formatedExtraCost }}</td>
         </tr>
         <tr>
-            <td class="font-weight-bold bold-bottom">Total bezahlt</td>
-            <td class="text-right font-weight-bold bold-bottom">{{ $booking->invoice->displayPrice }}</td>
+            <td class="font-weight-bold  bold-bottom">Total bezahlt (keine MwSt-Pflicht)  </td>
+            <td class="text-right font-weight-bold  bold-bottom">{{ $booking->formatedTotalCost }}</td>
         </tr>   
     </table>
     <table class="w-100 pt-5">

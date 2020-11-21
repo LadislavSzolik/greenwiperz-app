@@ -23,16 +23,11 @@ class ReceiptFactory extends Factory
      */
     public function definition()
     {
-        return [
-            'user_id' => User::factory(),
+        return [            
             'booking_id' => Booking::factory(),
-            'receipt_nr' => 'REC12345678',
-            'price' => '5500',
-            'netto_price' => '5100',
-            'mwst_percent' => '400',
-            'mwst_id' => 'MWST 123.123.000',
+            'receipt_nr' => 'REC12345678',                        
             'transaction_id' => '123456789',
-            'settled_amount' => '5500',
+            'paid_amount' => '5500',
             'paid_with' => 'VIS',
         ];
     }

@@ -256,6 +256,16 @@ img {
     border-top: 8px solid #e53e3e;
 }
 
+.button-gray,
+.button-secondary {
+    color: black;
+    background-color: #f1f5f9;
+    border-bottom: 8px solid #f1f5f9;
+    border-left: 18px solid #f1f5f9;
+    border-right: 18px solid #f1f5f9;
+    border-top: 8px solid #f1f5f9;
+}
+
 /* Panels */
 
 .panel {

@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class BillingAddress extends Model
 {
 
-    protected $fillable = [
-        'booking_id',
-        'user_id', 
+    protected $fillable = [      
         'first_name',
         'last_name',
         'company_name',
@@ -22,7 +20,8 @@ class BillingAddress extends Model
     use HasFactory;
 
 
-    public function booking() {
-        return $this->belongsTo('App\Models\Booking');
+    public function billingable()
+    {
+        return $this->morphTo();
     }
 }

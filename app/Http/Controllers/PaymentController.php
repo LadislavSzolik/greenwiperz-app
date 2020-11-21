@@ -16,16 +16,18 @@ class PaymentController extends Controller
 {
 
 
-    public function redirectToDatatrans(Request $request) {        
+    public function redirectToDatatrans(Request $request) {              
         if (!Arr::exists($request, 'id')) {  
             abort(400, 'Booking id missing...');
         }   
+       
         $booking = Booking::findOrFail($request['id']);
+        
         // construct payload and init transaction
         $payload = [
             'currency'=>'CHF', 
             'refno'=> $booking->booking_nr, 
-            'amount'=> $booking->invoice->price, 
+            'amount'=> $booking->brutto_total_amount, 
             'autoSettle' => true,
             'redirect' => 
                 ['successUrl' => url('/').'/payments/handlePaymentSucceeded',
@@ -38,7 +40,8 @@ class PaymentController extends Controller
         
         // update the tranaction id on booking. will be compared after redirect
         if (Arr::exists($response, 'transactionId')) {               
-            $booking->transaction_id = $response['transactionId'];   
+            $booking->transaction_id = $response['transactionId'];  
+            $booking->status = 'pending';
             $booking->save();
         } else {
             abort(400, 'Transaction id was not recieved...');
@@ -59,38 +62,36 @@ class PaymentController extends Controller
 
     public function handlePaymentSucceeded(Request $request)
     {         
+        
         // TODO: add the signature check as middleware
         if (!Arr::exists($request, 'datatransTrxId')) {  
             abort(400, 'Transaction id not provided...');
         }        
         $datatransTrxId = $request['datatransTrxId'];
         $response = Datatrans::checkTransactionStatus($datatransTrxId);       
-
-        $booking = Booking::where('transaction_id', $response['transactionId'])->where('booking_nr',$response['refno'])->whereNull('paid_at')->firstOrFail();       
+        $booking = Booking::where('transaction_id', $response['transactionId'])->where('booking_nr',$response['refno'])->whereStatus('pending')->firstOrFail();       
         
-        $userId = $booking->user_id;
+        $userId = $booking->customer_id;
         if(!Auth::check()) {
             Auth::loginUsingId($userId);
-        }                                        
-       
-        $booking->receipt()->create([
-            'user_id'           => $userId,
-            'receipt_nr'        => $this->generateReceiptNumber(),
-            'price'             => $booking->invoice->price,
-            'netto_price'       => $booking->invoice->netto_price,
-            'mwst_percent'      => $booking->invoice->mwst_percent,
-            'mwst_id'           => config('greenwiperz.company.mwst_id'), 
-            'transaction_id'    => $response['transactionId'],
-            'settled_amount'    => $response['detail']['settle']['amount'],
+        }     
+                                          
+        $booking->receipt()->create([            
+            'receipt_nr'        => $this->generateReceiptNumber(),                     
+            'paid_amount'    =>  $response['detail']['settle']['amount'],
             'paid_with'         => $response['paymentMethod'],
-        ]);                       
-        $booking->paid_at = now();
-        $booking->save();
-        
-       
+            'transaction_id'    => $response['transactionId'],
+        ]);     
+        $booking->status = 'paid';              
+        $booking->save();        
         event(new BookingConfirmed($booking));
-       
-        $request->session()->flash('success', $booking->id);
+        
+        $request->session()->flash('message',
+        [
+            'color'=>'green',
+            'title'=>'Booking Confirmation', 
+            'description'=>'Your booking was successful. We received your funds. Shortly you will receive a mail about the confirmation.'
+        ]);
         return redirect()->route('bookings.show',['booking' => $booking->id]);
     }
 
@@ -105,17 +106,28 @@ class PaymentController extends Controller
         // TODO: add the signature check as middleware
         if (!Arr::exists($request, 'datatransTrxId')) {  
             abort(400, 'Transaction id missing...');
-        }                
+        }               
+       
         $response = Datatrans::checkTransactionStatus($request['datatransTrxId']);       
-        if(!$this->isCancelResponse($response['status'])) {
+        if($response['status'] != 'canceled') {
             abort(400, 'It is not a cancel request...');
-        }       
-        $booking = Booking::where('transaction_id', $response['transactionId'])->where('booking_nr',$response['refno'])->whereNull('paid_at')->firstOrFail();                    
-        $userId = $booking->user_id;
+        }      
+         
+        $booking = Booking::where('transaction_id', $response['transactionId'])->where('booking_nr',$response['refno'])->whereStatus('pending')->firstOrFail();         
+               
+        $userId = $booking->customer_id;
         if(!Auth::check()) {
             Auth::loginUsingId($userId);
-        }                   
-        return redirect()->route('bookings.show', ['booking' => $booking->id]);
+        }       
+            
+        $request->session()->flash('message',
+        [
+            'color'=>'yellow',
+            'title'=>'Payment canceled', 
+            'description'=>'The payment has been canceled. If you want to complete this booking please proceed to payment again.'
+        ]);       
+        
+        return view('bookings.review', ['booking' => $booking]); 
     }
 
     /** 
@@ -128,48 +140,28 @@ class PaymentController extends Controller
         if (!Arr::exists($request, 'datatransTrxId')) {  
             abort(400, "Missing transaction Id...");
         }        
+        
         $datatransTrxId = $request['datatransTrxId'];
-        $response = Datatrans::checkTransactionStatus($datatransTrxId);       
-        
-        // TODO: enhance the query
-        $booking = Booking::where('transaction_id', $response['transactionId'])->firstOrFail();       
-        
-        $userId = $booking->user_id;
+        $response = Datatrans::checkTransactionStatus($datatransTrxId);   
+        if($response['status'] != 'failed') {
+            abort(400, 'Wrong request sent to this url...');
+        }  
+          
+        $booking = Booking::where('transaction_id', $response['transactionId'])->where('booking_nr',$response['refno'])->whereStatus('pending')->firstOrFail();           
         if(!Auth::check()) {
-            Auth::loginUsingId($userId);
-        }       
+            Auth::loginUsingId($booking->customer_id);
+        }    
         
-        // does it have another error?
-        if($booking->payment != null && $booking->payment->status == 'failed') {            
-            $booking->payment->forceDelete();
-        }
-       
-        /*
-        Auth::user()->payments()->create([
-            'booking_id' => $booking->id,
-            'transaction_id' => $response['transactionId'],
-            'type' => $response['type'],
-            'status' => $response['status'],
-            'currency' => $response['currency'],
-            'refno' => $response['refno'],
-            'payment_method' => $response['paymentMethod'],
-            'detail_auth_amount' => $response['detail']['authorize']['amount'],              
-            'detail_fail_reason' => $response['detail']['fail']['reason'],                              
-            'detail_fail_msg' => $response['detail']['fail']['message'],                              
-        ]);    */
-        
-        return redirect()->route('bookings.show',['booking'=> $booking]);
+        $request->session()->flash('message',
+        [
+            'color'=>'red',
+            'title'=>'Payment failed', 
+            'description'=>'The payment failed. No transaction was made. If you want to complete this booking please proceed to payment again.'
+        ]);             
+        return view('bookings.review', ['booking' => $booking]); 
     }
+    
 
-
-
-    public function isCancelResponse(string $status) {
-        return $status =='canceled';
-    }
-
-    public function isFailResponse(string $status) {
-        return $status =='failed';
-    }
 
 
     protected function generateReceiptNumber()

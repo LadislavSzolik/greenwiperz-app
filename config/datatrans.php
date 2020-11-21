@@ -73,4 +73,6 @@ return [
 
     'sandbox' => env('DATATRANS_SANDBOX', false),
 
+    'mocked' => env('DATATRANS_MOCKED', true),
+
 ];

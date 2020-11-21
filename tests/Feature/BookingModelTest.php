@@ -24,64 +24,45 @@ class BookingModelTest extends TestCase
      * @return void
      */
     public function testBookingCreated_success()
-    {        
+    {              
+        $booking = Booking::factory()->create();
+        $this->assertDatabaseHas('bookings', ['id' => $booking->id]);
+    }
+
+
+    public function testBookingWithBillingAddressCreated_success()
+    {              
+        $booking = Booking::factory()->create();
+        $booking->billingAddress()->create([
+            'first_name' => 'FranK',
+            'last_name' => 'Jonson',
+            'street' => 'wehntalerstrasessse',  
+            'postal_code' => 'ddd',
+            'city' => 'Zurichx',
+            'country' => 'Schweiz',
+        ]);
+        $this->assertDatabaseCount('billing_addresses',1);
+    }
+
+    public function testBookingWithCarCreated_success()
+    {              
+        $booking = Booking::factory()->create();
+        $booking->car()->create([
+            'car_model' => 'Honda',
+            'car_color' => 'Black',
+            'number_plate' => 'ZH1234567',
+            'car_size' => 'small',  
+        ]);
+        $this->assertDatabaseCount('cars',1);
+    }
+
+    public function testBookingWithAppointmentCreated_success()
+    {
         $appointment = Appointment::factory()->create();
-        $booking = Booking::factory()->for(User::factory())->state([
-            'appointment_id' => $appointment->id,
-        ])->create();
-        $this->assertDatabaseHas('bookings', ['id' => $booking->id]);
+        $booking = Booking::factory()->create();
+        $appointment->booking()->save($booking);
+
+        $this->assertEquals($booking->appointment->start_time,$appointment->start_time);
     }
 
-    public function testBillingAddressCreated_success()
-    {
-        $booking = Booking::factory()->for(User::factory())->create();
-        $this->assertDatabaseHas('bookings', ['id' => $booking->id]);
-        BillingAddress::factory()->create([
-            'booking_id' => $booking->id,
-        ]);
-    }
-
-    public function testSellerAddressCreated_success()
-    {
-        $booking = Booking::factory()->for(User::factory())->create();
-        $seller = SellerAddress::factory()->create([
-            'booking_id' => $booking->id,
-        ]);
-        $this->assertDatabaseHas('seller_addresses', ['id' => $seller->id]);
-    }
-
-
-    public function testBookingServicesCreated_success()
-    {
-        $booking = Booking::factory()->for(User::factory())->create();
-        $bookingService = BookingService::factory()->create([
-            'booking_id' => $booking->id,
-        ]);
-        $this->assertDatabaseHas('booking_services', ['id' => $bookingService->id]);
-    }
-
-    public function testAppointmentCreated_success()
-    {
-        $timeslot = Appointment::factory()->create();
-        $booking = Booking::factory()->for(User::factory())->state([
-            'appointment_id' => $timeslot->id,
-        ])->create();
-        
-        $this->assertDatabaseHas('appointments', ['id' => $timeslot->id]);
-    }
-
-    public function testInvoiceCreated_success()
-    {
-        $booking = Booking::factory()->for(User::factory())->create();
-        $invoice = Invoice::factory()->create([
-            'booking_id'        => $booking->id,
-            'user_id'           => $booking->user_id,
-            'price'             => 5500,
-            'netto_price'       => intval(round(floatval('5500') / (1 + floatval(config('greenwiperz.mwst_percent'))))),
-            'mwst_percent'              => config('greenwiperz.mwst_percent'),
-            'mwst_id'       => config('greenwiperz.company.mwst_id'),
-        ]);
-
-        $this->assertDatabaseHas('invoices', ['id' => $invoice->id]);
-    }
 }

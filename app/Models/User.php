@@ -60,13 +60,48 @@ class User extends Authenticatable
     ];
 
 
-    public function bookings() {
-        return $this->hasMany('App\Models\Booking');
+    public function bookings() 
+    {
+        return $this->hasMany('App\Models\Booking', 'customer_id');
+    }   
+
+    public function ratings() 
+    {
+        return $this->hasMany('App\Models\Rating');
+    }  
+    
+    public function assignedBookings() 
+    {
+        return $this->hasMany('App\Models\Booking','assigned_to');
+    } 
+
+    public function appointments() 
+    {
+        return $this->hasMany('App\Models\Appointment', 'assigned_to');
+    }
+
+    public function billingAddress() 
+    {
+        return $this->morphOne('App\Models\BillingAddress','billingable');
+    }
+
+    public function car() 
+    {
+        return $this->morphOne('App\Models\Car','carable');
+    }
+
+
+    // temporary I just check if the guy is a greenwiper
+    public function isGreenwiper()
+    {
+        $flattenRoles = $this->roles->flatten()->pluck('name')->unique();
+        return $flattenRoles->contains('greenwiper');
     }
 
     public function roles() {
         return $this->belongsToMany('App\Models\Role')->withTimestamps();
     }
+
 
     public function assignRole($role)
     {

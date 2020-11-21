@@ -9,27 +9,43 @@ use App\Models\Booking;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Events\BookingCanceled;
+use App\Events\BookingCompleted;
+use App\Models\Appointment;
+use App\TimeslotService;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\App;
 
 class BookingController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(Booking::class, 'booking');
+       $this->authorizeResource(Booking::class, 'booking');
     }
 
 
-    public function index()
+    public function index(Request $request)
     {     
-        $bookings = Booking::where('user_id', auth()->user()->id )->whereNull('completed_at')->paginate(10);     
+        // TODO: add filters        
+
+        if(auth()->user()->isGreenwiper()) 
+        {
+            $bookings = auth()->user()->assignedBookings()->orderBy('booking_datetime','desc')->paginate(10);     
+        } else
+        {
+            $bookings = auth()->user()->bookings()->orderBy('booking_datetime','desc')->paginate(10);     
+        }
         return view('bookings.index', ['bookings' => $bookings ]);
     }
 
 
-    public function create(Request $request)
+    public function create()
     {
-
         return view('bookings.create');
+    }
+
+    public function edit(Booking $booking)
+    {       
+        return view('bookings.update', ['booking'=> $booking]);
     }
 
 
@@ -39,77 +55,283 @@ class BookingController extends Controller
     }
 
 
-    public function cancel(Request $request, Booking $booking) {
-
-        $response = Datatrans::checkTransactionStatus($booking->transaction_id);
-    
-        
-        if($response['status'] == 'authorized' || $response['status'] == 'settled' || $response['status'] == 'transmitted') {
-
-            $bookingTime = $booking->appointment->carbonDate;
-            $hoursBeforeCleaning = Carbon::now()->diffInMinutes($bookingTime);
-            
-            $settledAmount = $booking->receipt->settled_amount;
-            
-            if( $hoursBeforeCleaning < 60) {
-                $amountToRefund = 0;
-            } else if($hoursBeforeCleaning < 120 && $hoursBeforeCleaning >= 60){
-                $amountToRefund = $settledAmount * 0.2;
-            } else if($hoursBeforeCleaning < 180  && $hoursBeforeCleaning >= 120){
-                $amountToRefund = $settledAmount * 0.5;
-            } else if($hoursBeforeCleaning >= 180){
-                $amountToRefund = $settledAmount;
-            } else {
-                $amountToBeRefund = 0;
-            }
-
-            $intvalueOfAmountToRefund = intval($amountToRefund);
-           
-            $payload = [
-                'currency' => 'CHF',
-                'refno' => $booking->booking_nr,
-                'amount' => $intvalueOfAmountToRefund,
-            ];
-            
-            $response = Datatrans::refundTransaction($booking->transaction_id, $payload );
-
-            if($response->status() < 299 && Arr::exists($response, 'transactionId') ) {                                                
-                $responseStatusCheck = Datatrans::checkTransactionStatus($response['transactionId']);   
-                // needs to type=credit
-                $booking->refund()->create([
-                    'user_id' => $booking->user_id,
-                    'refund_nr' =>  $this->generateRefundNumber(),
-                    'price'             => $booking->invoice->price,
-                    'netto_price'       => $booking->invoice->netto_price,
-                    'mwst_percent'      => $booking->invoice->mwst_percent,
-                    'mwst_id'           => config('greenwiperz.company.mwst_id'), 
-                    'transaction_id'    => $responseStatusCheck['transactionId'],
-                    'refunded_amount'    => $responseStatusCheck['detail']['settle']['amount'],
-                ]);
-                $booking->transaction_id =  $responseStatusCheck['transactionId'];                
-            }
-           
-        }
-        $booking->canceled_at = now();            
-        $booking->canceled_by = auth()->user()->id;
-        $booking->save();  
+    public function cancel(Request $request, Booking $booking) 
+    {  
+               
         $booking->appointment->canceled_at = now();
+        $booking->appointment->canceled_by = auth()->user()->id;
         $booking->appointment->save();
-
-        event(new BookingCanceled($booking));
-
-        $request->session()->flash('canceled', 'Your booking has been canceled.');
+        $booking->status = 'canceled';
+        $booking->save();
        
+        $refundableAmount = $booking->refundableAmount;
+        if(auth()->user()->isGreenwiper() && filled($request['amountToRefund'])) {
+            if($request['amountToRefund'] > $booking->brutto_total_amount) {
+                $refundableAmount = $booking->brutto_total_amount;
+            }else {
+                $refundableAmount = $request['amountToRefund'];
+            }           
+            
+        }       
+        Datatrans::handleBookingRefund($booking, $refundableAmount);
+        event(new BookingCanceled($booking));
+        $request->session()->flash('message',
+        [
+            'color'=>'green',
+            'title'=>'Booking canceled', 
+            'description'=>'Your booking was canceled. About refunds see for refunds document for details. Shortly you will receive a mail about the confirmation.'
+        ]);
         return back();
     }
 
-    
+    public function complete(Request $request, Booking $booking)
+    {
+        $booking->appointment->completed_at = now();
+        $booking->appointment->completed_by = auth()->user()->id;
+        $booking->status = 'completed';
+        $booking->save();
 
+        event(new BookingCompleted($booking));
+
+        $request->session()->flash('message',
+        [
+            'color'=>'green',
+            'title'=>'Booking completed', 
+            'description'=>'Nice delivery. The client will receive a confirmation mail soon!'
+        ]);
+        return back();
+    }
+
+
+    public function store(Request $request) 
+    {         
+       
+        //TODO: store accepted terms and conditions   
+        $validated = $this->validateRequest();
+        
+        $availableSlots = TimeslotService::fetchSlots($validated['bookingDate'], $validated['assignedTo'],$validated['duration']); 
+       
+        if(!$availableSlots->contains($validated['bookingTime']))
+        {                
+            session()->flash('message', 'Unfortunately in a meanwhile the timeslot has been taken. Please select a new one.');
+            return back();
+        }
+       
+        $appointment = Appointment::create
+        ([
+            'date' => $validated['bookingDate'],
+            'start_time' => $validated['bookingTime'],
+            'end_time' => Carbon::parse($validated['bookingTime'])->addMinutes($validated['duration'] - 1)->format('H:i'),
+            'assigned_to' => $validated['assignedTo'],
+        ]);
+
+        $user = auth()->user();
+        $booking = Booking::create
+        ([
+            'booking_nr' => 'GW'.$this->generateBaseNumber(),
+            'invoice_nr' => 'INV'.$this->generateBaseNumber(),  
+            'appointment_id' => $appointment->id,          
+            'status' => 'draft',
+            'customer_id' => $user->id,
+            'booking_datetime' =>  new Carbon($validated['bookingDate'] .' '.$validated['bookingTime']) ,
+            
+            'assigned_to' =>  $validated['assignedTo'] ,    
+                                     
+            'loc_street_number' => $validated['locStreetNumber'],
+            'loc_route' =>  $validated['locRoute'] ,
+            'loc_city' =>  $validated['locCity']  ,
+            'loc_postal_code'  => $validated['locPostalCode'],
+
+            'service_type' => $validated['serviceType'],
+            'duration' =>  $validated['duration'],            
+
+            'base_cost' => $validated['baseCost'],
+            'extra_cost' => $validated['extraCost'],
+            'brutto_total_amount' => $validated['bruttoTotalAmount'],
+            
+            'has_extra_dirt' => $validated['hasExtraDirt'],
+            'has_animal_hair' => $validated['hasAnimalHair'],        
+
+            'phone' => $validated['phone'],                                        
+            'notes' => $validated['notes'],                      
+
+            'gw_vat_number' => config('greenwiperz.company.mwst_id'),
+            'gw_company_name' => config('greenwiperz.company.name'),
+            'gw_street' => config('greenwiperz.company.street'),
+            'gw_postal_code' =>  config('greenwiperz.company.postal_code') ,
+            'gw_city' =>  config('greenwiperz.company.city') ,
+            'gw_country'  => config('greenwiperz.company.country'), 
+        ]);                 
+
+        $booking->car()->create
+        ([
+            'car_model' => $validated['carModel'],
+            'car_color' => $validated['carColor'],
+            'number_plate' => $validated['numberPlate'],
+            'car_size' => $validated['carSize'],  
+        ]); 
+        $booking->billingAddress()->create
+        ([
+            'first_name' => $validated['billFirstName'],
+            'last_name' => $validated['billLastName'],
+            'company_name' => $validated['billCompanyName'],            
+            'street' => $validated['billStreet'],  
+            'postal_code' => $validated['billPostalCode'],
+            'city' => $validated['billCity'],
+            'country' => $validated['billCountry'],
+        ]);
+                      
+        $this->updateUserAddressAndCar($validated);
+        return view('bookings.review', ['booking' => $booking]);       
+    }
+
+    public function update(Request $request, Booking $booking)
+    {        
+        $validated =  $this->validateRequest();        
+        $booking->update
+        ([                   
+            'booking_datetime' =>  new Carbon($validated['bookingDate'] .' '.$validated['bookingTime']) ,            
+            'assigned_to' =>  $validated['assignedTo'] ,                                         
+            'loc_street_number' => $validated['locStreetNumber'],
+            'loc_route' =>  $validated['locRoute'] ,
+            'loc_city' =>  $validated['locCity']  ,
+            'loc_postal_code'  => $validated['locPostalCode'],
+            'service_type' => $validated['serviceType'],
+            'duration' =>  $validated['duration'],            
+            'base_cost' => $validated['baseCost'],
+            'extra_cost' => $validated['extraCost'],
+            'brutto_total_amount' => $validated['bruttoTotalAmount'],            
+            'has_extra_dirt' => $validated['hasExtraDirt'],
+            'has_animal_hair' => $validated['hasAnimalHair'],        
+            'phone' => $validated['phone'],                                        
+            'notes' => $validated['notes'],                      
+        ]);
+        $booking->appointment()->update
+        ([
+            'date' => $validated['bookingDate'],
+            'start_time' => $validated['bookingTime'],
+            'end_time' => Carbon::parse($validated['bookingTime'])->addMinutes($validated['duration'] - 1)->format('H:i'),
+            'assigned_to' => $validated['assignedTo'],
+        ]);    
+        
+        $booking->car()->update
+        ([
+            'car_model' => $validated['carModel'],
+            'car_color' => $validated['carColor'],
+            'number_plate' => $validated['numberPlate'],
+            'car_size' => $validated['carSize'],  
+        ]);       
+        $booking->billingAddress()->update
+        ([
+            'first_name' => $validated['billFirstName'],
+            'last_name' => $validated['billLastName'],
+            'company_name' => $validated['billCompanyName'],            
+            'street' => $validated['billStreet'],  
+            'postal_code' => $validated['billPostalCode'],
+            'city' => $validated['billCity'],
+            'country' => $validated['billCountry'],
+        ]);
+        $booking->save();
+        $this->updateUserAddressAndCar($validated);
+        return view('bookings.review', ['booking' => $booking]); 
+    }
+
+    public function updateUserAddressAndCar($validated)
+    {
+        $user = auth()->user();
+
+        if(filled($user->car)) 
+        {
+        $user->car()->update(
+            [
+                'car_model' => $validated['carModel'],
+                'car_color' => $validated['carColor'],
+                'number_plate' => $validated['numberPlate'],
+                'car_size' => $validated['carSize'],  
+            ]);
+        } else {
+            $user->car()->create(
+            [
+                'car_model' => $validated['carModel'],
+                'car_color' => $validated['carColor'],
+                'number_plate' => $validated['numberPlate'],
+                'car_size' => $validated['carSize'],  
+            ]);
+        }
+       
+        
+        if(filled($user->billingAddress)) 
+        {
+            $user->billingAddress()->update([
+                'first_name' => $validated['billFirstName'],
+                'last_name' => $validated['billLastName'],
+                'company_name' => $validated['billCompanyName'],            
+                'street' => $validated['billStreet'],  
+                'postal_code' => $validated['billPostalCode'],
+                'city' => $validated['billCity'],
+                'country' => $validated['billCountry'],
+            ]);
+        } else 
+        {
+            $user->billingAddress()->create([
+                'first_name' => $validated['billFirstName'],
+                'last_name' => $validated['billLastName'],
+                'company_name' => $validated['billCompanyName'],            
+                'street' => $validated['billStreet'],  
+                'postal_code' => $validated['billPostalCode'],
+                'city' => $validated['billCity'],
+                'country' => $validated['billCountry'],
+            ]);
+        }
+    }
+
+    protected function validateRequest() 
+    {
+        
+        return request()->validate([
+            'assignedTo' => 'required',                        
+            'locStreetNumber' => 'required',
+            'locRoute' => 'required',
+            'locCity' => 'required',
+            'locPostalCode' => 'required',            
+            'serviceType' => 'required',
+            'duration' => 'required|numeric',
+            'baseCost' => 'required|numeric',
+            'extraCost' => 'required|numeric',
+            'bruttoTotalAmount' => 'required|numeric',
+            'hasExtraDirt' => 'required',
+            'hasAnimalHair' => 'required', 
+            'carModel' =>  'required',    
+            'numberPlate' => 'required',          
+            'carColor' => 'required',
+            'carSize' => 'required',
+            'bookingDate' => 'required',
+            'bookingTime' => 'required',
+            'notes' => 'nullable',
+            'phone' => 'nullable',
+            'billFirstName' => 'required',
+            'billLastName' => 'required',  
+            'billCompanyName' => 'nullable',                    
+            'billStreet' => 'required',
+            'billPostalCode' => 'required',
+            'billCity' => 'required',
+            'billCountry' => 'required',
+        ]); 
+        
+    }
+    
     
     public function destroy(Request $request, Booking $booking)
-    {              
-        $booking->appointment()->forceDelete();    
-        $request->session()->flash('deleted', 'The booking has been successfully deleted.');
+    {                          
+        if( $booking->appointment) 
+        {
+            $booking->appointment->delete();
+        }
+        
+        $booking->billingAddress->delete();      
+        $booking->car->delete();
+        $booking->delete();    
+        $request->session()->flash('deleted', 'The booking has been successfully deleted.');        
         return redirect()->route('bookings.index');
     }
 
@@ -130,6 +352,16 @@ class BookingController extends Controller
         $pdf = App::make('dompdf.wrapper');
         $pdf->loadView('pdf.refund_de', ['booking' => $booking]); 
         return $pdf->stream();  
+    }
+    
+    protected function generateBaseNumber()
+    {       
+        $baseNumberStructure = [            
+            'date' => Carbon::now('GMT+2')->format('U'),
+            'divider2' => '-',
+            'userid' => str_pad(auth()->user()->id, 4, "0", STR_PAD_LEFT),
+        ];
+        return implode($baseNumberStructure);
     }
 
     protected function generateRefundNumber()

@@ -12,8 +12,7 @@ Thank you for your booking. Here is the summary
 {{ $bookingColor }}  
 
 **Date and Time of cleaning**  
-{{ $bookingDate}} {{ $bookingTime }}  
-
+{{ $bookingDateTime}}   
 
 **Place of cleaning**  
 {{ $bookingRoute}} {{ $bookingStreet}}  

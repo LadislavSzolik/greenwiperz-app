@@ -2,6 +2,7 @@
 
 
 use App\Models\Booking;
+use App\Mail\BookingCompletedMail;
 use App\Mail\BookingConfirmedMail;
 use Illuminate\Support\Facades\Route;
 use App\Mail\CanceledConfirmationMail;
@@ -10,8 +11,11 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\WaitingVisitorController;
+use App\Http\Controllers\BookingCommentController;
+use App\Http\Controllers\RatingController;
+use App\Http\Controllers\UserController;
 
-// GUEST ZONE
+// VISITOR ZONE
 Route::get('lang/{locale}', LocalizationController::class)->name('language');
 Route::get('/', function () { return view('welcome'); })->name('home');
 Route::get('/prices', function () { return view('prices'); })->name('prices');
@@ -21,40 +25,48 @@ Route::get('/about', function () {return view('about');})->name('about');
 Route::get('/contact', function () {return view('contact');})->name('contact');
 Route::get('/terms', function () {return view('terms');})->name('terms');
 
-// sign up for waitinglist
+// SIGN UP FOR WAITINGLIST
 Route::get('/waitingvisitors/create', [WaitingVisitorController::class, 'create'])->name('waitingvisitors.create');
 Route::post('/waitingvisitors/store', [WaitingVisitorController::class, 'store'])->name('waitingvisitors.store');
+// RATING
+Route::get('/ratings/{user}', [RatingController::class, 'create'])->name('ratings.create');
+Route::post('/ratings', [RatingController::class, 'store'])->name('ratings.store');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/termsinapp', function () {return view('terms-inapp');})->name('terms.inapp');
-Route::middleware(['auth:sanctum', 'verified','can:view_appointments'])->get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
-Route::middleware(['auth:sanctum', 'verified','can:view_appointments'])->get('/appointments/{appointment}', [AppointmentController::class, 'show'])->name('appointments.show');
-Route::middleware(['auth:sanctum', 'verified','can:update_appointments'])->get('/appointments/{appointment}/edit', [AppointmentController::class, 'edit'])->name('appointments.edit');
-Route::middleware(['auth:sanctum', 'verified','can:update_appointments'])->get('/appointments/{appointment}/update', [AppointmentController::class, 'update'])->name('appointments.update');
+// ADMIN
+Route::middleware(['auth:sanctum', 'verified','can:manage_bookings'])->group(function () {
+    Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::post('/bookings/{booking}/complete', [BookingController::class, 'complete'])->name('bookings.complete');
+    Route::post('/comments/{booking}', [BookingCommentController::class, 'store']);
+    Route::get('/ratings', [RatingController::class, 'index'])->name('ratings.index');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+});
 
-
-// 
-
-// AUTH USER ZONE
-
-Route::middleware(['auth:sanctum', 'verified'])->get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
-Route::middleware(['auth:sanctum', 'verified'])->get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
-Route::middleware(['auth:sanctum', 'verified'])->get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
-Route::middleware(['auth:sanctum', 'verified'])->post('/bookings/{booking}/delete', [BookingController::class, 'destroy'])->name('bookings.delete');
-Route::middleware(['auth:sanctum', 'verified'])->post('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
-Route::middleware(['auth:sanctum', 'verified'])->get('/bookings/{booking}/invoice', [BookingController::class, 'showInvoice'])->name('bookings.invoice');
-Route::middleware(['auth:sanctum', 'verified'])->get('/bookings/{booking}/receipt', [BookingController::class, 'showReceipt'])->name('bookings.receipt');
-Route::middleware(['auth:sanctum', 'verified'])->get('/bookings/{booking}/refund', [BookingController::class, 'showRefund'])->name('bookings.refund');
-
-Route::middleware(['auth:sanctum', 'verified'])->get('/payments/redirectToDatatrans/{id}', [PaymentController::class, 'redirectToDatatrans'])->name('payments.redirect');
+// AUTH CUSTOMER ZONE
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/termsinapp', function () {return view('terms-inapp');})->name('terms.inapp');
+    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
+    Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+    Route::patch('/bookings/{booking}', [BookingController::class, 'update'])->name('bookings.update');
+    Route::get('/bookings/{booking}/edit', [BookingController::class, 'edit'])->name('bookings.edit');
+    Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+    Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+    Route::get('/bookings/{booking}/invoice', [BookingController::class, 'showInvoice'])->name('bookings.invoice');
+    Route::get('/bookings/{booking}/receipt', [BookingController::class, 'showReceipt'])->name('bookings.receipt');
+    Route::get('/bookings/{booking}/refund', [BookingController::class, 'showRefund'])->name('bookings.refund');
+    Route::get('/payments/redirectToDatatrans/{id}', [PaymentController::class, 'redirectToDatatrans'])->name('payments.redirect');   
+});
 Route::post('/payments/handlePaymentSucceeded', [PaymentController::class, 'handlePaymentSucceeded']);
 Route::post('/payments/handlePaymentCanceled', [PaymentController::class, 'handlePaymentCanceled']);
 Route::post('/payments/handlePaymentFailed', [PaymentController::class, 'handlePaymentFailed']);
 
 // TODO: finish mail testing
 Route::get('mailable',function(){
-    $booking = Booking::findOrFail(1);   
+    $booking = Booking::findOrFail(2);   
     //return new BookingConfirmedMail($booking);
-    return new CanceledConfirmationMail($booking);
+    //return new CanceledConfirmationMail($booking);
+    return new BookingCompletedMail($booking);
 });
 
 

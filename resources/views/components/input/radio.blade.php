@@ -1,6 +1,6 @@
 @props([
     'text',
-    'subText',
+    'subText' => null,
 ])
 
 <div class="mt-2">

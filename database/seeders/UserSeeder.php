@@ -19,33 +19,34 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        /*
         $user1 = User::create([
-            'name' => 'Ladislav',
-            'email' => 'szolik.ladislav@gmail.com',
+            'name' => 'John',
+            'email' => 'sz@gmail.com',
             'password' => Hash::make('password'),  
         ]);     
 
         DB::table('users')->insert([
             'name' => 'Harold',
-            'email' => 'szolik@gmail.com',
+            'email' => 'l@gmail.com',
             'password' => Hash::make('password'),       
-        ]);
+        ]); */
+
+        $user1 = User::create([
+            'name' => 'admin',
+            'email' => 'info@greenwiperz.ch',
+            'password' => Hash::make('password'),  
+        ]); 
 
         $role = Role::firstOrCreate([
             'name' => 'greenwiper',
         ]);
 
         Ability::firstOrCreate([
-            'name' => 'view_appointments'
+            'name' => 'manage_bookings'
         ]);
-        Ability::firstOrCreate([
-            'name' => 'update_appointments'
-        ]);
-
         
-        $role->allowTo('view_appointments');
-        $role->allowTo('update_appointments');
-
+        $role->allowTo('manage_bookings');        
         $user1->assignRole('greenwiper');
 
     }

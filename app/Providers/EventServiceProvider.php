@@ -24,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\BookingCanceled' => [
             'App\Listeners\SendCancelationConfirmation',
         ],
+        'App\Events\BookingCompleted' => [
+            'App\Listeners\SendCompletionConfirmation',
+        ],
     ];
 
     /**

@@ -24,8 +24,6 @@ class BillingAddressFactory extends Factory
     public function definition()
     {
         return [
-            'user_id'  => User::factory(), 
-            'booking_id'        => Booking::factory(),
             'first_name'        => $this->faker->name(),
             'last_name'         => $this->faker->name(),
             'company_name'      => $this->faker->name(),

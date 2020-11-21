@@ -16,6 +16,8 @@ return [
     'mwst_percent' => env('MWST_PERCENT', '0.077'),
     'google_maps_api_key' => env('GOOGLE_MAPS_API_KEY', null),
 
-    'registration_enabled' => false,
+    'tranvel_time' => env('GW_TRAVEL_TIME',30),
+
+    'registration_enabled' => true,
 
 ];
