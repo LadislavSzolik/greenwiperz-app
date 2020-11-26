@@ -3,8 +3,8 @@
     'buttonType' => 'secondary',
     'action' => ''
 ])
-<div class="inline-flex">
-    <form method="{{ $method === 'GET' ? 'GET' : 'POST' }}" action=" {{ $action }} ">
+<div {{ $attributes->merge(['class' => "inline-flex"]) }}>
+    <form {{ $attributes }} method="{{ $method === 'GET' ? 'GET' : 'POST' }}" action=" {{ $action }} ">
         @csrf
         
         @if (! in_array($method, ['GET', 'POST']))

@@ -9,10 +9,29 @@ class Car extends Model
 {
     use HasFactory;
 
+    const COLORS = [
+        'black',
+        'gray',
+        'silver', 
+        'white', 
+        'red', 
+        'orange',
+        'yellow', 
+        'brown', 
+        'green', 
+        'teal',
+        'pink',
+    ];
+
     protected $guarded = [];
 
     public function carable()
     {
         return $this->morphTo();
+    }
+
+    public function getCarColorNameAttribute()
+    {
+        $en_colors = [];
     }
 }

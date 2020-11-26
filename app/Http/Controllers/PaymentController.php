@@ -62,7 +62,7 @@ class PaymentController extends Controller
 
     public function handlePaymentSucceeded(Request $request)
     {         
-        
+                
         // TODO: add the signature check as middleware
         if (!Arr::exists($request, 'datatransTrxId')) {  
             abort(400, 'Transaction id not provided...');
@@ -127,7 +127,7 @@ class PaymentController extends Controller
             'description'=>'The payment has been canceled. If you want to complete this booking please proceed to payment again.'
         ]);       
         
-        return view('bookings.review', ['booking' => $booking]); 
+        return redirect()->route('bookings.review', ['booking' => $booking]); 
     }
 
     /** 
@@ -158,7 +158,7 @@ class PaymentController extends Controller
             'title'=>'Payment failed', 
             'description'=>'The payment failed. No transaction was made. If you want to complete this booking please proceed to payment again.'
         ]);             
-        return view('bookings.review', ['booking' => $booking]); 
+        return redirect()->route('bookings.review', ['booking' => $booking]); 
     }
     
 

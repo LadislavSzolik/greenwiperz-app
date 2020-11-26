@@ -1,11 +1,10 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('app.review_booking') }}
-        </h2>
-    </x-slot>
+<div>
+    <x-header>
+        <x-slot name="title">{{ __('app.review_booking') }}</x-slot>
+        <x-slot name="actions"></x-slot>
+    </x-header>
 
-    <form method="GET" action="/payments/redirectToDatatrans/{{$booking->id}}">
+    <form wire:submit.prevent="submit">
         @csrf
         <div class="max-w-7xl mx-auto pt-5 sm:py-5 sm:px-6 lg:px-8">
             <div class="grid grid-cols-6 gap-3">
@@ -15,15 +14,15 @@
                     <div class="col-span-6">
                         <x-flash.universal x-data="{open: true}" :color="session('message')['color']" x-show.transition.out="open">
                             <x-slot name="title">
-                                {{ session('message')['title'] }}
+                                {{ __(session('message')['title']) }}
                             </x-slot>
 
                             <x-slot name="description">
-                                {{ session('message')['description'] }}
+                                {{ __(session('message')['description']) }}
                             </x-slot>
 
                             <x-slot name="actions">
-                                <div x-on:click="open=false" class="ml-3 px-2 py-1.5 rounded-md text-sm leading-5 font-medium hover:bg-{{session('message')['color']}}-100 focus:outline-none focus:bg-{{session('message')['color']}}-100 transition ease-in-out duration-150 cour
+                                <div x-on:click="open=false" class="px-2 py-1.5 rounded-md text-sm leading-5 font-medium hover:bg-{{session('message')['color']}}-100 focus:outline-none focus:bg-{{session('message')['color']}}-100 transition ease-in-out duration-150 cour
                                 ">
                                     {{ __('app.dismiss') }}
                                 </div>
@@ -54,7 +53,7 @@
                         </label>
                         {{ $booking->car->car_model }}, {{ $booking->car->number_plate }}
                         <br />
-                        {{ $booking->car->car_color }}, <span class="capitalize">{{ $booking->car->car_size }}</span>
+                        {{ __($booking->car->car_color) }}, <span class="capitalize">{{ $booking->car->car_size }}</span>
                     </div>
                     <div class="col-span-6">
                         <label class='block font-medium text-sm text-gray-700'>
@@ -111,20 +110,27 @@
                                     <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_1" required>
                                     <span class="ml-2">{{ __('app.terms_1_sub_1')}}</span>
                                 </label>
+
                                 <label class="inline-flex items-start">
                                     <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_2" required>
+                                    <span class="ml-2">{{ __('My car is NOT parked on public property')}}</span>
+                                </label>
+
+
+                                <label class="inline-flex items-start">
+                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_3" required>
                                     <span class="ml-2">{{ __('app.terms_1_sub_2')}}</span>
                                 </label>
                                 <label class="inline-flex items-start">
-                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_3" required>
+                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_4" required>
                                     <span class="ml-2">{{ __('app.terms_1_sub_3')}}</span>
                                 </label>
                                 <label class="inline-flex items-start">
-                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_4" required>
+                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_5" required>
                                     <span class="ml-2">{{ __('app.terms_1_sub_4')}}</span>
                                 </label>
                                 <label class="inline-flex items-start">
-                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_5" required>
+                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_6" required>
                                     <span class="ml-2">{{ __('app.terms_1_sub_5')}}</span>
                                 </label>
                             </div>
@@ -135,15 +141,15 @@
                                     {{ __('app.terms_2_title')}}
                                 </label>
                                 <label class="inline-flex items-start">
-                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_6" required>
+                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_7" required>
                                     <span class="ml-2">{{ __('app.terms_2_sub_1')}}</span>
                                 </label>
                                 <label class="inline-flex items-start">
-                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_7" required>
+                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_8" required>
                                     <span class="ml-2">{{ __('app.terms_2_sub_2')}} </span>
                                 </label>
                                 <label class="inline-flex items-start">
-                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_8" required>
+                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_9" required>
                                     <span class="ml-2">{{ __('app.terms_2_sub_3')}}</span>
                                 </label>
                             </div>
@@ -159,7 +165,7 @@
 
                                 </label>
                                 <label class="inline-flex items-start">
-                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_9" required>
+                                    <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " name="terms_10" required>
                                     <span class="ml-2">{{ __('app.terms_3_sub_1')}}</span>
                                 </label>
                             </div>
@@ -190,11 +196,9 @@
                         </div>
 
                         <div class="flex items-center justify-between pt-4 ">
-                            <a href="/bookings/{{$booking->id}}/edit">
-                                <x-div-button buttonType="secondary">
-                                    {{ __('app.modify') }}
-                                </x-div-button>
-                            </a>
+                            <x-div-button wire:click="destroy" buttonType="tertiary">
+                                {{ __('Cancel') }}
+                            </x-div-button>
                             <x-button wire:loading.attr="disabled" buttonType="primary" type="submit">
                                 {{ __('app.pay') }}
                             </x-button>
@@ -210,11 +214,9 @@
                             <div class="font-bold">{{ $booking->formatedTotalCost }}/ {{ $booking->formatedDuration }}</div>
                         </div>
                         <div class="my-2 flex justify-between items-center">
-                            <a href="/bookings/{{$booking->id}}/edit">
-                                <x-div-button buttonType="tertiary">
-                                    {{ __('app.modify') }}
-                                </x-div-button>
-                            </a>
+                            <x-div-button wire:click="destroy" buttonType="tertiary">
+                                {{ __('Cancel') }}
+                            </x-div-button>
                             <x-button wire:loading.attr="disabled" buttonType="primary" type="submit">
                                 {{ __('app.pay') }}
                             </x-button>
@@ -225,4 +227,4 @@
             </div>
         </div>
     </form>
-</x-app-layout>
+</div>

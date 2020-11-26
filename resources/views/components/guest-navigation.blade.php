@@ -49,7 +49,7 @@
 
                 @if(config('greenwiperz.registration_enabled'))   
                     @auth
-                        <a href="{{ route('bookings.index') }}" class="text-gray-700 underline">My Bookings</a>
+                        <a href="{{ route('bookings.index') }}" class="text-gray-700 underline">{{ __('My Bookings') }}</a>
                     @else
                         <a href="{{ route('login') }}" class="text-gray-700 underline">Login</a>
                         @if (Route::has('register'))

@@ -22,35 +22,13 @@ class BookingController extends Controller
        $this->authorizeResource(Booking::class, 'booking');
     }
 
-
-    public function index(Request $request)
-    {     
-        // TODO: add filters        
-
-        if(auth()->user()->isGreenwiper()) 
-        {
-            $bookings = auth()->user()->assignedBookings()->orderBy('booking_datetime','desc')->paginate(10);     
-        } else
-        {
-            $bookings = auth()->user()->bookings()->orderBy('booking_datetime','desc')->paginate(10);     
-        }
-        return view('bookings.index', ['bookings' => $bookings ]);
-    }
-
-
     public function create()
-    {
+    {        
         return view('bookings.create');
     }
 
-    public function edit(Booking $booking)
-    {       
-        return view('bookings.update', ['booking'=> $booking]);
-    }
-
-
     public function show(Booking $booking)
-    {      
+    {     
         return view('bookings.show', ['booking' => $booking] );
     }
 
@@ -104,11 +82,8 @@ class BookingController extends Controller
 
 
     public function store(Request $request) 
-    {         
-       
-        //TODO: store accepted terms and conditions   
-        $validated = $this->validateRequest();
-        
+    {                 
+        $validated = $this->validateRequest(); 
         $availableSlots = TimeslotService::fetchSlots($validated['bookingDate'], $validated['assignedTo'],$validated['duration']); 
        
         if(!$availableSlots->contains($validated['bookingTime']))
@@ -182,59 +157,9 @@ class BookingController extends Controller
         ]);
                       
         $this->updateUserAddressAndCar($validated);
-        return view('bookings.review', ['booking' => $booking]);       
+        return redirect()->route('bookings.review', ['booking' => $booking]);       
     }
 
-    public function update(Request $request, Booking $booking)
-    {        
-        $validated =  $this->validateRequest();        
-        $booking->update
-        ([                   
-            'booking_datetime' =>  new Carbon($validated['bookingDate'] .' '.$validated['bookingTime']) ,            
-            'assigned_to' =>  $validated['assignedTo'] ,                                         
-            'loc_street_number' => $validated['locStreetNumber'],
-            'loc_route' =>  $validated['locRoute'] ,
-            'loc_city' =>  $validated['locCity']  ,
-            'loc_postal_code'  => $validated['locPostalCode'],
-            'service_type' => $validated['serviceType'],
-            'duration' =>  $validated['duration'],            
-            'base_cost' => $validated['baseCost'],
-            'extra_cost' => $validated['extraCost'],
-            'brutto_total_amount' => $validated['bruttoTotalAmount'],            
-            'has_extra_dirt' => $validated['hasExtraDirt'],
-            'has_animal_hair' => $validated['hasAnimalHair'],        
-            'phone' => $validated['phone'],                                        
-            'notes' => $validated['notes'],                      
-        ]);
-        $booking->appointment()->update
-        ([
-            'date' => $validated['bookingDate'],
-            'start_time' => $validated['bookingTime'],
-            'end_time' => Carbon::parse($validated['bookingTime'])->addMinutes($validated['duration'] - 1)->format('H:i'),
-            'assigned_to' => $validated['assignedTo'],
-        ]);    
-        
-        $booking->car()->update
-        ([
-            'car_model' => $validated['carModel'],
-            'car_color' => $validated['carColor'],
-            'number_plate' => $validated['numberPlate'],
-            'car_size' => $validated['carSize'],  
-        ]);       
-        $booking->billingAddress()->update
-        ([
-            'first_name' => $validated['billFirstName'],
-            'last_name' => $validated['billLastName'],
-            'company_name' => $validated['billCompanyName'],            
-            'street' => $validated['billStreet'],  
-            'postal_code' => $validated['billPostalCode'],
-            'city' => $validated['billCity'],
-            'country' => $validated['billCountry'],
-        ]);
-        $booking->save();
-        $this->updateUserAddressAndCar($validated);
-        return view('bookings.review', ['booking' => $booking]); 
-    }
 
     public function updateUserAddressAndCar($validated)
     {
@@ -287,7 +212,6 @@ class BookingController extends Controller
 
     protected function validateRequest() 
     {
-        
         return request()->validate([
             'assignedTo' => 'required',                        
             'locStreetNumber' => 'required',
@@ -327,11 +251,16 @@ class BookingController extends Controller
         {
             $booking->appointment->delete();
         }
-        
         $booking->billingAddress->delete();      
         $booking->car->delete();
         $booking->delete();    
-        $request->session()->flash('deleted', 'The booking has been successfully deleted.');        
+        
+        $request->session()->flash('message',
+        [
+            'color'=>'green',
+            'title'=>'Booking deleted', 
+            'description'=>'The booking has been successfully deleted'
+        ]);
         return redirect()->route('bookings.index');
     }
 

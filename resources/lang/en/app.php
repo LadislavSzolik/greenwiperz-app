@@ -54,7 +54,7 @@ return [
     'google_autocomplete_error_2' => 'Unfortunately our services are not yet available in this area. Please call us on +41 123 12 12 to discuss further details.',    
     'invoice' => 'Invoice',
     'last_name' => 'Last name',
-    'lets_make_sure' => 'Und jetzt vergewissern wir uns, dass wir diesen Job für Sie machen können!',
+    'lets_make_sure' => 'Let\'s make sure we can do this job for you!',
     'logout' => 'Logout',
     'manage_account' => 'Manage account',
     'mark_done' => 'Mark as done',

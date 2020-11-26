@@ -58,7 +58,7 @@ class Datatrans
         $merchantPassw = config('datatrans.api_password');
         
         $response = Http::withBasicAuth($merchantId , $merchantPassw)->$method(static::apiBaseUrl().$uri, $payload);                
-
+        
         if (Arr::exists($response, 'error')) {            
             throw new DatatransException($response['error']['message'], $response->status());
         }
@@ -96,7 +96,7 @@ class Datatrans
                     'refunded_amount'    => $responseStatusCheck['detail']['settle']['amount'],
                 ]);
                 $booking->transaction_id =  $responseStatusCheck['transactionId'];     
-                $booking->save();      
+                $booking->save();                      
             }           
         }
     }

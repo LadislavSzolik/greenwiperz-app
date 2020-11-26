@@ -20,7 +20,7 @@ return [
     'benefit3Description' => 'embarrasmment of a dirty car',
 
     'howWorksMainTitle' => 'How it works?',
-    'howWorksParagrph1' => 'When your car is dirty and parked in our area of service in Zürich for at least 60 to 90 minutes why not have it cleaned on the spot in an eco-friendly way?',
+    'howWorksParagrph1' => 'When your car is dirty and parked in our area of service in Zürich for at least 40 minutes why not have it cleaned on the spot in an eco-friendly way?',
     'howWorksParagrph2' => 'When you decided to have your car cleaned by us, contact us via our website and we make an appointment. If one of our Wiperz is available we can be there within 20 to 40 minutes.',
     'howWorksParagrph3' => 'We send you a Twint about the cleaning fee, your order is finalised when we receive the payment.',
     'howWorksParagrph4' => 'We travel to your car by our e-bikes and get to work.',

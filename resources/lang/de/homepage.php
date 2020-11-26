@@ -20,7 +20,7 @@ return [
 
 
     'howWorksMainTitle' => 'Wie funktioniert es?',
-    'howWorksParagrph1' => 'Wenn Ihr Auto schmutzig ist und mindestens 60 bis 90 Minuten in unserem Servicebereich in Zürich geparkt ist, lassen Sie es vor Ort umweltfreundlich reinigen.',
+    'howWorksParagrph1' => 'Wenn Ihr Auto schmutzig ist und mindestens 40 Minuten in unserem Servicebereich in Zürich geparkt ist, lassen Sie es vor Ort umweltfreundlich reinigen.',
     'howWorksParagrph2' => 'Wenn Sie sich entschieden haben, Ihr Auto von uns reinigen zu lassen, kontaktieren Sie uns über unsere Webseite und wir vereinbaren einen Termin. Wenn einer unserer Wiperz verfügbar ist, können wir innerhalb von 20 bis 40 Minuten dort sein.',
     'howWorksParagrph3' => 'Wir senden Ihnen einen Twint über die Reinigungsgebühr. Ihre Bestellung ist abgeschlossen, sobald wir die Zahlung erhalten haben.',
     'howWorksParagrph4' => 'Wir fahren mit unseren E-Bikes zu Ihrem Auto und machen uns an die Arbeit.    ',

@@ -10,16 +10,17 @@
     <div class="max-w-5xl mx-auto py-4 sm:px-6 lg:px-8  hidden sm:block">
         <x-table>
             <x-slot name="head">
-                <x-table.heading>User</x-table.heading>
+                <x-table.heading>User/Name</x-table.heading>
                 <x-table.heading>Level</x-table.heading>
                 <x-table.heading>Comment</x-table.heading>  
-                <x-table.heading>Entered</x-table.heading>                
+                <x-table.heading>Entered</x-table.heading>    
+                <x-table.heading> </x-table.heading>             
             </x-slot>
             <x-slot name="body">
                 @forelse ($ratings as $rating)
                 <x-table.row>
                     <x-table.cell>
-                        {{ $rating->user->name }}
+                        {{ $rating->name_for_public }}
                     </x-table.cell>
                     <x-table.cell>
                         {{ $rating->level }}
@@ -29,7 +30,10 @@
                     </x-table.cell>
                     <x-table.cell>
                         {{ $rating->created_at }}
-                    </x-table.cell>                                
+                    </x-table.cell>        
+                    <x-table.cell>
+                        TODO: Mark as favorite
+                    </x-table.cell>                         
                 </x-table.row>
                 @empty
                 <x-table.row>

@@ -14,7 +14,8 @@
                         <dd>
                             <p>{{ config('greenwiperz.company.name') }}</p>
                             <p>{{ config('greenwiperz.company.street') }} </p>
-                            <p>{{ config('greenwiperz.company.postal_code') }} {{ config('greenwiperz.company.country') }}</p>                            
+                            <p>{{ config('greenwiperz.company.postal_code') }} {{ config('greenwiperz.company.city') }}</p>  
+                            <p>{{ config('greenwiperz.company.country') }}</p>                          
                         </dd>
                     </div>
                     <div class="mt-6">

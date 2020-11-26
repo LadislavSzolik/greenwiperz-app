@@ -38,7 +38,7 @@
     function colorPicker() {
         return {
             colorFromParentComponent: @entangle($attributes->wire('model')),
-            open: false,
+            open: false,       
             colors: [{
                     name: 'black',
                     selected: false

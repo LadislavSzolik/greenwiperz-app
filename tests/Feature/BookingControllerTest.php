@@ -70,12 +70,11 @@ class BookingControllerTest extends TestCase
             'billCity' =>  $this->faker->city,
             'billCountry' =>  $this->faker->country,
             'phone' => $this->faker->phoneNumber,
-            'notes' => $this->faker->text(),
-            '_token' => Session::token(),  
+            'notes' => $this->faker->text(),            
         ];
                           
-        $response = $this->actingAs(User::factory()->create())->post('bookings/store', $request);
-        $response->assertStatus(200);
+        $response = $this->actingAs(User::factory()->create())->post('bookings/store', $request);        
+        $response->assertStatus(302);
         
         $this->assertDatabaseCount('bookings',1);
         $this->assertDatabaseCount('billing_addresses',2);

@@ -8,12 +8,16 @@ use Illuminate\Support\Facades\Route;
 use App\Mail\CanceledConfirmationMail;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\WaitingVisitorController;
 use App\Http\Controllers\BookingCommentController;
 use App\Http\Controllers\RatingController;
-use App\Http\Controllers\UserController;
+use App\Http\Livewire\Appointments;
+use App\Http\Livewire\Bookings;
+use App\Http\Livewire\Clients;
+use App\Http\Livewire\ReviewBooking;
+use App\Http\Livewire\ShowRatings;
+use App\Http\Livewire\Users;
 
 // VISITOR ZONE
 Route::get('lang/{locale}', LocalizationController::class)->name('language');
@@ -33,24 +37,25 @@ Route::get('/ratings/{user}', [RatingController::class, 'create'])->name('rating
 Route::post('/ratings', [RatingController::class, 'store'])->name('ratings.store');
 
 // ADMIN
-Route::middleware(['auth:sanctum', 'verified','can:manage_bookings'])->group(function () {
-    Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+Route::middleware(['auth:sanctum', 'verified','can:manage_bookings'])->group(function () {    
     Route::post('/bookings/{booking}/complete', [BookingController::class, 'complete'])->name('bookings.complete');
     Route::post('/comments/{booking}', [BookingCommentController::class, 'store']);
-    Route::get('/ratings', [RatingController::class, 'index'])->name('ratings.index');
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/appointments', Appointments::class)->name('appointments.index');
+    Route::get('/ratings', ShowRatings::class)->name('ratings.index');
+    Route::get('/users', Users::class)->name('users.index');
+    Route::get('/clients', Clients::class)->name('clients.index');
 });
 
 // AUTH CUSTOMER ZONE
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/termsinapp', function () {return view('terms-inapp');})->name('terms.inapp');
-    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings', Bookings::class)->name('bookings.index');
     Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
     Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/bookings/{booking}/review', ReviewBooking::class)->name('bookings.review');
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
-    Route::patch('/bookings/{booking}', [BookingController::class, 'update'])->name('bookings.update');
-    Route::get('/bookings/{booking}/edit', [BookingController::class, 'edit'])->name('bookings.edit');
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+    
     Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
     Route::get('/bookings/{booking}/invoice', [BookingController::class, 'showInvoice'])->name('bookings.invoice');
     Route::get('/bookings/{booking}/receipt', [BookingController::class, 'showReceipt'])->name('bookings.receipt');
@@ -63,10 +68,10 @@ Route::post('/payments/handlePaymentFailed', [PaymentController::class, 'handleP
 
 // TODO: finish mail testing
 Route::get('mailable',function(){
-    $booking = Booking::findOrFail(2);   
+    $booking = Booking::findOrFail(9);   
     //return new BookingConfirmedMail($booking);
     //return new CanceledConfirmationMail($booking);
-    return new BookingCompletedMail($booking);
+    return new BookingConfirmedMail($booking);
 });
 
 

@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
                     <a href="/">
-                        <x-application-logo class="h-10 text-green-600 " />
+                        <x-application-logo class="h-10 text-green-500 " />
                     </a>
                 </div>
 
@@ -32,16 +32,22 @@
                         {{ __('app.vacations') }}
                     </x-jet-nav-link>
 
+                    @if(config('greenwiperz.add_wiper_enabled'))  
                     <x-jet-nav-link href="{{ route('users.index') }}"
                         :active="request()->routeIs('users.index')">
                         {{ __('app.users') }}
+                    </x-jet-nav-link>
+                    @endif
+
+                    <x-jet-nav-link href="{{ route('clients.index') }}"
+                        :active="request()->routeIs('clients.index')">
+                        {{ __('Clients') }}
                     </x-jet-nav-link>
 
                     <x-jet-nav-link href="{{ route('ratings.index') }}"
                         :active="request()->routeIs('ratings.index')">
                         {{ __('app.ratings') }}
                     </x-jet-nav-link>
-
                     @endcan
 
                     <x-jet-nav-link href="{{ route('terms.inapp') }}"
@@ -185,9 +191,16 @@
                 {{ __('app.vacations') }}
             </x-jet-responsive-nav-link>
 
+            @if(config('greenwiperz.add_wiper_enabled'))  
             <x-jet-responsive-nav-link href="{{ route('users.index') }}"
                 :active="request()->routeIs('users.index')">
                 {{ __('app.users') }}
+            </x-jet-responsive-nav-link>
+            @endif
+
+            <x-jet-responsive-nav-link href="{{ route('clients.index') }}"
+                :active="request()->routeIs('clients.index')">
+                {{ __('Clients') }}
             </x-jet-responsive-nav-link>
 
             <x-jet-responsive-nav-link href="{{ route('ratings.index') }}"

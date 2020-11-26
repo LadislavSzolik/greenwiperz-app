@@ -25,7 +25,7 @@ class BookingConfirmedMail extends Mailable
         return $this->subject('Greenwiperz cleaning confirmed')->markdown('emails.bookings.confirmed')->with([
             'bookingNumber' => $this->booking->booking_nr,
             'bookingDateTime' => $this->booking->appointment->date,
-            'bookingPrice' => $this->booking->brutto_total_amount,
+            'bookingPrice' => $this->booking->formatedTotalCost,
             'bookingVehicle' => $this->booking->car->car_model,
             'bookingNumberPlate' => $this->booking->car->number_plate,
             'bookingColor' => $this->booking->car->car_color,

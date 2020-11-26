@@ -1,8 +1,12 @@
 <div>
-    <div>
-        <div class="flex justify-end py-2">
-            <x-div-button wire:click="create" buttonType="primary">{{ __('app.new') }}</x-div-button>
-        </div>
+    <x-header>
+        <x-slot name="title">{{ __('Vacations') }}</x-slot>
+        <x-slot name="actions">
+            <x-div-button wire:click="create" buttonType="primary">{{ __('New')}}</x-div-button>
+        </x-slot>
+    </x-header>
+
+    <div class="max-w-7xl mx-auto py-4 px-2 sm:px-6 lg:px-8">        
         <x-table>
             <x-slot name="head">
                 <x-table.heading>{{ __('app.date')}}</x-table.heading>
@@ -32,7 +36,7 @@
                     </x-table.cell>
                     <x-table.cell>
                         <x-button.link wire:click="delete({{$appointment->id}})">
-                            <span class="text-red-500">{{ __('app.delete') }}</span>
+                            <span class="text-red-500">{{ __('Delete') }}</span>
                         </x-button.link>
                     </x-table.cell>
                 </x-table.row>
@@ -89,10 +93,10 @@
 
             <x-slot name="footer">
                 <x-jet-secondary-button wire:click="$set('showModal', false)" wire:loading.attr="disabled">
-                {{ __('app.cancel') }}
+                    {{ __('app.cancel') }}
                 </x-jet-secondary-button>
                 <x-jet-button class="ml-2" wire:loading.attr="disabled">
-                {{ __('app.save') }}
+                    {{ __('app.save') }}
                 </x-jet-button>
             </x-slot>
         </x-jet-dialog-modal>

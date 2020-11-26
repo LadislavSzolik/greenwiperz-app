@@ -11,6 +11,7 @@
 
                 <div class="text-gray-600 leading-7 ">
                     <p class="">{{ __('homepage.serviceAreaText1') }}</p>
+                    <p>{{__('At the moment it is not allowed to clean cars in public spaces in the City of Zürich, so we are only allowed to operate on private spaces. But we are happy to make house calls!')}}</p>
                     <p class="">{{ __('homepage.serviceAreaText2') }}
                         <span class="text-green-800 font-bold">8001, 8002, 8003, 8004, 8005, 8006</span>
                     </p>

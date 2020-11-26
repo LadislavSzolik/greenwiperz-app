@@ -33,7 +33,7 @@
 
             <div class="flex justify-between">
                 <div class="flex items-center mt-4">
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('home') }}">{{ __('Back to home') }}</a>
+                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('home') }}">{{ __('Back') }}</a>
                 </div>
                 
                 <div class="flex items-center justify-end mt-4">

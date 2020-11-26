@@ -91,9 +91,11 @@ class CreateBookingsTable extends Migration
         Schema::create('ratings', function (Blueprint $table) 
         {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->integer('level');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('display_name')->nullable();
+            $table->integer('level');            
             $table->longText('comment')->nullable();
+            $table->boolean('is_favorite')->default(0);
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
         });

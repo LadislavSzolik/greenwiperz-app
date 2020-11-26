@@ -1,5 +1,5 @@
 <div  class="grid grid-cols-6 gap-3">
-    <div class="col-span-6 sm:col-span-4 grid grid-cols-6 gap-6 px-4 py-5 bg-white shadow rounded-md sm:p-10 sm:px-20">
+    <div class="col-span-6 sm:col-span-4 grid grid-cols-6 gap-6 px-4 py-5 bg-white shadow rounded-md sm:px-20">
         @csrf
         <input hidden wire:model="duration" name="duration" />
         <input hidden wire:model="baseCost" name="baseCost" />
@@ -10,11 +10,13 @@
         <input hidden wire:model="locPostalCode" name="locPostalCode" />
         <input hidden wire:model="locCity" name="locCity" />
         <input hidden wire:model="assignedTo" name="assignedTo" />
-        <input hidden wire:model="carColor" name="carColor" />
         <input hidden name="hasExtraDirt" value="{{ $hasExtraDirtLocal==1 ?  1 : 0}}" />
         <input hidden name="hasAnimalHair" value="{{ $hasAnimalHairLocal==1 ?  1 : 0}}" />
 
-        <!-- booking.serviceType -->
+        @if(session()->has('message'))
+        <div class="col-span-6 bg-red-100 text-red-700 rounded p-2">{{ __(session('message')) }}</div>
+        @endif
+                
         <x-input.group class="col-span-6" for="serviceType" label="{{ __('app.cleaning')}}">
             <x-input.radio wire:model="serviceType" name="serviceType" value="outside" text="{{ __('app.outside')}}" >
             </x-input.radio>
@@ -24,7 +26,7 @@
 
 
         <!-- CAR INFORMATION -->
-        <div class="col-span-6 border-cool-gray-200">
+        <div class="col-span-6 border-cool-gray-200 -mb-4">
             <h3 class="text-2xl font-extrabold text-gray-900">{{ __('app.car')}}</h3>
         </div>
 
@@ -64,7 +66,7 @@
 
         <!-- color -->
         <x-input.group class="col-span-6 sm:col-span-3" for="carColor" label="{{ __('app.car_color') }}">
-            <x-input.color-picker wire:model="carColor" />
+            <x-input.color wire:model="carColor" name="carColor"  />
         </x-input.group>
 
 
@@ -112,18 +114,18 @@
 
 
         <!-- DATE AND TIME -->
-        <div class="col-span-6 border-cool-gray-200">
+        <div class="col-span-6 border-cool-gray-200 -mb-4">
             <h3 class="text-2xl font-extrabold text-gray-900">{{ __('app.date_time') }}</h3>            
         </div>
 
         <!-- booking date -->
-        <x-input.group class="col-span-6 sm:col-span-3" for="bookingDate" label="{{ __('app.date') }}">
-            <x-input.date-picker wire:model="bookingDate" name="bookingDate" type="text" placeholder="DD.MM.YYYY" />
+        <x-input.group class="col-span-6 sm:col-span-3" for="bookingDate" label="{{ __('app.date') }}">            
+            <x-input.date wire:model="bookingDate" name="bookingDate" placeholder="DD.MM.YYYY"/>
         </x-input.group>
 
         <!-- timeslots -->
         <x-input.group class="col-span-6 sm:col-span-3" for="bookingTime" label="{{ __('app.available_timeslots') }}">
-            <div class="mt-1 flex rounded-md shadow-sm ">
+            <div class="mt-1 flex rounded-md shadow-sm">
                 <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
                     <svg class="w-5 h-5 text-gray-400" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM11 6C11 5.44772 10.5523 5 10 5C9.44771 5 9 5.44772 9 6V10C9 10.2652 9.10536 10.5196 9.29289 10.7071L12.1213 13.5355C12.5118 13.9261 13.145 13.9261 13.5355 13.5355C13.9261 13.145 13.9261 12.5118 13.5355 12.1213L11 9.58579V6Z" />
@@ -146,7 +148,7 @@
 
 
         <!-- BILLING ADDRESS -->
-        <div class="col-span-6 border-cool-gray-200">
+        <div class="col-span-6 border-cool-gray-200 -mb-4">
             <h3 class="text-2xl font-extrabold text-gray-900">{{ __('app.billing_address') }}</h3>
         </div>
 

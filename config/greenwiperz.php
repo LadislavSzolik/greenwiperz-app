@@ -19,5 +19,7 @@ return [
     'tranvel_time' => env('GW_TRAVEL_TIME',30),
 
     'registration_enabled' => true,
+    'add_wiper_enabled' => env('GW_ADD_WIPER',false),
+    'service_area_postal_codes' => env('GW_SERVICE_AREA_POSTAL', null),
 
 ];

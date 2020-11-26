@@ -102,8 +102,8 @@ class PaymentControllerTest extends TestCase
             'status' => 'pending',     
         ])->has(Car::factory())->has(BillingAddress::factory())->create();                           
         $payload = ['datatransTrxId'=> $transactionId];
-        $response = $this->post('/payments/handlePaymentFailed', $payload);       
-        $response->assertStatus(200);
+        $response = $this->post('/payments/handlePaymentFailed', $payload);               
+        $response->assertStatus(302);
     }
 
 
@@ -131,7 +131,7 @@ class PaymentControllerTest extends TestCase
         ])->has(Car::factory())->has(BillingAddress::factory())->create();
         $payload = ['datatransTrxId'=> '201101103538422731'];
         $response = $this->post('/payments/handlePaymentCanceled',$payload);        
-        $response->assertStatus(200);
+        $response->assertStatus(302);
         $this->assertDatabaseHas('bookings', ['status'=> 'pending']);
         $this->assertDatabaseCount('receipts', 0);        
     }

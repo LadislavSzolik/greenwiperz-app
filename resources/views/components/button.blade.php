@@ -10,6 +10,6 @@
 ])
 
 <button
-    {{ $attributes->merge(['class' => "{$colors[$buttonType]} inline-flex items-center justify-center rounded-md font-semibold text-xs uppercase  disabled:opacity-25 transition ease-in-out duration-150"]) }}>
+    {{ $attributes->merge(['class' => "{$colors[$buttonType]} inline-flex items-center justify-center rounded-md font-semibold text-xs uppercase disabled:opacity-25 transition ease-in-out duration-150"]) }}>
     {{ $slot }}    
 </button>

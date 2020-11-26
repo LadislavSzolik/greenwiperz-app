@@ -1,28 +1,26 @@
 <x-app-layout>
-
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('app.booking_details') }}
-        </h2>
-    </x-slot>
+    <x-header>
+        <x-slot name="title">{{ __('app.booking_details') }}</x-slot>
+        <x-slot name="actions"></x-slot>
+    </x-header>
 
     <div class="max-w-7xl mx-auto pt-5 sm:py-5 sm:px-6 lg:px-8">
-        <div class=" bg-white rounded-md sm:py-6 sm:px-20 ">
+        <div class="bg-white rounded-md py-4 sm:py-6 sm:px-20 shadow">
 
             @if(session()->has('message'))
             <div class="py-4 sm:px-6 px-4 w-full sm:max-w-7xl mx-auto ">
                 <x-flash.universal x-data="{open: true}" :color="session('message')['color']" x-show.transition.out="open">
                     <x-slot name="title">
-                        {{ session('message')['title'] }}
+                        {{ __(session('message')['title']) }}
                     </x-slot>
 
                     <x-slot name="description">
-                        {{ session('message')['description'] }}
+                        {{ __(session('message')['description']) }}
 
                     </x-slot>
 
                     <x-slot name="actions">
-                        <button x-on:click="open=false" class="ml-3 px-2 py-1.5 rounded-md text-sm leading-5 font-medium hover:bg-{{session('message')['color']}}-100 focus:outline-none focus:bg-{{session('message')['color']}}-100 transition ease-in-out duration-150">
+                        <button x-on:click="open=false" class="px-2 py-1.5 rounded-md text-sm leading-5 font-medium hover:bg-{{session('message')['color']}}-100 focus:outline-none focus:bg-{{session('message')['color']}}-100 transition ease-in-out duration-150">
                         {{ __('app.dismiss') }}
                         </button>
                     </x-slot>
@@ -119,7 +117,7 @@
                         <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
                             {{ $booking->car->car_model }}, {{ $booking->car->number_plate }}
                             <br />
-                            {{ $booking->car->car_color }}, <span class="capitalize">{{ $booking->car->car_size }}</span>
+                            {{ __($booking->car->car_color) }}, <span class="capitalize">{{ $booking->car->car_size }}</span>
                         </dd>
                     </div>
                     <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
@@ -222,7 +220,7 @@
                 </div>
             </div>
 
-            <div class="mt-4 sm:flex  justify-between space-y-5 sm:space-y-0">
+            <div class="mt-4 sm:flex justify-between px-4 sm:px-0 space-y-5 sm:space-y-0">
                 <a href="/bookings/">
                     <x-div-button class="w-full sm:w-auto" buttonType="secondary">
                         {{ __('app.back_overview') }}
@@ -258,12 +256,11 @@
                 @endcan
 
                 @if($booking->status == 'draft' || $booking->status == 'pending')
-                <x-form-button method="POST" action="/bookings/{{ $booking->id }}/destroy" buttonType="destructive">
+                <x-form-button method="DELETE" class="w-full sm:w-auto" action="/bookings/{{ $booking->id }}" buttonType="destructive">
                     {{ __('app.delete') }}
                 </x-form-button>
                 @endif
             </div>
         </div>
     </div>
-    <x-footer />
 </x-app-layout>

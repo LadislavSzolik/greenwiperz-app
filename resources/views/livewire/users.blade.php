@@ -1,11 +1,19 @@
 <div>
-    <div>
-        <div class="flex justify-end py-2">
-            <x-div-button wire:click="create" buttonType="primary">{{ __('app.new')}}</x-div-button>
+    <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div class="inline-flex  items-center justify-between w-full">
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    {{ __('Users') }}
+                </h2>
+                <x-div-button wire:click="create" buttonType="primary">{{ __('New')}}</x-div-button>
+            </div>
         </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto py-4 sm:px-6 lg:px-8 ">
         <x-table>
             <x-slot name="head">
-                <x-table.heading>{{ __('app.name')}}</x-table.heading>
+                <x-table.heading>{{ __('Name')}}</x-table.heading>
                 <x-table.heading>{{ __('app.email')}}</x-table.heading>
                 <x-table.heading>{{ __('app.added_on_date')}}</x-table.heading>                
             </x-slot>
