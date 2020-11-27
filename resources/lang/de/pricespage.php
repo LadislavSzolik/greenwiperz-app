@@ -14,7 +14,7 @@ return [
     'carcategory2desc' => '(Die meisten Autos gehören zu dieser Kategorie)',
 
     'carcategory3type' => 'Große Autos',
-    'carcategory3examples' => 'z.B. SUV',
+    'carcategory3examples' => 'z.B. SUV 7 sitzer',
 
     'carcategory4type' => 'Extra große Autos',
     'carcategory4examples' => 'z.B. Transporter, Kleinbus, Minivan',

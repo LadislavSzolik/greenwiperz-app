@@ -25,7 +25,7 @@ return [
     'howWorksParagrph3' => 'We send you a Twint about the cleaning fee, your order is finalised when we receive the payment.',
     'howWorksParagrph4' => 'We travel to your car by our e-bikes and get to work.',
     'howWorksParagrph5' => 'If you ordered only the exterior cleaning there is no need for you to even unlock the car.',
-    'howWorksParagrph6' => 'Within 60 to 90 minutes we’ll have your car shiny clean and ready to go.',
+    'howWorksParagrph6' => 'Within 40 to 60 minutes we’ll have your car shiny clean and ready to go.',
 
     'howNanotechMainTitle' => 'How waterless nanotechnology cleaning works?',
     'howNanotechParagrph1' => 'The burning question of course is how does this cleaning method work? How does wiping the car without water NOT damage the paint surface of the car?',

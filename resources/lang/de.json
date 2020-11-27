@@ -5,6 +5,15 @@
     "No clients yet":"Noch keine Kunden",
     "Already registered?":"Schon registriert?",
     "Password":"Passwort",
+    "Current Password":"Derzeitiges Passwort",
+    "New Password":"Neues Passwort",
+    "Confirm Password":"Passwort bestätigen",
+    "Remember me":"Login speichern",
+    "Forgot your password?":"Passwort vergessen?",
+    "Reset Password":"Passwort zurücksetzen",
+    "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.":"Haben Sie Ihr Passwort vergessen? Kein Problem. Teilen Sie uns einfach Ihre E-Mail-Adresse mit und wir senden Ihnen per E-Mail einen Link zum Zurücksetzen des Passworts, über den Sie eine neue auswählen können.",
+    "To login":"Zur Login",
+    "Email Password Reset Link":"Neues Passwort senden",
     "Back":"Zurück",
 
     "What people tell about us?":"Was erzählen die Leute über uns?",
@@ -23,9 +32,7 @@
     "Update Password":"Passwort aktualizieren",
     "Ensure your account is using a long, random password to stay secure.":"Stellen Sie sicher, dass Ihr Konto ein langes, zufälliges Passwort verwendet, um die Sicherheit zu gewährleisten.",
 
-    "Current Password":"Derzeitiges Passwort",
-    "New Password":"Neues Passwort",
-    "Confirm Password":"Passwort bestätigen",
+ 
 
     "black": "Schwarz",
     "gray": "Silber",

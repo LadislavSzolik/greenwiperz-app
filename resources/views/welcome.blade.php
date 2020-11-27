@@ -121,6 +121,7 @@
                             {{ __('homepage.benefit1Description') }}
                         </dt>
                         <dd class="order-1 text-2xl leading-none font-extrabold text-green-600" aria-describedby="item-1">
+                        <img class="h-48 sm:h-80 mx-auto" src="{{ asset('img/save_water.png') }}" alt="Water saving" />
                             {{ __('homepage.benefit1Title') }}
                         </dd>
                     </div>
@@ -129,6 +130,9 @@
                             {{ __('homepage.benefit2Description') }}
                         </dt>
                         <dd class="order-1 text-2xl leading-none font-extrabold text-green-600">
+                        
+                            <img class="h-48 sm:h-80 mx-auto" src="{{ asset('img/one_hour_hustle.png') }}" alt="Hustling" />
+                        
                             {{ __('homepage.benefit2Title') }}
                         </dd>
                     </div>
@@ -137,6 +141,7 @@
                             {{ __('homepage.benefit3Description') }}
                         </dt>
                         <dd class="order-1 text-2xl leading-none font-extrabold text-green-600">
+                            <img class="h-48 sm:h-80 mx-auto" src="{{ asset('img/shame.png') }}" alt="Feeling shamed" />
                             {{ __('homepage.benefit3Title') }}
                         </dd>
                     </div>

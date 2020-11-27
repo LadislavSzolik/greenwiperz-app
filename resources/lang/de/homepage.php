@@ -25,7 +25,7 @@ return [
     'howWorksParagrph3' => 'Wir senden Ihnen einen Twint über die Reinigungsgebühr. Ihre Bestellung ist abgeschlossen, sobald wir die Zahlung erhalten haben.',
     'howWorksParagrph4' => 'Wir fahren mit unseren E-Bikes zu Ihrem Auto und machen uns an die Arbeit.    ',
     'howWorksParagrph5' => 'Wenn Sie nur die Außenreinigung bestellt haben, müssen Sie das Auto nicht einmal aufschließen.',
-    'howWorksParagrph6' => 'Innerhalb von 60 bis 90 Minuten ist Ihr Auto glänzend sauber und einsatzbereit.',
+    'howWorksParagrph6' => 'Innerhalb von 40 bis 60 Minuten ist Ihr Auto glänzend sauber und einsatzbereit.',
 
     'howNanotechMainTitle' => 'Wie funktioniert die wasserlose Reinigung?',
     'howNanotechParagrph1' => 'Die brennende Frage ist natürlich, wie diese Reinigungsmethode funktioniert. Wie bleibt die Lackoberfläche des Autos unbeschädigt wenn wir es ohne Wasser abwischen?',

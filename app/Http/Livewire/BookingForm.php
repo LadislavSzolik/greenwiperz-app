@@ -51,12 +51,14 @@ class BookingForm extends Component
 
     //helpers
     public $availableSlots;
+    public $wipers;
     public $priceList;
 
     public function mount()
     {
         $this->priceList = Services::all();
         $role = Role::whereName('greenwiper')->firstOrFail();
+        $this->wipers = $role->users()->get();
         $this->assignedTo = $role->users->first()->id;
 
 
@@ -76,26 +78,24 @@ class BookingForm extends Component
             $this->billCity = auth()->user()->billingAddress->city;
             $this->billCountry = auth()->user()->billingAddress->country;
         }
-
-
         $this->recalculatePriceAndTime();
     }
 
     // this is live:wire event hook
     public function updatedServiceType()
     {
-        $this->bookingDate = null;
+        $this->availableSlots = [];
         $this->bookingTime = null;
-        $this->availableSlots = null;
-        $this->recalculatePriceAndTime();
+        $this->bookingDate = null; 
+        $this->recalculatePriceAndTime();    
     }
     // this is live:wire event hook
     public function updatedCarSize()
     {
-        $this->bookingDate = null;
+        $this->availableSlots = [];
         $this->bookingTime = null;
-        $this->availableSlots = null;
-        $this->recalculatePriceAndTime();
+        $this->bookingDate = null; 
+        $this->recalculatePriceAndTime();        
     }
 
     public function updatedHasExtraDirtLocal()
@@ -143,7 +143,19 @@ class BookingForm extends Component
         return $moneyFormatter->format($money);
     }
 
+    public function updatedAssignedTo()
+    {
+        $this->availableSlots = [];
+        $this->bookingTime = null;
+        $this->bookingDate = null; 
+    }
+
     public function updatedBookingDate()
+    {
+       $this->refreshBookingDateAndTime();
+    }
+
+    public function refreshBookingDateAndTime()
     {
         $this->availableSlots = [];
         $this->bookingTime = null;

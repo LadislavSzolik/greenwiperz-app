@@ -8,8 +8,7 @@
         <input hidden wire:model="locStreetNumber" name="locStreetNumber" />
         <input hidden wire:model="locRoute" name="locRoute" />
         <input hidden wire:model="locPostalCode" name="locPostalCode" />
-        <input hidden wire:model="locCity" name="locCity" />
-        <input hidden wire:model="assignedTo" name="assignedTo" />
+        <input hidden wire:model="locCity" name="locCity" />        
         <input hidden name="hasExtraDirt" value="{{ $hasExtraDirtLocal==1 ?  1 : 0}}" />
         <input hidden name="hasAnimalHair" value="{{ $hasAnimalHairLocal==1 ?  1 : 0}}" />
 
@@ -118,6 +117,26 @@
             <h3 class="text-2xl font-extrabold text-gray-900">{{ __('app.date_time') }}</h3>            
         </div>
 
+
+        <!-- timeslots -->        
+        @if(count($wipers) > 1)
+        <x-input.group class="col-span-6" for="assignedTo" label="{{ __('Greenwiper') }}">
+            <div class="mt-1 flex rounded-md shadow-sm">
+                <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
+                    <svg class="w-5 h-5 text-gray-400" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                </span>
+                <select class="rounded-none rounded-r-md flex-1 form-input block w-full" name="assignedTo" wire:model="assignedTo">                   
+                    @foreach($wipers as $wiper)
+                    <option value="{{ $wiper->id }}"> {{ $wiper->name }}</option>
+                    @endforeach                    
+                </select>
+            </div>            
+        </x-input.group>
+        @else
+        <input hidden wire:model="assignedTo" name="assignedTo" />
+        @endif
+
+
         <!-- booking date -->
         <x-input.group class="col-span-6 sm:col-span-3" for="bookingDate" label="{{ __('app.date') }}">            
             <x-input.date wire:model="bookingDate" name="bookingDate" placeholder="DD.MM.YYYY"/>
@@ -131,12 +150,12 @@
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18ZM11 6C11 5.44772 10.5523 5 10 5C9.44771 5 9 5.44772 9 6V10C9 10.2652 9.10536 10.5196 9.29289 10.7071L12.1213 13.5355C12.5118 13.9261 13.145 13.9261 13.5355 13.5355C13.9261 13.145 13.9261 12.5118 13.5355 12.1213L11 9.58579V6Z" />
                     </svg>
                 </span>
-                <select class="rounded-none rounded-r-md flex-1 form-input block w-full" name="bookingTime" wire:model="bookingTime">
+                <select class="rounded-none rounded-r-md flex-1 form-input block w-full" name="bookingTime" wire:model="bookingTime" required>
                     @if (is_array($availableSlots) || is_object($availableSlots))
                     @forelse($availableSlots as $timeslot)
-                    <option>{{ Carbon\Carbon::parse($timeslot)->format('H:i') }} </option>
+                    <option value="{{ $timeslot }} " >{{ Carbon\Carbon::parse($timeslot)->format('H:i') }} </option>
                     @empty
-                    <option>{{ __('app.no_timeslot') }}</option>
+                    <option value='' >{{ __('app.no_timeslot') }}</option>
                     @endforelse
                     @endif
                 </select>

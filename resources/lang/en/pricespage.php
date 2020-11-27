@@ -12,7 +12,7 @@ return [
     'carcategory2examples' => 'e.g. VW Golf, VW Passat, Ford Focus',
     'carcategory2desc' => '(most cars belong to this category)',
     'carcategory3type' => 'Big cars',
-    'carcategory3examples' => 'e.g. SUV',
+    'carcategory3examples' => 'e.g. SUV 7 seater',
     'carcategory4type' => 'Extra-large cars',
     'carcategory4examples' => 'e.g. transporter, minibus, minivan',
 
