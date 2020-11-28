@@ -59,7 +59,7 @@ class Booking extends Model
     
     public function getParkingLocationAddressAttribute()
     {
-        return $this->loc_street_number.', '.$this->loc_route.',<br />'.$this->loc_postal_code.', '.$this->loc_city;
+        return $this->loc_route.' '. $this->loc_street_number.'<br />'.$this->loc_postal_code.', '.$this->loc_city;
     }
 
     public function getFormatedDurationAttribute()

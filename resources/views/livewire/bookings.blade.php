@@ -47,14 +47,14 @@
         <div class="hidden sm:block">
             <x-table>
                 <x-slot name="head">
-                    <x-table.heading> {{ __('app.cleaning_date') }}</x-table.heading>
+                    <x-table.heading sortable multi-column wire:click="sortBy('booking_datetime')" :direction="$sorts['booking_datetime'] ?? null" > {{ __('app.cleaning_date') }}</x-table.heading>
                     @can('manage_bookings')
-                    <x-table.heading> {{ __('app.car') }}</x-table.heading>
+                    <x-table.heading sortable multi-column wire:click="sortBy('number_plate')" :direction="$sorts['number_plate'] ?? null"> {{ __('app.car') }}</x-table.heading>
                     @endcan
-                    <x-table.heading>{{ __('app.car_location') }}</x-table.heading>
-                    <x-table.heading>{{ __('app.cleaning') }}</x-table.heading>
-                    <x-table.heading>{{ __('app.price') }}</x-table.heading>
-                    <x-table.heading>{{ __('app.status') }}</x-table.heading>
+                    <x-table.heading sortable multi-column wire:click="sortBy('loc_route')" :direction="$sorts['loc_route'] ?? null" >{{ __('app.car_location') }}</x-table.heading>
+                    <x-table.heading sortable multi-column wire:click="sortBy('service_type')" :direction="$sorts['service_type'] ?? null" >{{ __('app.cleaning') }}</x-table.heading>
+                    <x-table.heading sortable multi-column wire:click="sortBy('brutto_total_amount')" :direction="$sorts['brutto_total_amount'] ?? null"  >{{ __('app.price') }}</x-table.heading>
+                    <x-table.heading sortable multi-column wire:click="sortBy('status')" :direction="$sorts['status'] ?? null" >{{ __('app.status') }}</x-table.heading>
                     <x-table.heading> </x-table.heading>
                 </x-slot>
 
