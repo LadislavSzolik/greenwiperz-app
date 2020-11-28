@@ -155,7 +155,8 @@ class BookingController extends Controller
             'city' => $validated['billCity'],
             'country' => $validated['billCountry'],
         ]);
-                      
+             
+        $booking->push();
         $this->updateUserAddressAndCar($validated);
         return redirect()->route('bookings.review', ['booking' => $booking]);       
     }
