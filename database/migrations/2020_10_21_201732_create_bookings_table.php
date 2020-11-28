@@ -47,7 +47,7 @@ class CreateBookingsTable extends Migration
             $table->unsignedBigInteger('appointment_id')->nullable();
 
             
-            $table->timestamp('booking_datetime');  
+            $table->timestamp('booking_datetime')->nullable();  
             
             $table->string('loc_street_number',200);
             $table->string('loc_route',200);
