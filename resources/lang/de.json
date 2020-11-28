@@ -70,6 +70,10 @@
     "Please make sure that the requested cleaning is fully completed before finishing it.":"Bitte stellen Sie sicher, dass die angeforderte Reinigung vollständig abgeschlossen ist, bevor Sie sie beenden.",
     "Yes, Complete":"Ja, abschlossen",
 
+    "Booking completion confirmation":"Bestätigung des Buchungsabschlusses",
+    "Thank you for choosing us!":"Danke, dass Sie uns gewählt haben!",
+    "We are done with making your car shiny and clean again!":"Wir sind damit fertig, Ihr Auto wieder glänzend und sauber zu machen!",
+
     "Cancelling the booking":"Stornierung Ihrer Buchung",
     "We will cancel the booking date and transfer you back the funds based on our cancelation policity.":"Wir stornieren das Buchungsdatum und überweisen Ihnen das Geld zurück, basierend auf unserer Stornierungsrichtlinie.",
     "Enter how much you want to refund to the client. Use Rapens, not Franks. For example if you want to refund CHF 1, enter 100 in the input field.":"Geben Sie ein, wie viel Sie dem Kunden erstatten möchten. Verwenden Sie Rapens, nicht Franks. Wenn Sie beispielsweise CHF 1 erstatten möchten, geben Sie 100 in das Eingabefeld ein.",
@@ -98,6 +102,35 @@
     "The payment has been canceled. If you want to complete this booking please proceed to payment again.":"Die Zahlung wurde storniert. Wenn Sie diese Buchung abschließen möchten, fahren Sie bitte mit der Zahlung fort.",
 
     "Payment failed":"Bezahlung fehlgeschlagen",
-    "The payment failed. No transaction was made. If you want to complete this booking please proceed to payment again.":"Die Zahlung ist fehlgeschlagen. Es wurde keine Transaktion durchgeführt. Wenn Sie diese Buchung abschließen möchten, fahren Sie bitte mit der Zahlung fort."
+    "The payment failed. No transaction was made. If you want to complete this booking please proceed to payment again.":"Die Zahlung ist fehlgeschlagen. Es wurde keine Transaktion durchgeführt. Wenn Sie diese Buchung abschließen möchten, fahren Sie bitte mit der Zahlung fort.",
 
+
+    "Booking reference":"Buchungsreferenz",
+    "Car":"Auto",
+    "Date and Time of cleaning":"Reinigungsdatum",
+    "Car parking":"Parkplatz",
+    "Rate your cleaning":"Bewerten Sie Ihre Reinigung",
+    "Book another cleaning":"Buchen Sie eine weitere Reinigung",
+    "Thanks":"Danke",
+    "Greenwiperz Completion":"Greenwiperz Fertigstellung",
+    "Booking confirmation":"Buchungsbestätigung",
+    "Amount":"Betrag",
+    "Thank you for your booking. Here is the summary":"Vielen Dank für Ihre Buchung. Hier ist die Zusammenfassung",    
+    "View my bookings":"Meine Buchungen anzeigen",
+    "Greenwiperz canceled":"Greenwiperz abgesagt",
+    "Cancelation confirmation":"Stornierungsbestätigung",
+    "The following booking has been canceled":"Die folgende Buchung wurde storniert",
+    "Amount refunded":"Betrag erstattet",
+
+
+    "Rate our services":"Bewerten Sie unsere Dienstleistungen",
+    "We are constantly making our services better, your experience and opinion matter to us!":"Wir verbessern ständig unsere Dienstleistungen, Ihre Erfahrung und Meinung sind uns wichtig!",
+    "How happy are you with us?":"Wie glücklich bist du mit uns?",
+    "I did not like it":"ich mochte es nicht",
+    "A lot to improve":"Viel zu verbessern",
+    "More less ok":"Mehr weniger ok",
+    "It is fine":"Es ist in Ordnung",
+    "You're awesome":"Du bist unglaublich",
+    "Thank you for you feedback!":"Danke für deine Rückmeldung!",
+    "To Greenwiperz":"Zur Greenwiperz"
 }

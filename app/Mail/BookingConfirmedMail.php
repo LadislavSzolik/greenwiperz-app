@@ -22,9 +22,9 @@ class BookingConfirmedMail extends Mailable
 
     public function build()
     {                
-        return $this->subject('Greenwiperz cleaning confirmed')->markdown('emails.bookings.confirmed')->with([
+        return $this->subject(__('Greenwiperz Confirmation'))->markdown('emails.bookings.confirmed')->with([
             'bookingNumber' => $this->booking->booking_nr,
-            'bookingDateTime' => $this->booking->appointment->date,
+            'bookingDateTime' => $this->booking->booking_datetime,
             'bookingPrice' => $this->booking->formatedTotalCost,
             'bookingVehicle' => $this->booking->car->car_model,
             'bookingNumberPlate' => $this->booking->car->number_plate,

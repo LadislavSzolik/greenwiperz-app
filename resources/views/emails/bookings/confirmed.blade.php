@@ -1,30 +1,30 @@
 @component('mail::message')
-# Booking confirmation
+# {{__('Booking confirmation')}}
 
-Thank you for your booking. Here is the summary
+{{__('Thank you for your booking. Here is the summary')}}
 
-**Booking reference**  
+**{{__('Booking reference')}}**  
 {{ $bookingNumber }}
 
-**Car to be cleaned**  
+**{{__('Car')}}**  
 {{ $bookingVehicle}}  
 {{ $bookingNumberPlate }}  
-{{ $bookingColor }}  
+{{ __($bookingColor) }} 
 
-**Date and Time of cleaning**  
+**{{__('Date and Time of cleaning')}}**  
 {{ $bookingDateTime}}   
 
-**Place of cleaning**  
+**{{__('Car parking')}}**  
 {{ $bookingRoute}} {{ $bookingStreet}}  
 {{ $bookingPostalCode }} {{ $bookingCity }}  
 
-**Amount payed**  
+**{{__('Amount')}}**  
 {{ $bookingPrice }}  
 
 @component('mail::button', ['url' => $url])
-View my bookings
+{{__('View my bookings')}}
 @endcomponent
 
-Thanks,<br>
-The Greenwiperz team
+{{__('Thanks')}},<br>
+The Greenwiperz Team
 @endcomponent

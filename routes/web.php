@@ -68,10 +68,10 @@ Route::post('/payments/handlePaymentFailed', [PaymentController::class, 'handleP
 
 // TODO: finish mail testing
 Route::get('mailable',function(){
-    $booking = Booking::findOrFail(9);   
+    $booking = Booking::findOrFail(3);   
     //return new BookingConfirmedMail($booking);
     //return new CanceledConfirmationMail($booking);
-    return new BookingConfirmedMail($booking);
+   return new BookingCompletedMail($booking);
 });
 
 

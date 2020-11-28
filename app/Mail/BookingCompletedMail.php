@@ -32,12 +32,12 @@ class BookingCompletedMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Greenwiperz Completion')->markdown('emails.bookings.completed')->with([
+        return $this->subject(__('Greenwiperz Completion'))->markdown('emails.bookings.completed')->with([
             'bookingNumber' => $this->booking->booking_nr,
-            'bookingDateTime' => $this->booking->datetime,            
-            'bookingCar' => $this->booking->car_model,
-            'bookingNumberPlate' => $this->booking->number_plate,
-            'bookingColor' => $this->booking->car_color,
+            'bookingDateTime' => $this->booking->booking_datetime,            
+            'bookingCar' => $this->booking->car->car_model,
+            'bookingNumberPlate' => $this->booking->car->number_plate,
+            'bookingColor' => $this->booking->car->car_color,
             'bookingStreet' => $this->booking->loc_street_number,
             'bookingRoute' => $this->booking->loc_route,
             'bookingCity' => $this->booking->loc_city,

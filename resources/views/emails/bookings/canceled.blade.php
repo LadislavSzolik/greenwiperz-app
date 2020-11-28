@@ -1,34 +1,34 @@
 @component('mail::message')
-# Cancelation confirmation
+# {{__('Cancelation confirmation')}}
 
-The following booking has been canceled:
+{{__('The following booking has been canceled')}}  
 
-**Booking reference**  
+**{{__('Booking reference')}}**  
 {{ $bookingNumber }}
 
-**Car to be cleaned**  
+**{{__('Car')}}**  
 {{ $bookingVehicle}}  
 {{ $bookingNumberPlate }}  
-{{ $bookingColor }}  
+{{ __($bookingColor) }} 
 
-**Date and Time of cleaning**  
-{{ $bookingDate}} {{ $bookingTime }}  
+**{{__('Date and Time of cleaning')}}**  
+{{ $bookingDateTime}}  
 
 
-**Place of cleaning**  
+**{{__('Car parking')}}**  
 {{ $bookingRoute}} {{ $bookingStreet}}  
 {{ $bookingPostalCode }} {{ $bookingCity }}  
 
-**Amount payed**  
+**{{__('Amount')}}**  
 {{ $bookingPrice }}  
 
-**Amount refunded**  
+**{{__('Amount refunded')}}**  
 {{ $refundedAmount }}  
 
 @component('mail::button', ['url' => $url])
-View my bookings
+{{__('View my bookings')}}
 @endcomponent
 
-Thanks,<br>
-The Greenwiperz team
+{{__('Thanks')}},<br>
+The Greenwiperz Team
 @endcomponent
