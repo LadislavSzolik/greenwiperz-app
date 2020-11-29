@@ -32,29 +32,18 @@
 
 
     <div class="py-4 sm:px-6 lg:px-8 w-full sm:max-w-7xl mx-auto">
-        <div class="px-2 py-2  sm:space-x-2">
-            <label class="inline-flex items-center w-full sm:w-auto">
-                <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " wire:model="showPast">
-                <span class="ml-2">{{ __('Past bookings') }}</span>
-            </label>
-
-            <label class="inline-flex items-center w-full sm:w-auto">
-                <input type="checkbox" class="form-checkbox w-6 h-6 text-green-400 " wire:model="showCanceled">
-                <span class="ml-2">{{ __('Canceled bookings') }}</span>
-            </label>
-        </div>
 
         <div class="hidden sm:block">
             <x-table>
                 <x-slot name="head">
-                    <x-table.heading sortable multi-column wire:click="sortBy('booking_datetime')" :direction="$sorts['booking_datetime'] ?? null" > {{ __('app.cleaning_date') }}</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('booking_datetime')" :direction="$sortField == 'booking_datetime' ? $sortDirection : null"> {{ __('app.cleaning_date') }}</x-table.heading>
                     @can('manage_bookings')
-                    <x-table.heading sortable multi-column wire:click="sortBy('number_plate')" :direction="$sorts['number_plate'] ?? null"> {{ __('app.car') }}</x-table.heading>
+                    <x-table.heading> {{ __('app.car') }}</x-table.heading>
                     @endcan
-                    <x-table.heading sortable multi-column wire:click="sortBy('loc_route')" :direction="$sorts['loc_route'] ?? null" >{{ __('app.car_location') }}</x-table.heading>
-                    <x-table.heading sortable multi-column wire:click="sortBy('service_type')" :direction="$sorts['service_type'] ?? null" >{{ __('app.cleaning') }}</x-table.heading>
-                    <x-table.heading sortable multi-column wire:click="sortBy('brutto_total_amount')" :direction="$sorts['brutto_total_amount'] ?? null"  >{{ __('app.price') }}</x-table.heading>
-                    <x-table.heading sortable multi-column wire:click="sortBy('status')" :direction="$sorts['status'] ?? null" >{{ __('app.status') }}</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('loc_route')" :direction="$sortField == 'loc_route' ? $sortDirection : null">{{ __('app.car_location') }}</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('service_type')" :direction="$sortField == 'service_type' ? $sortDirection : null">{{ __('app.cleaning') }}</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('brutto_total_amount')" :direction="$sortField == 'brutto_total_amount' ? $sortDirection : null">{{ __('app.price') }}</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('status')" :direction="$sortField == 'status' ? $sortDirection : null">{{ __('app.status') }}</x-table.heading>
                     <x-table.heading> </x-table.heading>
                 </x-slot>
 
@@ -116,9 +105,20 @@
         </div>
 
 
+        <div class="block sm:hidden px-2 pb-4">
+            
+            <div class="w-full pb-2">
+                <x-sort.dropdown>
+                    <x-slot name="trigger">{{__('Sorted by') }} {{ __('app.'.$sortField)}}</x-slot>
+                    <x-sort.item wire:click="sortBy('booking_datetime')" :direction="$sortField == 'booking_datetime' ? $sortDirection : null">{{ __('app.cleaning_date')}}</x-sort.item>
+                    <x-sort.item wire:click="sortBy('loc_route')" :direction="$sortField == 'loc_route' ? $sortDirection : null">{{ __('app.car_location') }}</x-sort.item>
+                    <x-sort.item wire:click="sortBy('service_type')" :direction="$sortField == 'service_type' ? $sortDirection : null">{{ __('app.cleaning')}}</x-sort.item>
+                    <x-sort.item wire:click="sortBy('brutto_total_amount')" :direction="$sortField == 'brutto_total_amount' ? $sortDirection : null">{{ __('app.price')}}</x-sort.item>
+                    <x-sort.item wire:click="sortBy('status')" :direction="$sortField == 'status' ? $sortDirection : null">{{ __('app.status')}}</x-sort.item>
+                </x-sort.dropdown>
+            </div>
 
-        <!-- make mobile version work -->
-        <div class="block sm:hidden px-2 py-4">
+
             <x-grid.list>
                 @forelse ($bookings as $booking)
                 <x-grid.list.card>
@@ -194,7 +194,7 @@
             </x-grid.list>
         </div>
 
-        <div class="mt-2">
+        <div class="mt-2 mx-4 sm:mx-0">
             {{ $bookings->links() }}
         </div>
     </div>

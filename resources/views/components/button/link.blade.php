@@ -1,7 +1,7 @@
 <button
     {{ $attributes->merge([
         'type' => 'button',
-        'class' => 'text-cool-gray-700 text-sm leading-5 font-medium focus:outline-none uppercase focus:text-cool-gray-800 focus:underline transition duration-150 ease-in-out' . ($attributes->get('disabled') ? ' opacity-75 cursor-not-allowed' : ''),
+        'class' => 'text-gray-500 hover:text-gray-900 active:text-black underline font-semibold text-xs uppercase focus:underline transition duration-150 ease-in-out' . ($attributes->get('disabled') ? ' opacity-75 cursor-not-allowed' : ''),
     ]) }}
 >
     {{ $slot }}

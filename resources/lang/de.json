@@ -48,8 +48,8 @@
 
     "New":"Neue",
     "Cancel":"Abbrechen",    
-    "New Rating":"Neue Rückmeldung",
-    "Ratings":"Rückmeldungen",
+    "New Rating":"Neue Bewertung",
+    "Ratings":"Bewertungen",
     "No ratings yet":"Noch keine Rückmeldung",
     "Vacations":"Urlaub",
     "Saved.":"Gespeichert.",
@@ -132,5 +132,8 @@
     "It is fine":"Es ist in Ordnung",
     "You're awesome":"Du bist unglaublich",
     "Thank you for you feedback!":"Danke für deine Rückmeldung!",
-    "To Greenwiperz":"Zur Greenwiperz"
+    "To Greenwiperz":"Zur Greenwiperz",
+
+    "Sorted by":"Sortiert nach",
+    "Our work":"Unsere Arbeit"
 }

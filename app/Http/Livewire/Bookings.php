@@ -13,20 +13,21 @@ class Bookings extends Component
     use WithPagination;
     use WithSorting;
 
-    public $showPast;
-    public $showCanceled;
+    protected $queryString = ['sortField','sortDirection'];
 
-    protected $queryString = ['sorts'];
+    public function mount()
+    {
+        $this->sortField = 'booking_datetime';
+        $this->sortDirection = 'desc';
+    }
 
     public function getRowsProperty()
     {
         $isGreenwiper = auth()->user()->isGreenwiper();
 
         $query = Booking::query()
-        ->when(!$isGreenwiper, fn($query) => $query->where('customer_id', auth()->user()->id))
-        ->when(!$this->showPast, fn($query) => $query->where('booking_datetime', '>=', Carbon::now()))
-        ->when(!$this->showCanceled, fn($query) => $query->where('status', '<>', 'canceled'));
-        return $this->applySorting($query)->paginate(20);
+        ->when(!$isGreenwiper, fn($query) => $query->where('customer_id', auth()->user()->id));
+        return $this->applySorting($query)->paginate(10);
     }
     
     public function render()

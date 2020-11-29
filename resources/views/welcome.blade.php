@@ -3,8 +3,8 @@
     <main class="relative pt-16">
 
         <!-- Hero section -->
-        <section class="bg-white py-10">
-            <div class="max-w-7xl mx-auto flex flex-wrap sm:flex-no-wrap px-4 sm:px-6">
+        <section   class="bg-white py-10">
+            <div  class="max-w-7xl mx-auto flex flex-wrap sm:flex-no-wrap px-4 sm:px-6">
 
                 <div class="text-center sm:text-left w-full sm:w-2/5">
                     <div class="flex items-center justify-center sm:justify-start mb-4">
@@ -33,12 +33,16 @@
                     </div>
                 </div>
 
-                <div class="flex justify-center w-full sm:w-3/5 px-2 sm:px-0 mt-8">
-                    <img class="shadow-2xl h-48 sm:h-80 rounded-lg" src="{{ asset('img/hero-image.png') }}" alt="Hero image" />
+                <div  class="flex justify-center w-full sm:w-3/5 px-2 sm:px-0 mt-8">
+                    <img   class="shadow-2xl h-48 sm:h-80 rounded-lg" src="{{ asset('img/hero-image.png') }}" alt="Hero image" />
                 </div>
             </div>
         </section>
 
+          <!-- BEFORE/AFTER -->
+          <section>            
+            @livewire('show-work')            
+            </section>
 
         <!-- KEY FEATURES -->
         <section class="my-24">
@@ -105,6 +109,8 @@
                 </ul>
             </div>
         </section>
+
+      
 
         <!-- BENEFIT: SAVE WITH US -->
         <section class="my-24">

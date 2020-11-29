@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Livewire\DataTable\WithSorting;
 use App\Models\Rating;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -10,6 +11,8 @@ class ShowRatings extends Component
 {
 
     use WithPagination;
+    use WithSorting;
+
     public $showModal = false;
     public Rating $editing; 
 
@@ -21,6 +24,8 @@ class ShowRatings extends Component
 
     public function mount()
     {
+        $this->sortField = 'display_name';
+        $this->sortDirection = 'asc';
         $this->editing = $this->makeBlankRating();   
     }
 
@@ -32,6 +37,13 @@ class ShowRatings extends Component
     public function create()
     {        
         $this->editing = $this->makeBlankRating();        
+        $this->showModal = true;
+    }
+
+    public function edit(Rating $rating)
+    {
+        if ($this->editing->isNot($rating)) $this->editing = $rating;
+
         $this->showModal = true;
     }
 
@@ -59,8 +71,14 @@ class ShowRatings extends Component
         $rating->delete();
     }
 
+    public function getRowsProperty()
+    {
+        $query = Rating::with('user');
+        return $this->applySorting($query)->paginate(15);
+    }
+
     public function render()   
     {
-        return view('livewire.show-ratings',['ratings' => Rating::orderBy('created_at','desc')->paginate(20) ]);
+        return view('livewire.show-ratings',['ratings' => $this->rows ]);
     }
 }

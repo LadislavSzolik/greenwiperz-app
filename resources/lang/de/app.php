@@ -105,4 +105,14 @@ return [
     'users' => 'Benuzter',
     'outside' => 'Nur aussen',
     'in_outside' => 'Innen und aussen',
+
+    
+    'booking_datetime' => 'Reinigungsdatum',
+    'loc_route' => 'Parkplatz',
+    'service_type' => 'Reinigung',
+    'brutto_total_amount' => 'Preis',
+    'status' => 'Status',
+    'created_at' => 'Registriert',
+    'bookings_count' => 'Buchungen',
+
 ];

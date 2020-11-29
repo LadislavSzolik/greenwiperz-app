@@ -7,51 +7,128 @@
     </x-header>
 
     <div class="max-w-7xl mx-auto py-4 sm:px-6 lg:px-8">
-        <x-table>
-            <x-slot name="head">
-                <x-table.heading>User/Name</x-table.heading>
-                <x-table.heading>Level</x-table.heading>
-                <x-table.heading>Comment</x-table.heading>
-                <x-table.heading>Entered</x-table.heading>
-                <x-table.heading>Homepage</x-table.heading>
-                <x-table.heading> </x-table.heading>
-            </x-slot>
-            <x-slot name="body">
-                @forelse ($ratings as $rating)
-                <x-table.row>
-                    <x-table.cell>
-                        {{ $rating->name_for_public }}
-                    </x-table.cell>
-                    <x-table.cell>
-                        {{ $rating->level }}
-                    </x-table.cell>
-                    <x-table.cell>
-                        {{ $rating->comment }}
-                    </x-table.cell>
-                    <x-table.cell>
-                        {{ $rating->created_at }}
-                    </x-table.cell>
-                    <x-table.cell>
-                        @if($rating->is_favorite === 0)
-                        <x-button.link wire:click="markAsFavorite({{ $rating->id }})" >{{ __('Show') }}</x-button.link> 
-                        @else
-                        <x-button.link wire:click="removeAsFavorite({{ $rating->id }})" >{{ __('Hide') }}</x-button.link> 
-                        @endif
-                    </x-table.cell>
-                    <x-table.cell>                        
-                        <x-button.link wire:click="delete({{ $rating->id }})" ><span class="text-red-500" >{{ __('Delete') }} <span></x-button.link> 
-                    </x-table.cell>
-                </x-table.row>
-                @empty
-                <x-table.row>
-                    <x-table.cell colspan="6" class="text-center">
-                        <span class="text-gray-500">{{__('No ratings yet')}}</span>
-                    </x-table.cell>
-                </x-table.row>
-                @endforelse
-            </x-slot>
+        <div class="hidden sm:block">
+            <x-table>
+                <x-slot name="head">
+                    <x-table.heading sortable wire:click="sortBy('display_name')" :direction="$sortField == 'display_name' ? $sortDirection : null">Visiable name</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('level')" :direction="$sortField == 'level' ? $sortDirection : null">Level</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('comment')" :direction="$sortField == 'comment' ? $sortDirection : null">Comment</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('created_at')" :direction="$sortField == 'created_at' ? $sortDirection : null">Entered</x-table.heading>
+                    <x-table.heading sortable wire:click="sortBy('is_favorite')" :direction="$sortField == 'is_favorite' ? $sortDirection : null">Homepage</x-table.heading>
+                    <x-table.heading> </x-table.heading>
+                    <x-table.heading> </x-table.heading>
+                </x-slot>
+                <x-slot name="body">
+                    @forelse ($ratings as $rating)
+                    <x-table.row>
+                        <x-table.cell>
+                            {{ $rating->display_name}}
+                            @isset($rating->user)
+                            <p class="text-cool-gray-400">({{ $rating->user->name}})</p>
+                            @endisset
+                        </x-table.cell>
+                        <x-table.cell>
+                            {{ $rating->level }}
+                        </x-table.cell>
+                        <x-table.cell>
+                            {{ $rating->comment }}
+                        </x-table.cell>
+                        <x-table.cell>
+                            {{ $rating->created_at }}
+                        </x-table.cell>
+                        <x-table.cell>
+                            @if($rating->is_favorite === 0)
+                            <x-button.link wire:click="markAsFavorite({{ $rating->id }})">{{ __('Show') }}</x-button.link>
+                            @else
+                            <x-button.link wire:click="removeAsFavorite({{ $rating->id }})">{{ __('Hide') }}</x-button.link>
+                            @endif
+                        </x-table.cell>
+                        <x-table.cell>
+                            <x-button.link wire:click="edit({{ $rating->id }})"><span>{{ __('app.modify') }} <span></x-button.link>
+                        </x-table.cell>
+                        <x-table.cell>
+                            <x-button.link wire:click="delete({{ $rating->id }})"><span class="text-red-500 underline">{{ __('Delete') }} <span></x-button.link>
+                        </x-table.cell>
+                    </x-table.row>
+                    @empty
+                    <x-table.row>
+                        <x-table.cell colspan="6" class="text-center">
+                            <span class="text-gray-500">{{__('No ratings yet')}}</span>
+                        </x-table.cell>
+                    </x-table.row>
+                    @endforelse
+                </x-slot>
+            </x-table>
+        </div>
 
-        </x-table>
+        <div class="block sm:hidden px-2 pb-4">
+            <div class="w-full pb-2">
+                <x-sort.dropdown>
+                    <x-slot name="trigger">{{__('Sorted by') }} {{ __('app.'.$sortField)}}</x-slot>
+                    <x-sort.item sortable wire:click="sortBy('display_name')" :direction="$sortField == 'display_name' ? $sortDirection : null">{{ __('Visiable name')}}</x-sort.item>
+                    <x-sort.item sortable wire:click="sortBy('level')" :direction="$sortField == 'level' ? $sortDirection : null">{{ __('Level')}}</x-sort.item>
+                    <x-sort.item sortable wire:click="sortBy('comment')" :direction="$sortField == 'comment' ? $sortDirection : null">{{ __('Comment')}}</x-sort.item>
+                    <x-sort.item sortable wire:click="sortBy('created_at')" :direction="$sortField == 'created_at' ? $sortDirection : null">{{ __('Entered')}}</x-sort.item>
+                </x-sort.dropdown>
+            </div>
+
+            <x-grid.list>
+                @forelse ($ratings as $rating)
+                <x-grid.list.card>
+                    <x-slot name="information">
+                        <div class="flex-1 truncate">
+                            <p class="mt-1 text-gray-500 text-sm leading-5 truncate"> {{ __('Visiable name')}}
+                            </p>
+                            <div class="text-gray-900 text-sm leading-5 font-medium truncate">
+                                {{ $rating->display_name}}
+                                @isset($rating->user)
+                                <p class="text-cool-gray-400">({{ $rating->user->name}})</p>
+                                @endisset
+                            </div>
+
+                            <p class="mt-2 text-gray-500 text-sm leading-5 truncate">{{ __('Level')}}
+                            </p>
+                            <div class="text-gray-900 text-sm leading-5 font-medium truncate">
+                                {{ $rating->level }}
+                            </div>
+
+                            <p class="mt-2 text-gray-500 text-sm leading-5 truncate">{{ __('Comment')}}</p>
+                            <div class="text-gray-900 text-sm leading-5 font-medium truncate">
+                                {{ $rating->comment }}
+                            </div>
+
+                            <p class="mt-2 text-gray-500 text-sm leading-5 truncate">{{ __('Entered')}}</p>
+                            <div class="text-gray-900 text-sm leading-5 font-medium truncate">
+                                {{ $rating->created_at }}
+                            </div>
+
+                            <p class="mt-2 text-gray-500 text-sm leading-5 truncate">{{ __('Bookings')}}</p>
+                            <div class="text-gray-900 text-sm leading-5 font-medium truncate">
+                                @if($rating->is_favorite === 0)
+                                <x-button.link wire:click="markAsFavorite({{ $rating->id }})">{{ __('Show') }}</x-button.link>
+                                @else
+                                <x-button.link wire:click="removeAsFavorite({{ $rating->id }})">{{ __('Hide') }}</x-button.link>
+                                @endif
+                            </div>
+
+                        </div>
+                    </x-slot>
+                    <x-slot name="actions">
+                    <div class="flex flex-no-wrap h-12 px-4 justify-end items-center w-full space-x-8">
+                        <x-button.link wire:click="edit({{ $rating->id }})"><span>{{ __('app.modify') }} <span></x-button.link>
+                        <x-button.link wire:click="delete({{ $rating->id }})"><span class="text-red-500 underline">{{ __('Delete') }} <span></x-button.link>
+                    </div>
+                    </x-slot>
+                </x-grid.list.card>
+                @empty
+                <div class="bg-white shadow-sm rounded-md text-center py-6">
+                    <span class="text-gray-500">{{__('No ratings yet')}} </span>
+                </div>
+                @endforelse
+            </x-grid.list>
+        </div>
+
+
         <div class="mt-2">
             {{ $ratings->links() }}
         </div>
