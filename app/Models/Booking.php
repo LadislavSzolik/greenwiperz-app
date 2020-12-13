@@ -21,6 +21,7 @@ class Booking extends Model
         'pending' => 'Pending',
         'paid' => 'Paid',
         'canceled' => 'Canceled',
+        'confirmed' => 'Confirmed',
         'completed' => 'Completed',
         'draft' => 'Draft',
     ];
@@ -31,6 +32,10 @@ class Booking extends Model
 
     public function car() {
         return $this->morphOne('App\Models\Car','carable');
+    }
+
+    public function fleets() {
+        return $this->morphMany('App\Models\Fleet','fleetable');
     }
 
     public function billingAddress() {
@@ -71,6 +76,11 @@ class Booking extends Model
         return Carbon::parse($this->created_at)->format('d.m.Y');
     }
 
+    public function getTotalNumberOfCarsAttribute()
+    {
+        return $this->fleets[0]->outside + $this->fleets[0]->inoutside + $this->fleets[1]->outside + $this->fleets[1]->inoutside + $this->fleets[2]->outside + $this->fleets[2]->inoutside + $this->fleets[3]->outside + $this->fleets[3]->inoutside;
+    }
+
     public function getFormatedTotalCostAttribute()
     {
         $money = new Money($this->brutto_total_amount, new Currency('CHF'));
@@ -98,46 +108,25 @@ class Booking extends Model
         return $moneyFormatter->format($money);
     }
 
+    public function getFormatedDiscountedCostAttribute()
+    {
+        $money = new Money( $this->discounted_cost, new Currency('CHF'));
+        $currencies = new ISOCurrencies();
+        $numberFormatter = new \NumberFormatter('de_CH', \NumberFormatter::CURRENCY);
+        $moneyFormatter = new IntlMoneyFormatter($numberFormatter, $currencies);        
+        return $moneyFormatter->format($money);
+    }
+
     public function getCompleteBillingAddressAttribute()
     {
         return $this->billingAddress->first_name.' '.$this->billingAddress->last_name.', '.$this->billingAddress->company_name.'<br>'.$this->billingAddress->street.'<br/>'.$this->billingAddress->postal_code.' '.$this->billingAddress->city.'<br/>'.$this->billingAddress->country;
     }
 
-    public function getCustomerMailAttribute()
-    {
-        return $this->customer->email;
-    }
-
-    /*
-    public function getBookingTimestampAttribute()
-    {
-        return new Carbon($this->appointment->date.' '.$this->appointment->start_time);
-    }
-
-    public function bookingStatus()
-    {
-        if(filled($this->appointment->completed_at)) 
-        {
-            return 'completed';
-        }
-
-        if(filled($this->appointment->canceled_at)) 
-        {
-            return 'canceled';
-        }
-
-        if(filled($this->paid_at)) 
-        {
-            return 'paid';
-        }
-
-        return 'not_paid';
-    } */
 
     public function getRefundableAmountAttribute()
     {
-        
-        $hoursBeforeCleaning = Carbon::now()->diffInMinutes($this->booking_datetime);
+        $bookingDateTime = new Carbon($this->date. ' '. $this->time);
+        $hoursBeforeCleaning = Carbon::now()->diffInMinutes($bookingDateTime);
         $settledAmount = $this->brutto_total_amount;
             
         if( $hoursBeforeCleaning < 60) {
@@ -155,16 +144,4 @@ class Booking extends Model
         return intval($amountToRefund);
     }
 
-    /*
-    public function isCancelAllowed() 
-    {
-       
-        return filled($this->paid_at) && blank($this->appointment->completed_at) && blank($this->appointment->canceled_at);
-    }
-    
-    public function isCompletionAllowed()
-    {
-        return filled($this->paid_at) && blank($this->appointment->completed_at) && blank($this->appointment->canceled_at);
-    }
-    */
 }

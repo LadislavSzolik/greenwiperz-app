@@ -20,10 +20,16 @@
                     </x-jet-nav-link>
                     
                     @cannot('manage_bookings') 
-                    <x-jet-nav-link href="{{ route('bookings.create') }}"
-                        :active="request()->routeIs('bookings.create')">
+                    <x-jet-nav-link href="{{ route('bookings.private.create') }}"
+                        :active="request()->routeIs('bookings.private.create') || request()->routeIs('bookings.company.create')">
                         {{ __('app.new_booking') }}
                     </x-jet-nav-link>
+
+                    <x-jet-nav-link href="{{ route('cars.index') }}"
+                        :active="request()->routeIs('cars.index')">
+                        {{ __('Cars') }}
+                    </x-jet-nav-link>
+
                     @endcannot
 
                     @can('manage_bookings') 
@@ -63,6 +69,9 @@
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                
+                <div class="text-sm text-gray-500">
+                    Tel.:{{ config('greenwiperz.company.telefon') }}
+                </div>
                 
                 <x-app-language-switcher />
 
@@ -179,10 +188,16 @@
                 {{ __('app.bookings') }}
             </x-jet-responsive-nav-link>
             @cannot('manage_bookings')
-            <x-jet-responsive-nav-link href="{{ route('bookings.create') }}"
-                :active="request()->routeIs('bookings.create')">
+            <x-jet-responsive-nav-link href="{{ route('bookings.private.create') }}"
+                :active="request()->routeIs('bookings.private.create') || request()->routeIs('bookings.private.create')">
                 {{ __('app.new_booking') }}
             </x-jet-responsive-nav-link>
+
+            <x-jet-responsive-nav-link href="{{ route('cars.index') }}"
+                :active="request()->routeIs('cars.index')">
+                {{ __('Cars') }}
+            </x-jet-responsive-nav-link>
+
             @endcannot
 
             @can('manage_bookings') 

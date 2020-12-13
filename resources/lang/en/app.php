@@ -49,7 +49,7 @@ return [
     'extra_dirt' => 'Extra dirt',
     'first_name' => 'First name',
     'from' => 'From',
-    'google_autocomplete_info_text' => 'Please make sure you select the address from the Google dropdown.',
+    'google_autocomplete_info_text' => 'Please make sure you select the address from the dropdown.',
     'google_autocomplete_error_1' => 'Please provide the entire address.',
     'google_autocomplete_error_2' => 'Unfortunately our services are not yet available in this area. Please call us on +41 123 12 12 to discuss further details.',    
     'invoice' => 'Invoice',

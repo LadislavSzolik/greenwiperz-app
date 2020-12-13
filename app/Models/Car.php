@@ -23,15 +23,17 @@ class Car extends Model
         'pink',
     ];
 
-    protected $guarded = [];
+    protected $fillable = [
+        'car_model', 'number_plate', 'car_color', 'car_size'
+    ];
 
     public function carable()
     {
         return $this->morphTo();
     }
 
-    public function getCarColorNameAttribute()
+    public function getCarStringToSelectAttribute()
     {
-        $en_colors = [];
+        return $this->car_model.', '.$this->number_plate.', '.__($this->car_color).', '.__($this->car_size);
     }
 }

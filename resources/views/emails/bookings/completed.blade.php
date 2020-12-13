@@ -8,17 +8,17 @@
 {{ $bookingNumber }}
 
 **{{__('Car')}}**  
-{{ $bookingCar}}  
-{{ $bookingNumberPlate }}  
-{{ __($bookingColor) }}  
+{{ $car}}  
+{{ $number_plate }}  
+{{ __($color) }}  
 
 **{{__('Date and Time of cleaning')}}**  
-{{ $bookingDateTime}} 
+{{ $date}} {{ $time}} 
 
 
 **{{__('Car parking')}}**  
-{{ $bookingRoute}} {{ $bookingStreet}}  
-{{ $bookingPostalCode }} {{ $bookingCity }}  
+{{ $route}} {{ $street_number}}  
+{{ $postal_code }} {{ $city }}  
 
 
 @component('mail::button', [ 'url' => $rating_url])

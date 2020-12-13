@@ -21,7 +21,7 @@
 
                     <x-slot name="actions">
                         <button x-on:click="open=false" class="px-2 py-1.5 rounded-md text-sm leading-5 font-medium hover:bg-{{session('message')['color']}}-100 focus:outline-none focus:bg-{{session('message')['color']}}-100 transition ease-in-out duration-150">
-                        {{ __('app.dismiss') }}
+                            {{ __('app.dismiss') }}
                         </button>
                     </x-slot>
                 </x-flash.universal>
@@ -32,12 +32,46 @@
                 <dl>
                     <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
                         <dt class="text-sm leading-5 font-medium text-gray-500">
-                        {{ __('app.booking_number') }}
+                            {{ __('app.status') }}
+                        </dt>
+                        <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
+                            <x-booking-status :status="$booking->status" />
+                        </dd>
+                    </div>
+
+                    <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5 sm:border-t">
+                        <dt class="text-sm leading-5 font-medium text-gray-500">
+                            {{ __('app.booking_number') }}
                         </dt>
                         <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
                             {{ $booking->booking_nr }}
                         </dd>
                     </div>
+
+                    <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
+                        <dt class="text-sm leading-5 font-medium text-gray-500">
+                            {{ __('Location')}}
+                        </dt>
+                        <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
+                            {!! $booking->parkingLocationAddress !!}
+                        </dd>
+                    </div>
+
+
+                    @if($booking->type == 'private')
+
+                    <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
+                        <dt class="text-sm leading-5 font-medium text-gray-500">
+                            {{ __('app.car')}}
+                        </dt>
+                        <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
+                            {{ $booking->car->car_model }}, {{ $booking->car->number_plate }}
+                            <br />
+                            {{ __($booking->car->car_color) }}, <span class="capitalize">{{ $booking->car->car_size }}</span>
+                        </dd>
+                    </div>
+
+
                     <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5 sm:border-t ">
                         <dt class="text-sm leading-5 font-medium text-gray-500">
                             {{ __('app.cleaning') }}
@@ -50,95 +84,167 @@
                             @endif
                         </dd>
                     </div>
-                    <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5 sm:border-t ">
-                        <dt class="text-sm leading-5 font-medium text-gray-500">
-                            {{ __('app.status') }}
-                        </dt>
-                        <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-                            <x-booking-status :status="$booking->status" />
-                        </dd>
-                    </div>
+
                     <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
                         <dt class="text-sm leading-5 font-medium text-gray-500">
-                            {{ __('app.total_cost') }}
+                            {{ __('app.dirty_surcharge')}}
                         </dt>
                         <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-
-
-                            <div class="sm:inline-flex items-center sm:space-x-2 space-y-2 sm:space-y-0">
-                                <p>{{ $booking->formatedTotalCost }}</p>
-                                <x-document-download link="/bookings/{{ $booking->id }}/invoice">
-                                    {{ __('app.invoice')}}
-                                </x-document-download>
-
-                                @isset ($booking->receipt)
-                                <x-document-download link="/bookings/{{ $booking->id }}/receipt">
-                                {{ __('app.reciept')}}
-                                </x-document-download>
-                                @endisset
-
-                                @isset ($booking->refund)
-                                <x-document-download link="/bookings/{{ $booking->id }}/refund">
-                                {{ __('app.refund')}}
-                                </x-document-download>
-                                @endisset
-                            </div>
-                        </dd>
-                    </div>
-                    <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
-                        <dt class="text-sm leading-5 font-medium text-gray-500">
-                        {{ __('app.dirty_surcharge')}}
-                        </dt>
-                        <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-                            @if($booking->has_extra_dirt == 1)
+                            @if($booking->extra_dirt)
                             <p> &#10003; {{ __('app.extra_dirt')}} </p>
                             @else
                             <p> &#x2715; {{ __('app.extra_dirt')}}</p>
                             @endif
-                            @if($booking->has_animal_hair == 1)
+                            @if($booking->animal_hair)
                             <p> &#10003; {{ __('app.animal_hair')}} </p>
                             @else
                             <p> &#x2715; {{ __('app.animal_hair')}} </p>
                             @endif
                         </dd>
                     </div>
+                    @endif
+
+
+                    @if($booking->type == 'business')
+                    <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5 sm:border-t ">
+                        <dt class="text-sm leading-5 font-medium text-gray-500">
+                            {{ __('Cars') }}
+                        </dt>
+                        <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2 space-y-2">
+
+                            @if($booking->fleets[0]->outside > 0 || $booking->fleets[0]->inoutside > 0)
+                            <p>
+                                {{ __('pricespage.carcategory1type') }}:
+                                <span class="font-semibold">{{$booking->fleets[0]->outside}}</span>
+                                <span class="text-cool-gray-500">({{ __('app.outside')}})</span>,
+                                <span class="font-semibold">{{$booking->fleets[0]->inoutside}}</span>
+                                <span class="text-cool-gray-500">({{ __('app.in_outside')}})</span>
+                            </p>
+                            @endif
+
+                            @if($booking->fleets[1]->outside > 0 || $booking->fleets[1]->inoutside > 0)
+                            <p>
+                                {{ __('pricespage.carcategory2type') }}:
+                                <span class="font-semibold">{{$booking->fleets[1]->outside}}</span>
+                                <span class="text-cool-gray-500">({{ __('app.outside')}})</span>,
+                                <span class="font-semibold">{{$booking->fleets[1]->inoutside}}</span>
+                                <span class="text-cool-gray-500">({{ __('app.in_outside')}})</span>
+                            </p>
+                            @endif
+
+                            @if($booking->fleets[2]->outside > 0 || $booking->fleets[2]->inoutside > 0)
+                            <p>
+                                {{ __('pricespage.carcategory3type') }}:
+                                <span class="font-semibold">{{$booking->fleets[2]->outside}}</span>
+                                <span class="text-cool-gray-500">({{ __('app.outside')}})</span>,
+                                <span class="font-semibold">{{$booking->fleets[2]->inoutside}}</span>
+                                <span class="text-cool-gray-500">({{ __('app.in_outside')}})</span>
+                            </p>
+                            @endif
+
+                            @if($booking->fleets[3]->outside > 0 || $booking->fleets[3]->inoutside > 0)
+                            <p>
+                                {{ __('pricespage.carcategory4type') }}:
+                                <span class="font-semibold">{{$booking->fleets[3]->outside}}</span>
+                                <span class="text-cool-gray-500">({{ __('app.outside')}})</span>,
+                                <span class="font-semibold">{{$booking->fleets[3]->inoutside}}</span>
+                                <span class="text-cool-gray-500">({{ __('app.in_outside')}})</span>
+                            </p>
+                            @endif
+
+
+                        </dd>
+                    </div>
+                    @endif
+
+                    @if($booking->type == 'private')
                     <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
                         <dt class="text-sm leading-5 font-medium text-gray-500">
-                        {{ __('app.car_location')}}
+                            {{ __('app.total_cost') }}
                         </dt>
                         <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-                            {!! $booking->parkingLocationAddress !!}
+                            <div class="sm:inline-flex items-center sm:space-x-2 space-y-2 sm:space-y-0">
+                                <p>{{ $booking->formatedTotalCost }}</p>
+
+                                <x-document-download link="/bookings/{{ $booking->id }}/invoice">
+                                    {{ __('app.invoice')}}
+                                </x-document-download>
+
+                                @isset ($booking->receipt)
+                                <x-document-download link="/bookings/{{ $booking->id }}/receipt">
+                                    {{ __('app.reciept')}}
+                                </x-document-download>
+                                @endisset
+
+                                @isset ($booking->refund)
+                                <x-document-download link="/bookings/{{ $booking->id }}/refund">
+                                    {{ __('app.refund')}}
+                                </x-document-download>
+                                @endisset
+                            </div>
+                        </dd>
+                    </div>
+                    @endif
+
+
+                    @if($booking->type == 'business')
+                    <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
+                        <dt class="text-sm leading-5 font-medium text-gray-500">
+                            {{ __('Fees') }}
+                        </dt>
+                        <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
+
+                            <div class="flex justify-between sm:justify-start space-x-4 ">
+                                <div class="text-cool-gray-500 space-y-2">
+                                    <p>{{ __('Fee') }}</p>
+                                    <p>{{ __('app.dirty_surcharge') }}</p>
+                                    <p>{{ __('Sub total') }}</p>
+                                    <p>{{ __('Fleet discount') }}</p>
+                                    <p class="font-semibold">{{ __('Discounted cost') }}</p>
+
+                                </div>
+                                <div class="text-right space-y-2">
+                                    <p>{{ $booking->formatedBaseCost }}</p>
+                                    <p>{{ $booking->formatedExtraCost }}</p>
+                                    <p>{{ $booking->formatedTotalCost }}</p>
+                                    <p>{{ $booking->fleet_discount }} %</p>
+                                    <p class="font-semibold">{{ $booking->formatedDiscountedCost }}</p>
+                                </div>
+                            </div>
+
+                        </dd>
+                    </div>
+                    @endif
+
+
+
+
+                    <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
+                        <dt class="text-sm leading-5 font-medium text-gray-500">
+                            {{ __('app.cleaning_date') }}
+                        </dt>
+                        <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
+                            @if($booking->type == 'business' && Auth::user()->can('manage_bookings') && Str::contains($booking->status, ['pending', 'confirmed']))
+                            <livewire:add-booking-timeslot :booking="$booking">
+                            @else
+                            {{ $booking->date}} {{ $booking->time}} (c.a. {{$booking->formatedDuration}} )
+                            @endif
+                        </dd>
+                    </div>
+
+
+
+                    <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
+                        <dt class="text-sm leading-5 font-medium text-gray-500">
+                            {{ __('app.contact') }}
+                        </dt>
+                        <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
+                            {{ $booking->email }}, {{ $booking->phone }}
                         </dd>
                     </div>
                     <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
                         <dt class="text-sm leading-5 font-medium text-gray-500">
-                        {{ __('app.car')}}
-                        </dt>
-                        <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ $booking->car->car_model }}, {{ $booking->car->number_plate }}
-                            <br />
-                            {{ __($booking->car->car_color) }}, <span class="capitalize">{{ $booking->car->car_size }}</span>
-                        </dd>
-                    </div>
-                    <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
-                        <dt class="text-sm leading-5 font-medium text-gray-500">
-                        {{ __('app.cleaning_date') }}
-                        </dt>
-                        <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ $booking->booking_datetime}} (c.a. {{$booking->formatedDuration}} )
-                        </dd>
-                    </div>
-                    <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
-                        <dt class="text-sm leading-5 font-medium text-gray-500">
-                        {{ __('app.contact') }}
-                        </dt>
-                        <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ $booking->customerMail }}, {{ $booking->phone }}
-                        </dd>
-                    </div>
-                    <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
-                        <dt class="text-sm leading-5 font-medium text-gray-500">
-                        {{ __('app.billing_address') }}
+                            {{ __('app.billing_address') }}
                         </dt>
                         <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
                             {!! $booking->completeBillingAddress !!}
@@ -160,9 +266,9 @@
                         </dd>
                     </div>
                     @endcan
-                    <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t  sm:border-gray-200 sm:px-6 sm:py-5">
+                    <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-b sm:border-gray-200 sm:px-6 sm:py-5">
                         <dt class="text-sm leading-5 font-medium text-gray-500">
-                        {{ __('app.remarks') }}
+                            {{ __('app.remarks') }}
                         </dt>
                         <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
                             @if ($booking->notes)
@@ -176,7 +282,7 @@
                     @can('manage_bookings')
                     <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-b sm:border-gray-200 sm:px-6 sm:py-5">
                         <dt class="text-sm leading-5 font-medium text-gray-500">
-                        {{ __('app.remarks_internal') }}
+                            {{ __('app.remarks_internal') }}
                         </dt>
                         <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
                             @isset ($booking->internal_notes)
@@ -186,7 +292,7 @@
                             @endisset
                             <x-modals.comment actionLink="/comments/{{ $booking->id }}" :currentNote="$booking->internal_notes">
                                 <x-div-button class="w-full sm:w-auto" buttonType="secondary">
-                                {{ __('app.modify') }}
+                                    {{ __('app.modify') }}
                                 </x-div-button>
                             </x-modals.comment>
                         </dd>
@@ -195,7 +301,7 @@
                 </dl>
             </div>
 
-            <div class="mt-4 bg-blue-50 border-l-4 border-blue-400 p-4">
+            <div class="mt-4 bg-blue-50 border-l-4 border-blue-400 p-4 rounded-md">
                 <div class="flex">
                     <div class="flex-shrink-0">
                         <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -205,16 +311,16 @@
                     <div class="text-sm leading-5 text-blue-700 ml-3">
                         <p class="font-bold">{{ __('app.cancelation_policy') }}</p>
                         <p class="">
-                        {{ __('app.cancelation_policy_p1') }}
+                            {{ __('app.cancelation_policy_p1') }}
                         </p>
                         <p class="">
-                        {{ __('app.cancelation_policy_p2') }}
+                            {{ __('app.cancelation_policy_p2') }}
                         </p>
                         <p class="">
-                        {{ __('app.cancelation_policy_p3') }}
+                            {{ __('app.cancelation_policy_p3') }}
                         </p>
                         <p class="">
-                        {{ __('app.cancelation_policy_p4') }}
+                            {{ __('app.cancelation_policy_p4') }}
                         </p>
                     </div>
                 </div>
@@ -226,34 +332,42 @@
                         {{ __('app.back_overview') }}
                     </x-div-button>
                 </a>
-                @cannot('manage_bookings')                
+
+                
+                @cannot('manage_bookings')
                 @if($booking->status == 'paid')
                 <x-confirms-cancelation actionLink="/bookings/{{ $booking->id }}/cancel">
                     <x-div-button class="w-full sm:w-auto" buttonType="destructive">
-                    {{ __('app.cancel_booking') }}
+                        {{ __('app.cancel_booking') }}
                     </x-div-button>
                 </x-confirms-cancelation>
                 @endif
                 @endcannot
 
-                @can('manage_bookings')                               
-                @if($booking->status == 'paid')        
-                    <x-modals.confirms-wiper-cancelation 
-                        amount="{{ $booking->brutto_total_amount }}"  
-                        amountToRefund="{{$booking->refundableAmount}}" 
-                        actionLink="/bookings/{{ $booking->id }}/cancel">
-                        <x-div-button class="w-full sm:w-auto" buttonType="destructive">
+                <!-- WIPER SECTION -->
+                @can('manage_bookings')
+                @if($booking->status == 'paid')
+                <x-modals.confirms-wiper-cancelation amount="{{ $booking->brutto_total_amount }}" amountToRefund="{{$booking->refundableAmount}}" actionLink="/bookings/{{ $booking->id }}/cancel">
+                    <x-div-button class="w-full sm:w-auto" buttonType="destructive">
                         {{ __('app.cancel_by_wiper') }}
-                        </x-div-button>
-                    </x-modals.confirms-wiper-cancelation>
+                    </x-div-button>
+                </x-modals.confirms-wiper-cancelation>
 
-                    <x-confirms-completion actionLink="/bookings/{{ $booking->id }}/complete">
-                        <x-div-button class="w-full sm:w-auto" buttonType="primary" >
+                <x-confirms-completion actionLink="/bookings/{{ $booking->id }}/complete">
+                    <x-div-button class="w-full sm:w-auto" buttonType="primary">
                         {{ __('app.mark_done') }}
-                        </x-div-button>
-                    </x-confirms-completion> 
+                    </x-div-button>
+                </x-confirms-completion>
+                @endif
+                @if($booking->status == 'confirmed')
+                <x-confirms-completion actionLink="/bookings/{{ $booking->id }}/complete">
+                    <x-div-button class="w-full sm:w-auto" buttonType="primary">
+                        {{ __('app.mark_done') }}
+                    </x-div-button>
+                </x-confirms-completion>
                 @endif
                 @endcan
+                 <!-- EOF WIPER SECTION -->
 
                 @if($booking->status == 'draft' || $booking->status == 'pending')
                 <x-form-button method="DELETE" class="w-full sm:w-auto" action="/bookings/{{ $booking->id }}" buttonType="destructive">

@@ -16,6 +16,7 @@ class BillingAddress extends Model
         'postal_code',
         'city',
         'country',
+        'is_company',
     ];
     use HasFactory;
 

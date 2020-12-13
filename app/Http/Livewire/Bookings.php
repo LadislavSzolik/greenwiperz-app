@@ -17,7 +17,7 @@ class Bookings extends Component
 
     public function mount()
     {
-        $this->sortField = 'booking_datetime';
+        $this->sortField = 'date';
         $this->sortDirection = 'desc';
     }
 

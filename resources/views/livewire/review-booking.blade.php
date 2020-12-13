@@ -33,6 +33,13 @@
 
                     <div class="col-span-6">
                         <label class='block font-medium text-sm text-gray-700'>
+                            {{ __('app.car') }}
+                        </label>
+                        {{ $booking->car->car_model }}, {{ $booking->car->number_plate }}, {{ __($booking->car->car_color) }}, <span class="capitalize">{{ $booking->car->car_size }}</span>
+                    </div>
+
+                    <div class="col-span-6 sm:col-span-3">
+                        <label class='block font-medium text-sm text-gray-700'>
                             {{ __('app.cleaning') }}
                         </label>
                         @if ($booking->service_type == 'outside')
@@ -41,36 +48,42 @@
                         {{ __('app.in_outside') }}
                         @endif
                     </div>
+
+                    <div class="col-span-6 sm:col-span-3">
+                        <label class='block font-medium text-sm text-gray-700'>
+                            {{ __('app.dirty_surcharge')}}
+                        </label>
+                        @if($booking->extra_dirt)
+                        <p> &#10003; {{ __('app.extra_dirt')}} </p>
+                        @else
+                        <p> &#x2715; {{ __('app.extra_dirt')}} </p>
+                        @endif
+                        @if($booking->animal_hair)
+                        <p> &#10003; {{ __('app.animal_hair')}} </p>
+                        @else
+                        <p> &#x2715; {{ __('app.animal_hair')}} </p>
+                        @endif
+                    </div>
+
                     <div class="col-span-6">
                         <label class='block font-medium text-sm text-gray-700'>
                             {{ __('app.car_location') }}
                         </label>
                         {!! $booking->parkingLocationAddress !!}
                     </div>
-                    <div class="col-span-6">
+                    
+                    <div class="col-span-6 sm:col-span-3">
                         <label class='block font-medium text-sm text-gray-700'>
-                            {{ __('app.car') }}
+                            {{ __('app.email') }}
                         </label>
-                        {{ $booking->car->car_model }}, {{ $booking->car->number_plate }}
-                        <br />
-                        {{ __($booking->car->car_color) }}, <span class="capitalize">{{ $booking->car->car_size }}</span>
-                    </div>
-                    <div class="col-span-6">
-                        <label class='block font-medium text-sm text-gray-700'>
-                            {{ __('app.dirty_surcharge')}}
-                        </label>
-                        @if($booking->has_extra_dirt == 1)
-                        <p> &#10003; {{ __('app.extra_dirt')}} </p>
+                        @isset($booking->email)
+                        {{ $booking->email }}
                         @else
-                        <p> &#x2715; {{ __('app.extra_dirt')}} </p>
-                        @endif
-                        @if($booking->has_animal_hair == 1)
-                        <p> &#10003; {{ __('app.animal_hair')}} </p>
-                        @else
-                        <p> &#x2715; {{ __('app.animal_hair')}} </p>
+                        <span class="text-gray-400">-</span>
                         @endif
                     </div>
-                    <div class="col-span-6">
+
+                    <div class="col-span-6 sm:col-span-3">
                         <label class='block font-medium text-sm text-gray-700'>
                             {{ __('app.phone') }}
                         </label>
@@ -80,11 +93,19 @@
                         <span class="text-gray-400">-</span>
                         @endif
                     </div>
-                    <div class="col-span-6">
+
+                    <div class="col-span-6 sm:col-span-3">
                         <label class='block font-medium text-sm text-gray-700'>
                             {{ __('app.date_time') }}
                         </label>
-                        {{ $booking->booking_datetime}} ({{ __('app.about')}} {{$booking->formatedDuration}} )
+                        {{ $booking->date}} {{ $booking->time}} 
+                    </div>
+
+                    <div class="col-span-6 sm:col-span-3">
+                        <label class='block font-medium text-sm text-gray-700'>
+                            {{ __('app.date_time') }}
+                        </label>
+                        {{ __('app.about')}} {{$booking->formatedDuration}} 
                     </div>
 
                     <div class="col-span-6">

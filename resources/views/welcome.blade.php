@@ -3,8 +3,8 @@
     <main class="relative pt-16">
 
         <!-- Hero section -->
-        <section   class="bg-white py-10">
-            <div  class="max-w-7xl mx-auto flex flex-wrap sm:flex-no-wrap px-4 sm:px-6">
+        <section class="bg-white py-10">
+            <div class="max-w-7xl mx-auto flex flex-wrap sm:flex-no-wrap px-4 sm:px-6">
 
                 <div class="text-center sm:text-left w-full sm:w-2/5">
                     <div class="flex items-center justify-center sm:justify-start mb-4">
@@ -22,7 +22,7 @@
 
                     <div class="mt-5 sm:flex">
                         @if (config('greenwiperz.registration_enabled'))
-                        <a href="{{ route('bookings.create') }}" class="flex items-center justify-center px-8 py-3 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-green-600 hover:bg-green-500 focus:outline-none focus:border-green-700 focus:shadow-outline-green transition duration-150 ease-in-out md:py-4 md:text-lg md:px-10 ">
+                        <a href="{{ route('bookings.private.create') }}" class="flex items-center justify-center px-8 py-3 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-green-600 hover:bg-green-500 focus:outline-none focus:border-green-700 focus:shadow-outline-green transition duration-150 ease-in-out md:py-4 md:text-lg md:px-10 ">
                             {{ __('action-buttons.bookACleaningCTA') }}
                         </a>
                         @else
@@ -33,16 +33,13 @@
                     </div>
                 </div>
 
-                <div  class="flex justify-center w-full sm:w-3/5 px-2 sm:px-0 mt-8">
-                    <img   class="shadow-2xl h-48 sm:h-80 rounded-lg" src="{{ asset('img/hero-image.png') }}" alt="Hero image" />
+                <div class="flex justify-center w-full sm:w-3/5 px-2 sm:px-0 mt-8">
+                    <img class="shadow-2xl h-48 sm:h-80 rounded-lg" src="{{ asset('img/hero-image.png') }}" alt="Hero image" />
                 </div>
             </div>
         </section>
 
-          <!-- BEFORE/AFTER -->
-          <section>            
-            @livewire('show-work')            
-            </section>
+       
 
         <!-- KEY FEATURES -->
         <section class="my-24">
@@ -110,7 +107,7 @@
             </div>
         </section>
 
-      
+
 
         <!-- BENEFIT: SAVE WITH US -->
         <section class="my-24">
@@ -127,7 +124,7 @@
                             {{ __('homepage.benefit1Description') }}
                         </dt>
                         <dd class="order-1 text-2xl leading-none font-extrabold text-green-600" aria-describedby="item-1">
-                        <img class="h-48 sm:h-80 mx-auto" src="{{ asset('img/save_water.png') }}" alt="Water saving" />
+                            <img class="h-48 sm:h-80 mx-auto" src="{{ asset('img/save_water.png') }}" alt="Water saving" />
                             {{ __('homepage.benefit1Title') }}
                         </dd>
                     </div>
@@ -136,9 +133,9 @@
                             {{ __('homepage.benefit2Description') }}
                         </dt>
                         <dd class="order-1 text-2xl leading-none font-extrabold text-green-600">
-                        
+
                             <img class="h-48 sm:h-80 mx-auto" src="{{ asset('img/one_hour_hustle.png') }}" alt="Hustling" />
-                        
+
                             {{ __('homepage.benefit2Title') }}
                         </dd>
                     </div>
@@ -155,8 +152,15 @@
             </div>
         </section>
 
+        
+
         @livewire('show-public-ratings')
-       
+
+         <!-- BEFORE/AFTER -->
+         <section>
+            @livewire('show-work')
+        </section>
+
     </main>
     <x-footer />
 </x-guest-layout>

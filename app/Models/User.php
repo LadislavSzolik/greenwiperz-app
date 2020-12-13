@@ -80,14 +80,14 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Appointment', 'assigned_to');
     }
 
-    public function billingAddress() 
+    public function billingAddresses() 
     {
-        return $this->morphOne('App\Models\BillingAddress','billingable');
+        return $this->morphMany('App\Models\BillingAddress','billingable');
     }
 
-    public function car() 
+    public function cars() 
     {
-        return $this->morphOne('App\Models\Car','carable');
+        return $this->morphMany('App\Models\Car','carable');
     }
 
 

@@ -4,7 +4,7 @@
         <x-slot name="actions">
 
             @cannot('manage_bookings')
-            <x-form-button method="GET" action="{{ route('bookings.create') }}" buttonType="primary">
+            <x-form-button method="GET" action="{{ route('bookings.private.create') }}" buttonType="primary">
                 {{ __('app.new') }}
             </x-form-button>
             @endcannot
@@ -36,12 +36,9 @@
         <div class="hidden sm:block">
             <x-table>
                 <x-slot name="head">
-                    <x-table.heading sortable wire:click="sortBy('booking_datetime')" :direction="$sortField == 'booking_datetime' ? $sortDirection : null"> {{ __('app.cleaning_date') }}</x-table.heading>
-                    @can('manage_bookings')
-                    <x-table.heading> {{ __('app.car') }}</x-table.heading>
-                    @endcan
+                    <x-table.heading sortable wire:click="sortBy('date')" :direction="$sortField == 'date' ? $sortDirection : null"> {{ __('app.cleaning_date') }}</x-table.heading>   
+                    <x-table.heading sortable wire:click="sortBy('time')" :direction="$sortField == 'time' ? $sortDirection : null"> {{ __('Time') }}</x-table.heading>                
                     <x-table.heading sortable wire:click="sortBy('loc_route')" :direction="$sortField == 'loc_route' ? $sortDirection : null">{{ __('app.car_location') }}</x-table.heading>
-                    <x-table.heading sortable wire:click="sortBy('service_type')" :direction="$sortField == 'service_type' ? $sortDirection : null">{{ __('app.cleaning') }}</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('brutto_total_amount')" :direction="$sortField == 'brutto_total_amount' ? $sortDirection : null">{{ __('app.price') }}</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('status')" :direction="$sortField == 'status' ? $sortDirection : null">{{ __('app.status') }}</x-table.heading>
                     <x-table.heading> </x-table.heading>
@@ -51,37 +48,29 @@
                     @forelse ($bookings as $booking)
                     <x-table.row>
                         <x-table.cell>
-                            {{ $booking->booking_datetime }}
-                        </x-table.cell>
-                        @can('manage_bookings')
+                            {{ $booking->date }}
+                        </x-table.cell>       
                         <x-table.cell>
-                            {{ $booking->car->car_model }}, {{ $booking->car->number_plate }}
-                            <br />
-                            {{ $booking->car->car_color }}, <span class="capitalize">{{ $booking->car->car_size }}</span>
-                        </x-table.cell>
-                        @endcan('manage_bookings')
+                            {{ $booking->time }}
+                            @empty($booking->time)
+                            <p class="text-gray-400">{{ __('Pending') }}</p>
+                            @endempty
+                        </x-table.cell>                  
                         <x-table.cell>
                             {!! $booking->parkingLocationAddress !!}
-                        </x-table.cell>
+                        </x-table.cell>                 
                         <x-table.cell>
-                            @if ($booking->service_type == 'outside')
-                            {{ __('app.outside') }}
-                            @else
-                            {{ __('app.in_outside') }}
-                            @endif
-                        </x-table.cell>
-                        <x-table.cell>
-                            <span class="text-cool-gray-900 font-medium">{{ $booking->formatedTotalCost  }}</span>
+                            {{ $booking->formatedTotalCost }}
                         </x-table.cell>
                         <x-table.cell>
                             <x-booking-status :status="$booking->status" />
                         </x-table.cell>
                         <x-table.cell>
-                            @if($booking->status == 'draft' || $booking->status == 'pending')
+                            @if($booking->status == 'draft')
                             @can('manage_bookings')
-                            <x-form-button method="GET" action="/bookings/{{ $booking->id }}" buttonType="tertiary">
-                                {{ __('app.details') }}
-                            </x-form-button>
+                                <x-form-button method="GET" action="/bookings/{{ $booking->id }}" buttonType="tertiary">
+                                    {{ __('app.details') }}
+                                </x-form-button>
                             @endcan
                             <x-form-button method="DELETE" action="/bookings/{{ $booking->id }}" buttonType="tertiaryDestructive">
                                 {{ __('app.delete') }}
@@ -106,13 +95,12 @@
 
 
         <div class="block sm:hidden px-2 pb-4">
-            
             <div class="w-full pb-2">
                 <x-sort.dropdown>
                     <x-slot name="trigger">{{__('Sorted by') }} {{ __('app.'.$sortField)}}</x-slot>
-                    <x-sort.item wire:click="sortBy('booking_datetime')" :direction="$sortField == 'booking_datetime' ? $sortDirection : null">{{ __('app.cleaning_date')}}</x-sort.item>
-                    <x-sort.item wire:click="sortBy('loc_route')" :direction="$sortField == 'loc_route' ? $sortDirection : null">{{ __('app.car_location') }}</x-sort.item>
-                    <x-sort.item wire:click="sortBy('service_type')" :direction="$sortField == 'service_type' ? $sortDirection : null">{{ __('app.cleaning')}}</x-sort.item>
+                    <x-sort.item wire:click="sortBy('date')" :direction="$sortField == 'date' ? $sortDirection : null">{{ __('app.cleaning_date')}}</x-sort.item>
+                    <x-sort.item wire:click="sortBy('time')" :direction="$sortField == 'time' ? $sortDirection : null">{{ __('Time')}}</x-sort.item>
+                    <x-sort.item wire:click="sortBy('loc_route')" :direction="$sortField == 'loc_route' ? $sortDirection : null">{{ __('app.car_location') }}</x-sort.item>                 
                     <x-sort.item wire:click="sortBy('brutto_total_amount')" :direction="$sortField == 'brutto_total_amount' ? $sortDirection : null">{{ __('app.price')}}</x-sort.item>
                     <x-sort.item wire:click="sortBy('status')" :direction="$sortField == 'status' ? $sortDirection : null">{{ __('app.status')}}</x-sort.item>
                 </x-sort.dropdown>
@@ -127,32 +115,23 @@
                             <p class="mt-1 text-gray-500 text-sm leading-5 truncate"> {{ __('app.cleaning_date')}}
                             </p>
                             <div class="text-gray-900 text-sm leading-5 font-medium truncate">
-                                {{ $booking->booking_datetime }}
-                            </div>
-
-                            @can('manage_bookings')
-                            <p class="mt-2 text-gray-500 text-sm leading-5 truncate">{{ __('app.car') }}</p>
+                                {{ $booking->date }}
+                            </div>      
+                            
+                            <p class="mt-1 text-gray-500 text-sm leading-5 truncate"> {{ __('Time')}}
+                            </p>
                             <div class="text-gray-900 text-sm leading-5 font-medium truncate">
-                                {{ $booking->car->car_model }}, {{ $booking->car->number_plate }}
-                                <br />
-                                {{ $booking->car->car_color }}, <span class="capitalize">{{ $booking->car->car_size }}</span>
-                            </div>
-                            @endcan
+                                {{ $booking->time }}
+                                @empty($booking->time)
+                                <p class="text-gray-400">{{ __('Pending') }}</p>
+                                @endempty
+                            </div>  
 
                             <p class="mt-2 text-gray-500 text-sm leading-5 truncate">{{ __('app.car_location') }}
                             </p>
                             <div class="text-gray-900 text-sm leading-5 font-medium truncate">
                                 {!! $booking->parkingLocationAddress !!}
-                            </div>
-
-                            <p class="mt-2 text-gray-500 text-sm leading-5 truncate">{{ __('app.cleaning') }}</p>
-                            <div class="text-gray-900 text-sm leading-5 font-medium truncate">
-                                @if ($booking->service_type == 'outside')
-                                {{ __('app.outside') }}
-                                @else
-                                {{ __('app.in_outside') }}
-                                @endif
-                            </div>
+                            </div>                       
 
                             <p class="mt-2 text-gray-500 text-sm leading-5 truncate">{{ __('app.price') }}</p>
                             <div class="text-gray-900 text-sm leading-5 font-medium truncate">
@@ -164,12 +143,7 @@
                     </x-slot>
                     <x-slot name="actions">
                         <div class="flex flex-no-wrap h-12 px-4 justify-end items-center w-full space-x-8">
-                            @if($booking->status == 'draft' || $booking->status == 'pending')
-                            @cannot('manage_bookings')
-                            <x-form-button method="GET" action="/bookings/{{ $booking->id }}/edit" buttonType="primary">
-                                {{ __('app.checkout') }}
-                            </x-form-button>
-                            @endcannot
+                            @if($booking->status == 'draft')                    
                             @can('manage_bookings')
                             <x-form-button method="GET" action="/bookings/{{ $booking->id }}" buttonType="tertiary">
                                 {{ __('app.details') }}

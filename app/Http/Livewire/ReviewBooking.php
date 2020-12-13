@@ -16,10 +16,10 @@ class ReviewBooking extends Component
 
     public function destroy()
     {
-        $this->booking->appointment->delete();        
-        $this->booking->billingAddress->delete();      
-        $this->booking->car->delete();
-        return redirect()->route('bookings.create');
+        $this->booking->appointment()->delete();        
+        $this->booking->billingAddress()->delete();      
+        $this->booking->car()->delete();
+        return redirect()->route('bookings.private.create');
     }
 
     public function submit()

@@ -14,10 +14,17 @@ use App\Http\Controllers\BookingCommentController;
 use App\Http\Controllers\RatingController;
 use App\Http\Livewire\Appointments;
 use App\Http\Livewire\Bookings;
+use App\Http\Livewire\Cars;
 use App\Http\Livewire\Clients;
+use App\Http\Livewire\BookingCompanyForm;
+use App\Http\Livewire\BookingPrivateForm;
+use App\Http\Livewire\ConfirmCompanyBooking;
 use App\Http\Livewire\ReviewBooking;
+use App\Http\Livewire\ReviewCompanyBooking;
 use App\Http\Livewire\ShowRatings;
 use App\Http\Livewire\Users;
+use App\Mail\CompanyBookingConfirmedMail;
+use App\Mail\CompanyBookingEnteredMail;
 
 // VISITOR ZONE
 Route::get('lang/{locale}', LocalizationController::class)->name('language');
@@ -48,19 +55,29 @@ Route::middleware(['auth:sanctum', 'verified','can:manage_bookings'])->group(fun
 
 // AUTH CUSTOMER ZONE
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::get('/termsinapp', function () {return view('terms-inapp');})->name('terms.inapp');
+    
     Route::get('/bookings', Bookings::class)->name('bookings.index');
-    Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
-    Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');
+
+    Route::get('/bookings/private/create', BookingPrivateForm::class)->name('bookings.private.create');
+    Route::get('/bookings/company/create', BookingCompanyForm::class)->name('bookings.company.create');
+    
     Route::get('/bookings/{booking}/review', ReviewBooking::class)->name('bookings.review');
+    Route::get('/bookings/{booking}/company/review', ReviewCompanyBooking::class)->name('bookings.company.review');
+
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
     Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
     
     Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+
     Route::get('/bookings/{booking}/invoice', [BookingController::class, 'showInvoice'])->name('bookings.invoice');
     Route::get('/bookings/{booking}/receipt', [BookingController::class, 'showReceipt'])->name('bookings.receipt');
     Route::get('/bookings/{booking}/refund', [BookingController::class, 'showRefund'])->name('bookings.refund');
+
+    Route::get('/cars', Cars::class)->name('cars.index');
+
     Route::get('/payments/redirectToDatatrans/{id}', [PaymentController::class, 'redirectToDatatrans'])->name('payments.redirect');   
+
+    Route::get('/termsinapp', function () {return view('terms-inapp');})->name('terms.inapp');
 });
 Route::post('/payments/handlePaymentSucceeded', [PaymentController::class, 'handlePaymentSucceeded']);
 Route::post('/payments/handlePaymentCanceled', [PaymentController::class, 'handlePaymentCanceled']);
@@ -68,10 +85,12 @@ Route::post('/payments/handlePaymentFailed', [PaymentController::class, 'handleP
 
 // TODO: finish mail testing
 Route::get('mailable',function(){
-    $booking = Booking::findOrFail(3);   
+    $booking = Booking::findOrFail(1);   
     //return new BookingConfirmedMail($booking);
+    //return new BookingCompletedMail($booking);
     //return new CanceledConfirmationMail($booking);
-   return new BookingCompletedMail($booking);
+   //return new CompanyBookingEnteredMail($booking);
+   return new CompanyBookingConfirmedMail($booking);
 });
 
 

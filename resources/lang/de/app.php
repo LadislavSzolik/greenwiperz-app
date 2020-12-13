@@ -47,7 +47,7 @@ return [
     'extra_dirt' => 'Zusätzlicher Schmutz',
     'first_name' => 'Vorname',
     'from' => 'Ab',
-    'google_autocomplete_info_text' => 'Bitte die Adresse aus der Google-Dropdown-Liste auswählen.',
+    'google_autocomplete_info_text' => 'Bitte die Adresse aus der Dropdown-Liste auswählen.',
     'google_autocomplete_error_1' => 'Bitte geben Sie die gesamte Adresse an.',
     'google_autocomplete_error_2' => 'Leider sind unsere Dienstleistungen in diesem Bereich noch nicht verfügbar. Für mehr Informationen bitte uns anrufen: +41 123 12 12.',    
     'invoice' => 'Rechnung',

@@ -89,7 +89,7 @@ class PaymentController extends Controller
         $request->session()->flash('message',
         [
             'color'=>'green',
-            'title'=>'Booking Confirmation', 
+            'title'=>'Booking confirmation', 
             'description'=>'Your booking was successful. We received your funds. Shortly you will receive a mail about the confirmation.'
         ]);
         return redirect()->route('bookings.show',['booking' => $booking->id]);

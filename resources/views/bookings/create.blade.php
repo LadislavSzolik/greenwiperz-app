@@ -8,9 +8,8 @@
 
     <div class="max-w-7xl mx-auto py-4 sm:px-6 lg:px-8">
 
-        <form method="POST" action="/bookings/store">
-            @livewire('booking-form')
-        </form>
+    @livewire('booking-form')
+       
 
     </div> 
 

@@ -14,6 +14,12 @@
 </span>
 @break
 
+@case('confirmed')
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-green-50 text-green-800">
+{{ __('Confirmed')}}
+</span>
+@break
+
 @case('canceled')
 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-gray-100 text-gray-800">
 {{ __('app.canceled')}}

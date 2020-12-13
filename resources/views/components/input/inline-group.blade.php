@@ -6,11 +6,14 @@
 
 <div {{ $attributes }} >
 
-    <label for="{{ $for }}" class='block font-medium text-sm text-gray-700 mb-2'>
-        {{ $label }}
-    </label>
-    
-    {{ $slot }}
+    <div class="inline-grid grid-cols-6 items-center" >
+        <label for="{{ $for }}" class='block font-medium text-gray-700 text-sm col-span-3'>
+            {{ $label }}
+        </label>
+
+         {{ $slot }}           
+        
+    </div>
 
     @error($for)
         <p class='text-sm text-red-600'>{{ $message }}</p>

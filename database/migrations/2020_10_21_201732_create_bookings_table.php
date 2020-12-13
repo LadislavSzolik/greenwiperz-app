@@ -37,38 +37,39 @@ class CreateBookingsTable extends Migration
         {
             $table->id();
             $table->string('booking_nr');
-            $table->string('invoice_nr');
-            $table->bigInteger('transaction_id')->nullable();
-
-            $table->string('status');
-
+            $table->string('type')->default('private');
+            $table->string('status')->default('draft');
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('assigned_to');
+            $table->string('invoice_nr')->nullable();
+            $table->bigInteger('transaction_id')->nullable();            
             $table->unsignedBigInteger('appointment_id')->nullable();
-
             
-            $table->timestamp('booking_datetime')->nullable();  
+            $table->date('date');
+            $table->time('time')->nullable();
             
             $table->string('loc_street_number',200);
             $table->string('loc_route',200);
             $table->string('loc_city',100);
             $table->string('loc_postal_code',20);
 
-            $table->enum('service_type', ['outside', 'inside-outside']);
+            $table->enum('service_type', ['outside', 'inside-outside'])->nullable();
             $table->integer('duration');
-            $table->integer('quantity')->default(1);
             $table->string('currency')->default('CHF');
+
+            $table->unsignedInteger('extra_dirt')->default(0);
+            $table->unsignedInteger('animal_hair')->default(0);
 
             $table->integer('base_cost');
             $table->integer('extra_cost');
-            $table->double('vat')->default(0.077);
+            $table->double('vat')->default(0.077);            
+            $table->integer('fleet_discount')->nullable();
+            $table->integer('discounted_cost')->nullable();
             $table->integer('brutto_total_amount');
-            
-            $table->boolean('has_extra_dirt');
-            $table->boolean('has_animal_hair');        
-
-            $table->string('phone')->nullable();                            
-            
+                    
+            $table->string('email')->nullable(); 
+            $table->string('phone')->nullable();  
+                                       
             $table->text('notes')->nullable();
             $table->text('internal_notes')->nullable();
 
@@ -82,7 +83,7 @@ class CreateBookingsTable extends Migration
             $table->string('gw_country',100)->default('Schweiz');  
             $table->timestamps();
             
-            $table->foreign('appointment_id')->references('id')->on('appointments')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('appointment_id')->references('id')->on('appointments')->onUpdate('cascade');
             $table->foreign('customer_id')->references('id')->on('users');
             $table->foreign('assigned_to')->references('id')->on('users');
         });
@@ -112,10 +113,21 @@ class CreateBookingsTable extends Migration
             $table->timestamps();            
         });
 
+        Schema::create('fleets', function (Blueprint $table) 
+        {
+            $table->id(); 
+            $table->unsignedInteger('outside')->default(0);
+            $table->unsignedInteger('inoutside')->default(0);
+            $table->enum('car_size', ['small', 'medium', 'large','x-large']);   
+            $table->morphs('fleetable');
+            $table->timestamps();            
+        });
+
 
         Schema::create('billing_addresses', function (Blueprint $table) 
         {
             $table->id(); 
+            $table->string('is_company')->default(0);
             $table->string('first_name',255);
             $table->string('last_name',255);     
             $table->string('company_name',255)->nullable();       

@@ -17,7 +17,7 @@
         "laravel/jetstream": "^1.4",
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.0",
-        "livewire/livewire": "^2.0",
+        "livewire/livewire": "^2.3",
         "moneyphp/money": "^3.3"
     },
     "require-dev": {

@@ -28,6 +28,6 @@ class SendCancelationConfirmation
      */
     public function handle(BookingCanceled $event)
     {
-        Mail::to(auth()->user()->email)->send(new CanceledConfirmationMail( $event->booking)); 
+        Mail::to($event->booking->email)->bcc(config('greenwiperz.company.email'))->send(new CanceledConfirmationMail($event->booking)); 
     }
 }

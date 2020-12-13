@@ -24,6 +24,8 @@
             </div>
         </div>
 
+        <div class="text-sm text-center text-gray-500">Tel.:{{ config('greenwiperz.company.telefon') }}</div>
+
         <div class="mt-8 flex justify-center space-x-6">
             <a href="https://www.facebook.com/Greenwiperz/" target="_blank" class="text-gray-400 hover:text-gray-500">
                 <span class="sr-only">Facebook</span>

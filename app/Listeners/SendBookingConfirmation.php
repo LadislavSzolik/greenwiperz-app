@@ -28,6 +28,6 @@ class SendBookingConfirmation
      */
     public function handle(BookingConfirmed $event)
     {        
-        Mail::to(auth()->user()->email)->send(new BookingConfirmedMail( $event->booking));        
+        Mail::to($event->booking->email)->bcc(config('greenwiperz.company.email'))->send(new BookingConfirmedMail( $event->booking));        
     }
 }

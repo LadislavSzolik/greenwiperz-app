@@ -28,6 +28,6 @@ class SendCompletionConfirmation
      */
     public function handle(BookingCompleted $event)
     {
-        Mail::to($event->booking->customerMail)->send(new BookingCompletedMail($event->booking)); 
+        Mail::to($event->booking->email)->bcc(config('greenwiperz.company.email'))->send(new BookingCompletedMail($event->booking)); 
     }
 }
