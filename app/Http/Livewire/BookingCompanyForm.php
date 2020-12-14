@@ -220,6 +220,7 @@ class BookingCompanyForm extends Component
         $this->booking->loc_route = $placeData['route'];
         $this->booking->loc_city = $placeData['locality'];
         $this->booking->loc_postal_code = $placeData['postal_code'];
+        $this->emit('addressEntered', $placeData);
     }
 
     public function saveBooking()

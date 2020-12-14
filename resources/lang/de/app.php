@@ -53,7 +53,7 @@ return [
     'invoice' => 'Rechnung',
     'last_name' => 'Familienname',
     'lets_make_sure' => 'Und jetzt vergewissern wir uns, dass wir diesen Job für Sie machen können!',
-    'logout' => 'Auslogen',
+    'logout' => 'Ausloggen',
     'manage_account' => 'Konto verwalten',
     'mark_done' => 'Als erledigt markieren',
     'modify' => 'Ändern',
