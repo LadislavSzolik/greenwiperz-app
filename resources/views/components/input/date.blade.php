@@ -1,4 +1,12 @@
-<div  class="mt-1 flex rounded-md shadow-sm" >
+@props([
+    'id'
+])
+
+@php
+    $id = $id ?? md5($attributes->wire('model'));
+@endphp
+
+<div class="mt-1 flex rounded-md shadow-sm" >
     <span
         class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
         <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
@@ -7,17 +15,15 @@
         </svg>
     </span>
     
-    <input  id="datepicker" type="text"
-    class="rounded-none rounded-r-md flex-1 form-input block w-full transition duration-150 ease-in-out " readonly
-       
+    <input id="{{ $id }}" type="text"
+    class="rounded-none rounded-r-md flex-1 form-input block w-full transition duration-150 ease-in-out " readonly       
         {{ $attributes }}                
     />
 </div>
 
-@push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"  ></script>
+@push('scripts')       
         <script defer>                         
-            var picker = new Pikaday({ field: document.getElementById('datepicker'), 
+            var picker = new Pikaday({ field: document.getElementById('{{ $id }}'), 
                 firstDay:1, format:'YYYY-MM-DD', 
                 toString(date, format) {
                     const day = date.getDate();
@@ -39,10 +45,6 @@
                 } else {
                     return false;
                 }},
-                onSelect(date) { document.getElementById('datepicker').dispatchEvent(new Event('input')); } });
+                onSelect(date) { document.getElementById('{{ $id }}').dispatchEvent(new Event('input')); } });
         </script>
-@endpush
-
-@push('styles')
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
 @endpush

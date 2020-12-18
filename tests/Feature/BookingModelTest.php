@@ -58,11 +58,10 @@ class BookingModelTest extends TestCase
 
     public function testBookingWithAppointmentCreated_success()
     {
-        $appointment = Appointment::factory()->create();
-        $booking = Booking::factory()->create();
-        $appointment->booking()->save($booking);
-
-        $this->assertEquals($booking->appointment->start_time,$appointment->start_time);
+        
+        $booking = Booking::factory()->has(Appointment::factory())->create();
+        
+        $this->assertDatabaseHas('bookings',['id'=> $booking->id]);
     }
 
 }

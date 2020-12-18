@@ -15,7 +15,7 @@ class Appointment extends Model
     use HasFactory;    
     
     public function booking() {
-        return $this->hasOne('App\Models\Booking');
+        return $this->belongsTo('App\Models\Booking');
     }    
 
     public function assignedTo()

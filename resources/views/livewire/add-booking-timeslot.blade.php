@@ -23,7 +23,7 @@
 
 
     <x-input.group class="col-span-3" for="time" label="{{ __('app.from') }}">
-        <select class="rounded-none rounded-r-md flex-1 form-input block w-full" id="start" wire:model="booking.time">
+        <select class="rounded-md flex-1 form-input block w-full" id="start" wire:model="booking.time">
             <option value="" selected>-- {{ __('app.select')}}</option>
             @foreach($timeslots as $timeslot)
             <option value="{{$timeslot }}">{{$timeslot}}</option>
@@ -32,7 +32,7 @@
     </x-input.group>
 
     <x-input.group class="col-span-3" for="end_time" label="{{ __('app.until') }}">
-        <select class="rounded-none rounded-r-md flex-1 form-input block w-full" id="end" wire:model="end_time">
+        <select class="rounded-md flex-1 form-input block w-full" id="end" wire:model="end_time">
             <option value="" selected>-- {{ __('app.select')}}</option>
             @foreach($timeslots as $timeslot)
             <option value="{{$timeslot }}">{{$timeslot}}</option>

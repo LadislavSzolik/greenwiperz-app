@@ -246,17 +246,17 @@ class BookingPrivateForm extends Component
             session()->flash('message', 'Unfortunately in a meanwhile the timeslot has been taken. Please select a new one.');  
             return;
         }
-        $appointment = Appointment::create([
+        $this->booking->save();
+        $this->booking->appointment()->create([
             'date' => $this->booking->date,
             'start_time' => $this->booking->time,
             'end_time' => Carbon::parse($this->booking->time)->addMinutes($this->booking->duration - 1)->format('H:i'),
             'assigned_to' =>$this->booking->assigned_to,
         ]);
-        $this->booking->save();
-        $this->booking->appointment()->associate($appointment);
+        
         $this->booking->car()->create($this->cars->where('id','=', $this->carForBooking)->first()->toArray());
         $this->booking->billingAddress()->create($this->addressForBooking->toArray());   
-        $this->booking->save();
+        $this->booking->push();
         return redirect()->route('bookings.review', ['booking' => $this->booking]);       
     }
 

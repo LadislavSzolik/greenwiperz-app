@@ -55,20 +55,13 @@ class PaymentControllerTest extends TestCase
                 ], 
             ], 200)
         ]);        
-        $user = User::factory()->state([
-            'email' => 'szolik.ladislav@gmail.com'
-        ])->create();
-        $appointment = Appointment::factory()->state([          
-            'date' => '2020-12-12',
-            'start_time' => '08:00:00',
-        ])->create();        
-        $booking = Booking::factory()->state([
-            'customer_id' => $user->id,
+        $user = User::factory()->create();
+        
+        $booking = Booking::factory()->state([          
             'transaction_id' => '201101103538422731',
-            'booking_nr' => '1234567890',
-            'appointment_id' => $appointment->id,
+            'booking_nr' => '1234567890',         
             'status' => 'pending',
-        ])->has(Car::factory())->has(BillingAddress::factory())->create();    
+        ])->for(User::factory(),'customer')->has(Car::factory())->has(BillingAddress::factory())->has(Appointment::factory())->create();    
         $payload = ['datatransTrxId'=> '201101103538422731'];
         $response = $this->post('/payments/handlePaymentSucceeded', $payload);       
         $response->assertStatus(302);
@@ -123,8 +116,7 @@ class PaymentControllerTest extends TestCase
             ], 200)
         ]);           
         $user = User::factory()->create(); 
-        $booking = Booking::factory()->state([
-            'customer_id' => $user->id,
+        $booking = Booking::factory()->state([        
             'transaction_id' => '201101103538422731',
             'booking_nr' => '1234567890',  
             'status' => 'pending',       

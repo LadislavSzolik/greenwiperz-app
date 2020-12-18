@@ -2,73 +2,76 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use App\Datatrans;
-use Carbon\Carbon;
 use App\Models\Booking;
-use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-use App\Events\BookingCanceled;
-use App\Events\BookingCompleted;
-use App\Models\Appointment;
-use App\TimeslotService;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Events\BusinessBookingCanceled;
+use App\Events\BusinessBookingCompleted;
+use App\Events\PrivateBookingCanceled;
+use App\Events\PrivateBookingCompleted;
 use Illuminate\Support\Facades\App;
 
 class BookingController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct() {
        $this->authorizeResource(Booking::class, 'booking');
     }
 
-    public function show(Booking $booking)
-    {     
+    public function show(Booking $booking) {     
         return view('bookings.show', ['booking' => $booking] );
     }
 
 
-    public function cancel(Request $request, Booking $booking) 
-    {              
+    public function cancel(Request $request, Booking $booking) {                
+        if($booking->isCancelAllowed === false ) {
+            abort(403, 'Cannot cancel booking');
+        }      
+        if($booking->status === 'paid' && $booking->type = 'private') {
+            $refundableAmount = $booking->refundableAmount;
+            if(auth()->user()->isGreenwiper() && filled($request['amountToRefund'])) {
+                if($request['amountToRefund'] > $booking->brutto_total_amount) {
+                    $refundableAmount = $booking->brutto_total_amount;
+                }else {
+                    $refundableAmount = $request['amountToRefund'];
+                }                       
+            }       
+            Datatrans::handleBookingRefund($booking, $refundableAmount);
+        }
         $booking->appointment->canceled_at = now();
-        $booking->appointment->canceled_by = auth()->user()->id;
-        $booking->appointment->save();
+        $booking->appointment->canceled_by = auth()->user()->id; 
         $booking->status = 'canceled';
-        $booking->save();
-       
-        $refundableAmount = $booking->refundableAmount;
-        if(auth()->user()->isGreenwiper() && filled($request['amountToRefund'])) {
-            if($request['amountToRefund'] > $booking->brutto_total_amount) {
-                $refundableAmount = $booking->brutto_total_amount;
-            }else {
-                $refundableAmount = $request['amountToRefund'];
-            }                       
-        }       
-        Datatrans::handleBookingRefund($booking, $refundableAmount);
-        event(new BookingCanceled($booking));
+        $booking->push(); 
+        if($booking->type == 'private') {
+            event(new PrivateBookingCanceled($booking));
+        } else {
+            event(new BusinessBookingCanceled($booking));
+        }
+    
         $request->session()->flash('message',
         [
             'color'=>'green',
             'title'=>'Booking canceled', 
-            'description'=>'Your booking was canceled. About refunds see for refunds document for details. Shortly you will receive a mail about the confirmation.'
+            'description'=>'Your booking was canceled. Shortly you will receive a mail about the confirmation.'
         ]);
         return back();
     }
 
     public function complete(Request $request, Booking $booking)
     {
-        $booking->appointment->completed_at = now();
-        $booking->appointment->completed_by = auth()->user()->id;
-        $booking->appointment->save();
-        $booking->status = 'completed';
-        $booking->save();
-
-        if($booking->type === 'private') {
-            event(new BookingCompleted($booking));
+        if(!auth()->user()->isGreenwiper() || $booking->isCompleteAllowed === false) {
+            abort(403);
         }
-        //TODO: Add business mail
-        
-
+        if($booking->appointment) {           
+            $booking->appointment->completed_at = now();
+            $booking->appointment->completed_by = auth()->user()->id;            
+        }        
+        $booking->status = 'completed';
+        $booking->push();
+        if($booking->type === 'private') {
+            event(new PrivateBookingCompleted($booking));
+        } else {
+            event(new BusinessBookingCompleted($booking));
+        }
         $request->session()->flash('message',
         [
             'color'=>'green',
@@ -81,8 +84,8 @@ class BookingController extends Controller
         
     
     public function destroy(Request $request, Booking $booking)
-    {                          
-        if( $booking->appointment) {
+    {        
+        if( $booking->appointment) {            
             $booking->appointment()->delete();
         }
         if($booking->billingAddress) {
@@ -107,18 +110,24 @@ class BookingController extends Controller
 
     
     public function showInvoice(Booking $booking) {
+        $this->authorize('update', $booking);
+
         $pdf = App::make('dompdf.wrapper');
         $pdf->loadView('pdf.invoice_de', ['booking' => $booking]);    
         return $pdf->stream();
     }
 
     public function showReceipt(Booking $booking){
+        $this->authorize('update', $booking);
+
         $pdf = App::make('dompdf.wrapper');
         $pdf->loadView('pdf.receipt_de', ['booking' => $booking]); 
         return $pdf->stream();  
     }
 
     public function showRefund(Booking $booking){
+        $this->authorize('update', $booking);
+
         $pdf = App::make('dompdf.wrapper');
         $pdf->loadView('pdf.refund_de', ['booking' => $booking]); 
         return $pdf->stream();  

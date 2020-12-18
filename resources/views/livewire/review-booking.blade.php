@@ -103,7 +103,7 @@
 
                     <div class="col-span-6 sm:col-span-3">
                         <label class='block font-medium text-sm text-gray-700'>
-                            {{ __('app.date_time') }}
+                            {{ __('app.duration') }}
                         </label>
                         {{ __('app.about')}} {{$booking->formatedDuration}} 
                     </div>

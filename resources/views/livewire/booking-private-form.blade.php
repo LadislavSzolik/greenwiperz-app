@@ -31,6 +31,7 @@
 
                     <!-- CAR INFORMATION -->
                     <x-input.group class="col-span-6" for="carForBooking" label="{{ __('app.car')}}">
+                        @if(count($cars) > 0)
                         <select class="rounded shadow-sm flex-1 form-input block w-full" name="carForBooking" wire:model="carForBooking" required>
                             @forelse($cars as $car)
                             <option value="{{ $car->id}}">{{ $car->car_model }}, {{ $car->number_plate }}, {{ __($car->car_size) }}, {{ __($car->car_color) }}</option>
@@ -38,7 +39,10 @@
                             <option value="">-</option>
                             @endforelse
                         </select>
-                        <a wire:click="$emit('createCar')" class="block mt-2 cursor-pointer text-green-500 font-bold hover:text-green-700 active:text-green-800">{{ __('New')}}</a>
+                        @endif
+                        <div class="mt-4">
+                            <a wire:click="$emit('createCar')" class=" cursor-pointer px-4 py-2 bg-green-50 rounded  text-green-500 font-bold hover:text-green-700 hover:bg-green-100 active:text-green-800">{{ __('Add new')}}</a>
+                        </div>
                     </x-input.group>
 
                     <x-input.group class="col-span-6 sm:col-span-3" for="serviceType" label="{{ __('app.cleaning')}}">
@@ -152,7 +156,7 @@
 
 
                     <!-- BILLING ADDRESS -->
-                    <x-input.group class="col-span-6 sm:col-span-3" for="addressForBooking" label="{{ __('app.billing_address') }}">
+                    <x-input.group class="col-span-6" for="addressForBooking" label="{{ __('app.billing_address') }}">
                         @isset($addressForBooking)
                         <p>{{ $addressForBooking->first_name }} {{ $addressForBooking->last_name }}, </p>
                         <p>{{ $addressForBooking->street }}</p>
@@ -160,7 +164,7 @@
                         <p>{{ $addressForBooking->country }} </p>
                         @endisset
                         <div class="space-x-4">
-                            <a wire:click="$emit('createAddress')" class="cursor-pointer text-green-500 font-bold hover:text-green-700 active:text-green-800">{{ __('New')}}</a>
+                            <a wire:click="$emit('createAddress')" class="cursor-pointer text-green-500 font-bold hover:text-green-700 active:text-green-800">{{ __('Add new')}}</a>
                             <a wire:click="showAddresses" class="cursor-pointer text-green-500 font-bold hover:text-green-700 active:text-green-800">{{ __('Select other')}}</a>
                         </div>
                     </x-input.group>

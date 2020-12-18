@@ -8,13 +8,12 @@ use Carbon\Carbon;
 use App\Models\Booking;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
-use App\Events\BookingConfirmed;
+use App\Events\PrivateBookingConfirmed;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class PaymentController extends Controller
 {
-
 
     public function redirectToDatatrans(Request $request) {              
         if (!Arr::exists($request, 'id')) {  
@@ -58,12 +57,8 @@ class PaymentController extends Controller
     }
 
 
-
-
     public function handlePaymentSucceeded(Request $request)
     {         
-                
-        // TODO: add the signature check as middleware
         if (!Arr::exists($request, 'datatransTrxId')) {  
             abort(400, 'Transaction id not provided...');
         }        
@@ -83,8 +78,10 @@ class PaymentController extends Controller
             'transaction_id'    => $response['transactionId'],
         ]);     
         $booking->status = 'paid';              
-        $booking->save();        
-        event(new BookingConfirmed($booking));
+        $booking->push();  
+        $booking->refresh();
+
+        event(new PrivateBookingConfirmed($booking));
         
         $request->session()->flash('message',
         [

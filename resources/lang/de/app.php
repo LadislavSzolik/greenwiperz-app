@@ -100,14 +100,13 @@ return [
     'terms_2_sub_2' => 'In den Lack eingebrannte organische Stoffe (zB Käfer) können nicht entfernt werden',
     'terms_2_sub_3' => 'Die inneren Radkästen werden nicht gewaschen',   
     'terms_3_sub_1' => 'Ja wohl',
+    'time' => 'Zeitpunkt',
     'total_cost' => 'Gesamtkosten',
     'until' => 'Bis',
     'users' => 'Benuzter',
     'outside' => 'Nur aussen',
     'in_outside' => 'Innen und aussen',
 
-    
-    'booking_datetime' => 'Reinigungsdatum',
     'loc_route' => 'Parkplatz',
     'service_type' => 'Reinigung',
     'brutto_total_amount' => 'Preis',

@@ -50,7 +50,7 @@ switch ($maxWidth ?? '2xl') {
     class="fixed top-0 inset-x-0 px-4 z-50 sm:pt-6 sm:px-0 sm:flex sm:items-top sm:justify-center"
     style="display: none;"
 >
-    <div x-show="show" class="fixed inset-0 transform transition-all" x-on:click="show = false" x-transition:enter="ease-out duration-300"
+    <div x-show="show" class="fixed inset-0 transform transition-all"  x-transition:enter="ease-out duration-300"
                     x-transition:enter-start="opacity-0"
                     x-transition:enter-end="opacity-100"
                     x-transition:leave="ease-in duration-200"

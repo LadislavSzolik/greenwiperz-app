@@ -102,14 +102,13 @@ return [
     'terms_2_sub_2' => 'Organic matter (zB beetles) burned into the paintwork cannot be removed',
     'terms_2_sub_3' => 'The inner wheel arches will not be washed',   
     'terms_3_sub_1' => 'Yes, indeed',
+    'time' => 'Time',
     'total_cost' => 'Total cost',
     'until' => 'Until',
     'users' => 'Users',
     'outside' => 'Only outside',
     'in_outside' => 'Inside and outside',
 
-        
-    'booking_datetime' => 'Cleaning date',
     'loc_route' => 'Car parking',
     'service_type' => 'Cleaning',
     'brutto_total_amount' => 'Price',

@@ -226,9 +226,9 @@
                         <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
                             @if($booking->type == 'business' && Auth::user()->can('manage_bookings') && Str::contains($booking->status, ['pending', 'confirmed']))
                             <livewire:add-booking-timeslot :booking="$booking">
-                            @else
-                            {{ $booking->date}} {{ $booking->time}} (c.a. {{$booking->formatedDuration}} )
-                            @endif
+                                @else
+                                {{ $booking->date}} {{ $booking->time}} (c.a. {{$booking->formatedDuration}} )
+                                @endif
                         </dd>
                     </div>
 
@@ -333,9 +333,9 @@
                     </x-div-button>
                 </a>
 
-                
+
                 @cannot('manage_bookings')
-                @if($booking->status == 'paid')
+                @if(($booking->status == 'paid' || $booking->status == 'pending') && $booking->type === 'private' )
                 <x-confirms-cancelation actionLink="/bookings/{{ $booking->id }}/cancel">
                     <x-div-button class="w-full sm:w-auto" buttonType="destructive">
                         {{ __('app.cancel_booking') }}
@@ -346,20 +346,14 @@
 
                 <!-- WIPER SECTION -->
                 @can('manage_bookings')
-                @if($booking->status == 'paid')
+                @if($booking->status == 'paid' || $booking->status == 'confirmed')
+                @if($booking->type === 'private')
                 <x-modals.confirms-wiper-cancelation amount="{{ $booking->brutto_total_amount }}" amountToRefund="{{$booking->refundableAmount}}" actionLink="/bookings/{{ $booking->id }}/cancel">
                     <x-div-button class="w-full sm:w-auto" buttonType="destructive">
-                        {{ __('app.cancel_by_wiper') }}
+                        {{ __('app.cancel_booking') }}
                     </x-div-button>
-                </x-modals.confirms-wiper-cancelation>
-
-                <x-confirms-completion actionLink="/bookings/{{ $booking->id }}/complete">
-                    <x-div-button class="w-full sm:w-auto" buttonType="primary">
-                        {{ __('app.mark_done') }}
-                    </x-div-button>
-                </x-confirms-completion>
+                </x-modals.confirms-wiper-cancelation>             
                 @endif
-                @if($booking->status == 'confirmed')
                 <x-confirms-completion actionLink="/bookings/{{ $booking->id }}/complete">
                     <x-div-button class="w-full sm:w-auto" buttonType="primary">
                         {{ __('app.mark_done') }}
@@ -367,9 +361,17 @@
                 </x-confirms-completion>
                 @endif
                 @endcan
-                 <!-- EOF WIPER SECTION -->
+                <!-- EOF WIPER SECTION -->
 
-                @if($booking->status == 'draft' || $booking->status == 'pending')
+                @if(($booking->status == 'pending' || $booking->status == 'confirmed') && $booking->type === 'business')
+                <x-confirms-business-cancelation actionLink="/bookings/{{ $booking->id }}/cancel">
+                    <x-div-button class="w-full sm:w-auto" buttonType="destructive">
+                        {{ __('app.cancel_booking') }}
+                    </x-div-button>
+                </x-confirms-business-cancelation>
+                @endif
+
+                @if($booking->status == 'draft')
                 <x-form-button method="DELETE" class="w-full sm:w-auto" action="/bookings/{{ $booking->id }}" buttonType="destructive">
                     {{ __('app.delete') }}
                 </x-form-button>

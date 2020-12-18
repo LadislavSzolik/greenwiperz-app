@@ -154,7 +154,7 @@
                         <p>{{ $addressForBooking->country }} </p>
                         @endisset
                         <div class="space-x-4">
-                            <a wire:click="$emit('createAddress')" class="cursor-pointer text-green-500 font-bold hover:text-green-700 active:text-green-800">{{ __('New')}}</a>
+                            <a wire:click="$emit('createAddress')" class="cursor-pointer text-green-500 font-bold hover:text-green-700 active:text-green-800">{{ __('Add new')}}</a>
                             <a wire:click="showAddresses" class="cursor-pointer text-green-500 font-bold hover:text-green-700 active:text-green-800">{{ __('Select other')}}</a>
                         </div>
                     </x-input.group>

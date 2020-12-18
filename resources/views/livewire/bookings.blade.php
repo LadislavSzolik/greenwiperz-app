@@ -37,7 +37,7 @@
             <x-table>
                 <x-slot name="head">
                     <x-table.heading sortable wire:click="sortBy('date')" :direction="$sortField == 'date' ? $sortDirection : null"> {{ __('app.cleaning_date') }}</x-table.heading>   
-                    <x-table.heading sortable wire:click="sortBy('time')" :direction="$sortField == 'time' ? $sortDirection : null"> {{ __('Time') }}</x-table.heading>                
+                    <x-table.heading sortable wire:click="sortBy('time')" :direction="$sortField == 'time' ? $sortDirection : null"> {{ __('app.time') }}</x-table.heading>                
                     <x-table.heading sortable wire:click="sortBy('loc_route')" :direction="$sortField == 'loc_route' ? $sortDirection : null">{{ __('app.car_location') }}</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('brutto_total_amount')" :direction="$sortField == 'brutto_total_amount' ? $sortDirection : null">{{ __('app.price') }}</x-table.heading>
                     <x-table.heading sortable wire:click="sortBy('status')" :direction="$sortField == 'status' ? $sortDirection : null">{{ __('app.status') }}</x-table.heading>
@@ -99,7 +99,7 @@
                 <x-sort.dropdown>
                     <x-slot name="trigger">{{__('Sorted by') }} {{ __('app.'.$sortField)}}</x-slot>
                     <x-sort.item wire:click="sortBy('date')" :direction="$sortField == 'date' ? $sortDirection : null">{{ __('app.cleaning_date')}}</x-sort.item>
-                    <x-sort.item wire:click="sortBy('time')" :direction="$sortField == 'time' ? $sortDirection : null">{{ __('Time')}}</x-sort.item>
+                    <x-sort.item wire:click="sortBy('time')" :direction="$sortField == 'time' ? $sortDirection : null">{{ __('app.time')}}</x-sort.item>
                     <x-sort.item wire:click="sortBy('loc_route')" :direction="$sortField == 'loc_route' ? $sortDirection : null">{{ __('app.car_location') }}</x-sort.item>                 
                     <x-sort.item wire:click="sortBy('brutto_total_amount')" :direction="$sortField == 'brutto_total_amount' ? $sortDirection : null">{{ __('app.price')}}</x-sort.item>
                     <x-sort.item wire:click="sortBy('status')" :direction="$sortField == 'status' ? $sortDirection : null">{{ __('app.status')}}</x-sort.item>

@@ -232,7 +232,7 @@ class BookingCompanyForm extends Component
         $this->booking->fleets()->save($this->largeCars);
         $this->booking->fleets()->save($this->xlargeCars);
         $this->booking->billingAddress()->create($this->addressForBooking->toArray());
-        $this->booking->save();
+        $this->booking->push();
         return redirect()->route('bookings.company.review', ['booking' => $this->booking]);
     }
 

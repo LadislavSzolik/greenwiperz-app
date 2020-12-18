@@ -95,16 +95,14 @@ class TimeslotServiceTest extends TestCase
         $this->seed(ServiceSeeder::class);
         $user = User::factory()->create(); 
         $bookingDate = '2020-11-02';
-        $appointment = Appointment::create([           
+       
+        Booking::factory()->has(Appointment::factory([           
             'date' =>  $bookingDate,
             'start_time' =>  '07:30',
             'end_time' =>  '09:30',
             'assigned_to' => $user->id,
             'canceled_at' => Carbon::now(),
-        ]);
-        $booking = Booking::factory()->state([
-            'appointment_id' => $appointment->id, 
-        ])->create();
+        ]))->create();
      
         $timeslots = TimeslotService::fetchSlots($bookingDate, $user->id, 30, 104);        
 

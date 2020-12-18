@@ -14,25 +14,6 @@ class CreateBookingsTable extends Migration
     public function up()
     {
 
-        Schema::create('appointments', function (Blueprint $table) 
-        {
-            $table->id();                
-            $table->date('date');
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->timestamp('completed_at')->nullable();
-            $table->unsignedBigInteger('completed_by')->nullable();
-            $table->unsignedBigInteger('assigned_to')->nullable();
-            $table->timestamp('canceled_at')->nullable();
-            $table->unsignedBigInteger('canceled_by')->nullable();  
-            $table->boolean('is_vacation')->default(0);          
-            $table->text('comment')->nullable();
-            $table->timestamps();            
-            $table->foreign('assigned_to')->references('id')->on('users')->onUpdate('cascade');
-        });
-
-
-
         Schema::create('bookings', function (Blueprint $table) 
         {
             $table->id();
@@ -43,7 +24,6 @@ class CreateBookingsTable extends Migration
             $table->unsignedBigInteger('assigned_to');
             $table->string('invoice_nr')->nullable();
             $table->bigInteger('transaction_id')->nullable();            
-            $table->unsignedBigInteger('appointment_id')->nullable();
             
             $table->date('date');
             $table->time('time')->nullable();
@@ -82,10 +62,28 @@ class CreateBookingsTable extends Migration
             $table->string('gw_city',100);
             $table->string('gw_country',100)->default('Schweiz');  
             $table->timestamps();
-            
-            $table->foreign('appointment_id')->references('id')->on('appointments')->onUpdate('cascade');
+                    
             $table->foreign('customer_id')->references('id')->on('users');
             $table->foreign('assigned_to')->references('id')->on('users');
+        });
+
+        Schema::create('appointments', function (Blueprint $table) 
+        {
+            $table->id();                
+            $table->date('date');
+            $table->time('start_time');
+            $table->time('end_time');
+            $table->timestamp('completed_at')->nullable();
+            $table->unsignedBigInteger('completed_by')->nullable();
+            $table->unsignedBigInteger('assigned_to')->nullable();
+            $table->unsignedBigInteger('booking_id')->nullable();
+            $table->timestamp('canceled_at')->nullable();
+            $table->unsignedBigInteger('canceled_by')->nullable();  
+            $table->boolean('is_vacation')->default(0);          
+            $table->text('comment')->nullable();
+            $table->timestamps();            
+            $table->foreign('assigned_to')->references('id')->on('users')->onUpdate('cascade');
+            $table->foreign('booking_id')->references('id')->on('bookings')->onUpdate('cascade');
         });
 
        

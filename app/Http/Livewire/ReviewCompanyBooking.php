@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Events\CompanyBookingEntered;
+use App\Events\BusinessBookingEntered;
 use App\Models\Booking;
 use App\Models\Fleet;
 use Livewire\Component;
@@ -41,9 +41,9 @@ class ReviewCompanyBooking extends Component
 
         $this->booking->status = 'pending';
         $this->booking->tc_accepted_at = now();
-        $this->booking->save();
+        $this->booking->save();        
 
-        event(new CompanyBookingEntered($this->booking));
+        event(new BusinessBookingEntered($this->booking));
         
         return redirect()->route('bookings.show', ['booking'=>$this->booking->id]);    
     }

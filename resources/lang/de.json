@@ -73,9 +73,12 @@
     "Booking completion confirmation":"Bestätigung des Buchungsabschlusses",
     "Thank you for choosing us!":"Danke, dass Sie uns gewählt haben!",
     "We are done with making your car shiny and clean again!":"Wir sind damit fertig, Ihr Auto wieder glänzend und sauber zu machen!",
+    "We are done with making your cars shiny and clean again!":"Wir sind damit fertig, Ihres Autos wieder glänzend und sauber zu machen!",
+
 
     "Cancelling the booking":"Stornierung Ihrer Buchung",
     "We will cancel the booking date and transfer you back the funds based on our cancelation policity.":"Wir stornieren das Buchungsdatum und überweisen Ihnen das Geld zurück, basierend auf unserer Stornierungsrichtlinie.",
+    "We will cancel the booking date. After cancelation you can still access the booking details.":"Wir werden das Buchungsdatum stornieren. Nach der Stornierung können Sie weiterhin auf die Buchungsdetails zugreifen.",
     "Enter how much you want to refund to the client. Use Rapens, not Franks. For example if you want to refund CHF 1, enter 100 in the input field.":"Geben Sie ein, wie viel Sie dem Kunden erstatten möchten. Verwenden Sie Rapens, nicht Franks. Wenn Sie beispielsweise CHF 1 erstatten möchten, geben Sie 100 in das Eingabefeld ein.",
     "Current refundable amount":"Aktueller erstattungsfähiger Betrag",
     "Amount to refund":"Rückerstattungsbetrag",
@@ -83,7 +86,7 @@
     "Booking canceled":"Das Buchung wurde storniert",
     "Yes, cancel":"Ja, stornieren",
     "No, go back":"Nein, zurück",
-    "Your booking was canceled. About refunds see for refunds document for details. Shortly you will receive a mail about the confirmation.":"Ihre Buchung wurde storniert. Informationen zu Rückerstattungen finden Sie im Rückerstattungsdokument. In Kürze erhalten Sie eine E-Mail über die Bestätigung.",
+    "Your booking was canceled. Shortly you will receive a mail about the confirmation.":"Ihre Buchung wurde storniert. In Kürze erhalten Sie eine E-Mail über die Bestätigung.",
 
     "Booking deleted":"Buchung gelöscht",
     "The booking has been successfully deleted":"Die Buchung wurde erfolgreich gelöscht",
@@ -114,7 +117,7 @@
     "Greenwiperz Completion":"Greenwiperz Fertigstellung",
     "Booking confirmation":"Buchungsbestätigung",
     "Amount":"Betrag",
-    "Thank you for your booking. Here is the summary":"Vielen Dank für Ihre Buchung. Hier ist die Zusammenfassung",    
+    "Thank you for your booking! Please find below the summary":"Nachfolgend finden Sie die Zusammenfassung",    
     "View my bookings":"Meine Buchungen anzeigen",
     "Greenwiperz canceled":"Greenwiperz abgesagt",
     "Cancelation confirmation":"Stornierungsbestätigung",
@@ -171,7 +174,8 @@
     "As agreed, we will confirm your appointment in writing:":"Wie vereinbart, bestätigen wir Ihren Termin schriftlich:",
     "Start and estimated end of cleaning":"Beginn und voraussichtliches Ende der Reinigung",
 
-    "Confirmed":"Bestätigt"
+    "Confirmed":"Bestätigt",
+    "Add new":"Neue hinzufügen"
     
 
 }

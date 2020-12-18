@@ -18,16 +18,17 @@ class Booking extends Model
     protected $guarded = [];
     
     const STATUSES = [
+        'draft' => 'Draft',
         'pending' => 'Pending',
         'paid' => 'Paid',
         'canceled' => 'Canceled',
         'confirmed' => 'Confirmed',
         'completed' => 'Completed',
-        'draft' => 'Draft',
+        
     ];
 
     public function appointment() {
-        return $this->belongsTo('App\Models\Appointment');
+        return $this->hasOne('App\Models\Appointment');
     }
 
     public function car() {
@@ -123,8 +124,7 @@ class Booking extends Model
     }
 
 
-    public function getRefundableAmountAttribute()
-    {
+    public function getRefundableAmountAttribute() {
         $bookingDateTime = new Carbon($this->date. ' '. $this->time);
         $hoursBeforeCleaning = Carbon::now()->diffInMinutes($bookingDateTime);
         $settledAmount = $this->brutto_total_amount;
@@ -142,6 +142,22 @@ class Booking extends Model
         }
 
         return intval($amountToRefund);
+    }
+
+
+    public function getIsCancelAllowedAttribute()
+    {
+        return in_array($this->status, ['pending','confirmed','paid']) && filled($this->appointment);
+    }
+
+    public function getIsDestroyAllowedAttribute()
+    {
+        return $this->status === 'draft';
+    }
+
+    public function getIsCompleteAllowedAttribute()
+    {
+        return in_array($this->status, ['confirmed', 'paid']);
     }
 
 }

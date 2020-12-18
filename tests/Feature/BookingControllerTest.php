@@ -33,79 +33,58 @@ class BookingControllerTest extends TestCase
     use WithFaker;
     use RefreshDatabase;
 
-    public function testCheckoutStore()
-    {               
-        $this->seed(TimeslotSeeder::class);
-        $user2 = User::factory()->create();
-
-        $request = [                     
-            'assignedTo' => $user2->id,                       
-
-            'bookingDate' => '2020-11-12',
-            'bookingTime' => '11:30',
-            'locStreetNumber' => $this->faker->numberBetween(123,543),
-            'locRoute' =>  $this->faker->streetName,
-            'locCity' => $this->faker->city,
-            'locPostalCode' => $this->faker->postcode,
-            'serviceType' => 'outside',
-            'duration' => $this->faker->numberBetween(45,120),
-
-            'baseCost' => $this->faker->numberBetween(5500,12000),
-            'extraCost' => $this->faker->numberBetween(0,300),
-            'bruttoTotalAmount' => $this->faker->numberBetween(5500,12000),
-
-            'carModel' =>  $this->faker->name,
-            'numberPlate' => $this->faker->numerify('ZH########'),           
-            'carColor' => $this->faker->colorName,
-            'carSize' => 'small',
-
-            'hasExtraDirt' => 0,
-            'hasAnimalHair' => 0,
-
-            'billFirstName' =>  $this->faker->firstName,
-            'billLastName' =>  $this->faker->lastName,            
-            'billCompanyName' =>  $this->faker->company,
-            'billStreet' =>  $this->faker->streetName,
-            'billPostalCode' =>  $this->faker->postcode,
-            'billCity' =>  $this->faker->city,
-            'billCountry' =>  $this->faker->country,
-            'phone' => $this->faker->phoneNumber,
-            'notes' => $this->faker->text(),            
-        ];
-                          
-        $response = $this->actingAs(User::factory()->create())->post('bookings/store', $request);        
-        $response->assertStatus(302);
-        
-        $this->assertDatabaseCount('bookings',1);
-        $this->assertDatabaseCount('billing_addresses',2);
-        $this->assertDatabaseCount('cars',2);
+    public function testCompleteNotWiper_fail()
+    {        
+        $booking = Booking::factory()->has(Appointment::factory())->has(BillingAddress::factory())->has(Car::factory())->for(User::factory(),'customer')->create();      
+        $response = $this->actingAs( $booking->customer)->post('/bookings/'.$booking->id.'/complete');  
+        $response->assertStatus(403);
     }
 
-
-
-    public function testBookingCompleteDeletion_success() {       
-        $this->seed(UserSeeder::class);
-
-        $user = User::factory()->create();       
-      
-        $booking = Booking::factory()->for(Appointment::factory())->has(BillingAddress::factory())->has(Car::factory())->create([
-            'customer_id' => $user->id,
-        ]);       
-        
-        $response = $this->actingAs($user)->delete('/bookings/'.$booking->id);
-        $response->assertStatus(302);
-        $this->assertDatabaseCount('appointments', 0);
-        $this->assertDatabaseMissing('bookings', ['id' => $booking->id]);
-        $this->assertDatabaseCount('billing_addresses',0);       
-    }
-
-
-
-
-    public function testCancelBooking_success() {       
-
+    public function testCompleteByWiper_success()
+    {
         Event::fake();
-        
+        $this->seed(UserSeeder::class);             
+        $wiperUser = User::factory()->create();
+        $wiperUser->assignRole('greenwiper');        
+        $booking = Booking::factory()->has(Appointment::factory())->has(BillingAddress::factory())->has(Car::factory())->for(User::factory(),'customer')->create([
+            'status' => 'paid',
+        ]);      
+        $response = $this->actingAs($wiperUser)->post('/bookings/'.$booking->id.'/complete');  
+        $response->assertStatus(302);
+        $this->assertDatabaseHas('bookings',['status'=> 'completed']);
+        $this->assertDatabaseHas('appointments',['completed_by'=> $wiperUser->id ]);
+        $response->assertSessionHas('message'); 
+    }
+
+    public function testShowBooking_success()
+    {        
+        $booking = Booking::factory()->has(Appointment::factory())->has(BillingAddress::factory())->has(Car::factory())->for(User::factory(),'customer')->create();      
+        $response = $this->actingAs($booking->customer)->get('/bookings/'.$booking->id);         
+        $response->assertOk();
+        $this->assertDatabaseHas('bookings',['id'=> $booking->id]);
+    }
+
+    public function testCancelWithoutAppointment_fail()
+    {
+        $booking = Booking::factory()->has(BillingAddress::factory())->has(Car::factory())->for(User::factory(),'customer')->create();    
+        $response = $this->actingAs($booking->customer)->post('/bookings/'.$booking->id.'/cancel');
+        $response->assertStatus(403);        
+    }
+
+    public function testCancelInStatusCaneled_fail()
+    {
+        $booking = Booking::factory()
+        ->has(Appointment::factory())
+        ->has(BillingAddress::factory())
+        ->has(Car::factory())
+        ->for(User::factory(),'customer')
+        ->create(['status'=> 'canceled']);
+        $response = $this->actingAs($booking->customer)->post('/bookings/'.$booking->id.'/cancel');   
+        $response->assertStatus(403);
+    }
+
+    public function testCancelPrivatePaidBooking_success() {       
+        Event::fake();
         $transactionId = '201101103538422731';   
         $newTransactionId = '201101103538422732';        
         $checkTransURL = Datatrans::apiBaseUrl().'/v1/transactions/'.$transactionId;
@@ -147,41 +126,111 @@ class BookingControllerTest extends TestCase
                     'settle' => [ 'amount' => 5500],
                 ], 
             ], 200)
-        ]);
+        ]);       
+        $booking = Booking::factory()
+        ->has(Appointment::factory())
+        ->has(BillingAddress::factory())
+        ->has(Car::factory())
+        ->for(User::factory(),'customer')->state([           
+            'transaction_id' => $transactionId,    
+            'status' => 'paid',         
+        ])->create();              
         
-        $user = User::factory()->create();
-
-        $Appointment = Appointment::factory()->create([           
-            'start_time' => '22:14:00',
-            'date' => '2020-11-03'
-        ]);
-        $booking = Booking::factory()->state([
-            'customer_id' => $user->id,
-            'appointment_id' => $Appointment->id,
-            'transaction_id' => $transactionId,            
-        ])->create();
-       
-
-        $receipt = Receipt::factory()->create([
-            'booking_id' => $booking->id,
-            'transaction_id' =>  $transactionId,
-        ]);
-
-       
-                
-        $response = $this->actingAs($user)->post('/bookings/'.$booking->id.'/cancel');
-       
-        $response->assertStatus(302);        
-
-        // does the new transaction id saved on booking?
+        $response = $this->actingAs($booking->customer)->post('/bookings/'.$booking->id.'/cancel');       
+        $response->assertStatus(302);      
+        $response->assertSessionHas('message');         
         $this->assertDatabaseHas('bookings', ['transaction_id' => $newTransactionId  ]); 
-         
-        // does the timeslot freed up?
-        $Appointment->refresh();
-       
-        $this->assertNotNull($Appointment->canceled_at);       
+        $this->assertDatabaseHas('bookings', ['status' => 'canceled' ]);                       
         $this->assertDatabaseCount('refunds',1);
         $this->assertDatabaseHas('refunds', ['refunded_amount' => 5500  ]);
     }
+
+    public function testCancelPrivatePendingBooking_success()
+    {
+        Event::fake();      
+        $booking = Booking::factory()
+        ->has(Appointment::factory())
+        ->has(BillingAddress::factory())
+        ->has(Car::factory())
+        ->for(User::factory(),'customer')->state([                     
+            'status' => 'pending',         
+        ])->create();               
+        $response = $this->actingAs($booking->customer)->post('/bookings/'.$booking->id.'/cancel');       
+        $response->assertStatus(302);      
+        $response->assertSessionHas('message');          
+        $this->assertDatabaseHas('bookings', ['status' => 'canceled' ]);                       
+        $this->assertDatabaseCount('refunds',0);        
+    }
+
+    public function testDestroyFullPrivateBooking_success() {       
+        $this->seed(UserSeeder::class);              
+        $booking = Booking::factory()       
+        ->has(Appointment::factory())
+        ->has(BillingAddress::factory())
+        ->has(Car::factory())->create();               
+        $response = $this->actingAs($booking->customer)->delete('/bookings/'.$booking->id);
+        $response->assertRedirect();
+        $response->assertSessionHas('message');
+        $this->assertDatabaseCount('appointments', 0);        
+        $this->assertDatabaseCount('billing_addresses',0);       
+        $this->assertDatabaseCount('cars',0);
+        $this->assertDatabaseMissing('bookings', ['id' => $booking->id]);
+    }
+
+    public function testDestroyPrivateBookingWithoutCar_success() {       
+        $this->seed(UserSeeder::class);              
+        $booking = Booking::factory()        
+        ->has(Appointment::factory())
+        ->has(BillingAddress::factory())
+        ->create();               
+        $response = $this->actingAs($booking->customer)->delete('/bookings/'.$booking->id);
+        $response->assertRedirect();
+        $response->assertSessionHas('message');
+        $this->assertDatabaseCount('appointments', 0);        
+        $this->assertDatabaseCount('billing_addresses',0);              
+        $this->assertDatabaseMissing('bookings', ['id' => $booking->id]);
+    }
+
+    public function testDestroyPrivateBookingWithoutAppointment_success() {       
+        $this->seed(UserSeeder::class);              
+        $booking = Booking::factory()    
+        ->has(BillingAddress::factory())
+        ->has(Car::factory())->create();               
+        $response = $this->actingAs($booking->customer)->delete('/bookings/'.$booking->id);
+        $response->assertRedirect();
+        $response->assertSessionHas('message');
+        $this->assertDatabaseCount('appointments', 0);        
+        $this->assertDatabaseCount('billing_addresses',0);              
+        $this->assertDatabaseMissing('bookings', ['id' => $booking->id]);
+    }
+
+
+    public function testDestroyPrivateBookingWithoutBillingAddr_success() {       
+        $this->seed(UserSeeder::class);              
+        $booking = Booking::factory()        
+        ->has(Appointment::factory())               
+        ->has(Car::factory())->create();               
+        $response = $this->actingAs($booking->customer)->delete('/bookings/'.$booking->id);
+        $response->assertRedirect();
+        $response->assertSessionHas('message');
+        $this->assertDatabaseCount('appointments', 0);        
+        $this->assertDatabaseCount('billing_addresses',0);              
+        $this->assertDatabaseMissing('bookings', ['id' => $booking->id]);
+    }
+
+    public function testDestroyPaidPrivateBooking_fail()
+    {
+        $this->seed(UserSeeder::class);         
+            
+        $booking = Booking::factory()       
+        ->has(Appointment::factory())
+        ->has(BillingAddress::factory())
+        ->has(Car::factory())->create([
+            'status' => 'paid',
+        ]);                 
+        $response = $this->actingAs($booking->customer)->delete('/bookings/'.$booking->id);
+        $response->assertStatus(403);
+    }
+
 
 }

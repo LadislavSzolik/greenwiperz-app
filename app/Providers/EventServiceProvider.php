@@ -18,20 +18,26 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        'App\Events\BookingConfirmed' => [
-            'App\Listeners\SendBookingConfirmation',
+        'App\Events\PrivateBookingConfirmed' => [
+            'App\Listeners\SendPrivateBookingConfirmation',
         ],
-        'App\Events\BookingCanceled' => [
-            'App\Listeners\SendCancelationConfirmation',
+        'App\Events\PrivateBookingCanceled' => [
+            'App\Listeners\SendPrivateCancelationConfirmation',
         ],
-        'App\Events\BookingCompleted' => [
-            'App\Listeners\SendCompletionConfirmation',
+        'App\Events\PrivateBookingCompleted' => [
+            'App\Listeners\SendPrivateCompletionConfirmation',
         ],
-        'App\Events\CompanyBookingEntered' => [
-            'App\Listeners\SendCompanyEnteredConfirmation',
+        'App\Events\BusinessBookingEntered' => [
+            'App\Listeners\SendBusinessEnteredConfirmation',
+        ],        
+        'App\Events\BusinessBookingCanceled' => [
+            'App\Listeners\SendBusinessCancelationConfirmation',
         ],
-        'App\Events\CompanyBookingConfirmed' => [
-            'App\Listeners\SendCompanyBookingConfirmation',
+        'App\Events\BusinessBookingConfirmed' => [
+            'App\Listeners\SendBusinessBookingConfirmation',
+        ],
+        'App\Events\BusinessBookingCompleted' => [
+            'App\Listeners\SendBusinessCompletionConfirmation',
         ],
     ];
 

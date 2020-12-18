@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Events\BusinessBookingConfirmed;
 use App\Events\CompanyBookingConfirmed;
 use App\Models\Appointment;
 use App\Models\Booking;
@@ -11,9 +12,8 @@ use Carbon\Carbon;
 use Livewire\Component;
 
 class AddBookingTimeslot extends Component
-{
-
-    public Booking $booking;  
+{   
+    public Booking $booking;   
     public $end_time;
     public $appointmentsOnDay = [];
     public $timeslots = [];
@@ -26,7 +26,8 @@ class AddBookingTimeslot extends Component
     ];
 
     public function mount()
-    {       
+    {      
+       
         $this->getAppointmentsForThatDay();
         $this->timeslots = Timeslot::all()->pluck('timeslot');
 
@@ -50,25 +51,24 @@ class AddBookingTimeslot extends Component
     public function saveAppointment()
     {
         $this->validate();
-
-        if( $this->booking->appointment) {
-            $id = $this->booking->appointment->id;
-            $this->booking->appointment()->dissociate();
-            $this->booking->save();
-            Appointment::destroy($id);            
+        if( $this->booking->appointment) {           
+            $this->booking->appointment()->delete();                  
         }
-        $appointment = Appointment::create([
+                   
+        $this->booking->appointment()->create([
             'date' => $this->booking->date,
             'start_time' => $this->booking->time,
             'end_time' => Carbon::parse($this->end_time)->format('H:i'),
             'assigned_to' =>$this->booking->assigned_to,
-        ]);               
-        $this->booking->appointment()->associate($appointment);
+        ]);  
         $this->booking->status = 'confirmed';
-        $this->booking->save();
-        $this->getAppointmentsForThatDay();
+        $this->booking->push();    
+        $this->booking->refresh();
+       
+        event(new BusinessBookingConfirmed($this->booking));      
         
-        event(new CompanyBookingConfirmed($this->booking));      
+        $this->getAppointmentsForThatDay();
+
         return redirect()->route('bookings.show', ['booking'=>$this->booking->id]);  
     }
 
