@@ -41,6 +41,6 @@
     </x-input.group>
 
     <div class="col-span-6 ">
-        <x-div-button wire:click="saveAppointment" buttonType="secondary">{{ __('Save')}}</x-div-button>                   
+        <x-div-button wire:click="saveAppointment" buttonType="primary">{{ __('Save')}}</x-div-button>                   
     </div>
 </div>

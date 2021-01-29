@@ -100,7 +100,7 @@ class PaymentController extends Controller
     *
     */
     public function handlePaymentCanceled(Request $request) {       
-        // TODO: add the signature check as middleware
+        
         if (!Arr::exists($request, 'datatransTrxId')) {  
             abort(400, 'Transaction id missing...');
         }               

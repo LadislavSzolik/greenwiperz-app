@@ -291,7 +291,7 @@
                             </div>
                             @endisset
                             <x-modals.comment actionLink="/comments/{{ $booking->id }}" :currentNote="$booking->internal_notes">
-                                <x-div-button class="w-full sm:w-auto" buttonType="secondary">
+                                <x-div-button class="w-full sm:w-auto" buttonType="primary">
                                     {{ __('app.modify') }}
                                 </x-div-button>
                             </x-modals.comment>
@@ -363,7 +363,7 @@
                 @endcan
                 <!-- EOF WIPER SECTION -->
 
-                @if(($booking->status == 'pending' || $booking->status == 'confirmed') && $booking->type === 'business')
+                @if($booking->status == 'confirmed' && $booking->type === 'business')
                 <x-confirms-business-cancelation actionLink="/bookings/{{ $booking->id }}/cancel">
                     <x-div-button class="w-full sm:w-auto" buttonType="destructive">
                         {{ __('app.cancel_booking') }}
@@ -371,7 +371,7 @@
                 </x-confirms-business-cancelation>
                 @endif
 
-                @if($booking->status == 'draft')
+                @if($booking->status == 'draft' || ($booking->type =='business' && $booking->status == 'pending' && blank($booking->appointment))   )
                 <x-form-button method="DELETE" class="w-full sm:w-auto" action="/bookings/{{ $booking->id }}" buttonType="destructive">
                     {{ __('app.delete') }}
                 </x-form-button>

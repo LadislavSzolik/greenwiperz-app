@@ -152,7 +152,7 @@ class Booking extends Model
 
     public function getIsDestroyAllowedAttribute()
     {
-        return $this->status === 'draft';
+        return $this->status === 'draft' || ($this->status === 'pending' && blank($this->appointment));
     }
 
     public function getIsCompleteAllowedAttribute()
