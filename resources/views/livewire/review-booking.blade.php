@@ -98,7 +98,9 @@
                         <label class='block font-medium text-sm text-gray-700'>
                             {{ __('app.date_time') }}
                         </label>
-                        {{ $booking->date}} {{ $booking->time}} 
+                        @foreach($booking->appointments as $appointment)
+                        {{ $appointment->dateForEditing  }} {{ $appointment->start_time}} 
+                        @endforeach
                     </div>
 
                     <div class="col-span-6 sm:col-span-3">

@@ -99,7 +99,7 @@ return [
     'terms_1_sub_5' => 'There are no mudcakes on my car',
     'terms_2_title' => 'I, the greatly appreciated customer graciously accept that',
     'terms_2_sub_1' => 'Photographs are taken of the surfaces of my car before and after cleaning',
-    'terms_2_sub_2' => 'Organic matter (zB beetles) burned into the paintwork cannot be removed',
+    'terms_2_sub_2' => 'Organic matter (e.g. beetles) burned into the paintwork cannot be removed',
     'terms_2_sub_3' => 'The inner wheel arches will not be washed',   
     'terms_3_sub_1' => 'Yes, indeed',
     'time' => 'Time',

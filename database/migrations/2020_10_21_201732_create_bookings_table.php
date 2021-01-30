@@ -25,8 +25,8 @@ class CreateBookingsTable extends Migration
             $table->string('invoice_nr')->nullable();
             $table->bigInteger('transaction_id')->nullable();            
             
-            $table->date('date');
-            $table->time('time')->nullable();
+            //$table->date('date');
+            //$table->time('time')->nullable();
             
             $table->string('loc_street_number',200);
             $table->string('loc_route',200);
@@ -69,7 +69,8 @@ class CreateBookingsTable extends Migration
 
         Schema::create('appointments', function (Blueprint $table) 
         {
-            $table->id();                
+            $table->id();          
+            $table->unsignedBigInteger('user_id')->nullable();      
             $table->date('date');
             $table->time('start_time');
             $table->time('end_time');
@@ -81,7 +82,8 @@ class CreateBookingsTable extends Migration
             $table->unsignedBigInteger('canceled_by')->nullable();  
             $table->boolean('is_vacation')->default(0);          
             $table->text('comment')->nullable();
-            $table->timestamps();            
+            $table->timestamps();    
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');        
             $table->foreign('assigned_to')->references('id')->on('users')->onUpdate('cascade');
             $table->foreign('booking_id')->references('id')->on('bookings')->onUpdate('cascade');
         });

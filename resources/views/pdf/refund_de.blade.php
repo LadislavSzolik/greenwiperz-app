@@ -128,7 +128,10 @@
         </tr>
         <tr>
             <td >Leistungszeitraum</td>
-            <td class="text-right">{{ $booking->date }} {{ $booking->time }}</td>
+            <td class="text-right">
+            @foreach($booking->appointments as $appointment)
+            {{ $appointment->dateForEditing }} {{ $appointment->start_time }}
+            @endforeach</td>
         </tr>
     </table>
 

@@ -9,16 +9,13 @@ use App\Events\BusinessBookingCanceled;
 use App\Events\BusinessBookingCompleted;
 use App\Events\PrivateBookingCanceled;
 use App\Events\PrivateBookingCompleted;
+use App\Models\Appointment;
 use Illuminate\Support\Facades\App;
 
 class BookingController extends Controller
 {
     public function __construct() {
        $this->authorizeResource(Booking::class, 'booking');
-    }
-
-    public function show(Booking $booking) {     
-        return view('bookings.show', ['booking' => $booking] );
     }
 
 
@@ -37,10 +34,10 @@ class BookingController extends Controller
             }       
             Datatrans::handleBookingRefund($booking, $refundableAmount);
         }
-        $booking->appointment->canceled_at = now();
-        $booking->appointment->canceled_by = auth()->user()->id; 
-        $booking->status = 'canceled';
-        $booking->push(); 
+
+        Appointment::where('booking_id', $booking->id)->update(['canceled_at'=> now(), 'canceled_by'=>auth()->user()->id]);
+        Booking::where('id',$booking->id)->update(['status'=> 'canceled']);
+        
         if($booking->type == 'private') {
             event(new PrivateBookingCanceled($booking));
         } else {
@@ -85,8 +82,8 @@ class BookingController extends Controller
     
     public function destroy(Request $request, Booking $booking)
     {        
-        if( $booking->appointment) {            
-            $booking->appointment()->delete();
+        if( $booking->appointments) {            
+            $booking->appointments()->delete();
         }
         if($booking->billingAddress) {
             $booking->billingAddress()->delete();

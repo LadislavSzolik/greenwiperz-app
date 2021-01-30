@@ -165,8 +165,8 @@
     "Thank you very much for your order, we have recorded the cleaning of :numberOfCars cars in our system. Our staff will contact you shortly by phone to clarify the exact time.": "Vielen Dank für Ihre Bestellung, wir haben die Reinigung von :numberOfCars Autos in unserem System registriert. Unser Mitarbeiter wird Sie in Kürze telefonisch kontaktieren, um die genaue Uhrzeit zu klären.",
 
     "Dear Customer!":"Sehr geehrter Kunde!",
-    "Existing appointments":"Bestehende Termine",
-    "No appointments":"Keine Termine",
+    "Other bookings on":"Andere Buchungen an",
+    "No appointments yet":"Noch keine Termine",
     "This booking":"Diese Buchung",
     "Saved & email sent!":"Gespeichert und Email geschickt!",
 
@@ -175,7 +175,9 @@
     "Start and estimated end of cleaning":"Beginn und voraussichtliches Ende der Reinigung",
 
     "Confirmed":"Bestätigt",
-    "Add new":"Neue hinzufügen"
+    "Add new":"Neue hinzufügen",
     
+    "Start time":"Startzeit",
+    "End time":"Endzeit"
 
 }

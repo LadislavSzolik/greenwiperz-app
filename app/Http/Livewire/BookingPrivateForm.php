@@ -17,6 +17,8 @@ use Livewire\Component;
 class BookingPrivateForm extends Component
 {
     public Booking $booking;
+    public $timeslot_date;
+    public $start_time;
     public $hasExtraDirt;
     public $hasAnimalHair;
     public $locStreetNumber;
@@ -37,6 +39,8 @@ class BookingPrivateForm extends Component
     public function rules()
     {
         return [
+            'timeslot_date' => 'required',
+            'start_time' => 'required',
             'carForBooking' => 'required',
             'addressForBooking' => 'required',
             'booking.customer_id' => 'required',
@@ -50,9 +54,7 @@ class BookingPrivateForm extends Component
             'booking.loc_street_number' => 'required',
             'booking.loc_route' => 'required',
             'booking.loc_city' => 'required',
-            'booking.loc_postal_code' => 'required | in:' . config('greenwiperz.service_area_postal_codes'),
-            'booking.date' => 'required',
-            'booking.time' => 'required',
+            'booking.loc_postal_code' => 'required | in:' . config('greenwiperz.service_area_postal_codes'),           
             'booking.email' => 'required',
             'booking.phone' => 'nullable',
             'booking.notes' => 'nullable',
@@ -111,8 +113,8 @@ class BookingPrivateForm extends Component
         $this->carForBooking = $this->cars->last()->id;
 
         $this->availableSlots = [];
-        $this->booking->time = null;
-        $this->booking->date = null;
+        $this->start_time = null;
+        $this->timeslot_date = null;
         $this->recalculatePriceAndTime();
     }
 
@@ -149,8 +151,8 @@ class BookingPrivateForm extends Component
     public function updatedCarForBooking()
     {
         $this->availableSlots = [];
-        $this->booking->time = null;
-        $this->booking->date = null;
+        $this->start_time = null;
+        $this->timeslot_date = null;
         $this->recalculatePriceAndTime();
     }
 
@@ -159,8 +161,8 @@ class BookingPrivateForm extends Component
     public function updatedBookingServiceType()
     {
         $this->availableSlots = [];
-        $this->booking->time = null;
-        $this->booking->date = null;
+        $this->start_time = null;
+        $this->timeslot_date = null;
         $this->recalculatePriceAndTime();
     }
 
@@ -209,21 +211,21 @@ class BookingPrivateForm extends Component
     public function updatedBookingAssignedTo()
     {
         $this->availableSlots = [];
-        $this->booking->time = null;
-        $this->booking->date = null;
+        $this->start_time = null;
+        $this->timeslot_date = null;
     }
 
-    public function updatedBookingDate()
-    {
+    public function updatedTimeslotDate()
+    {        
         $this->availableSlots = [];
-        $this->booking->time = null;
+        $this->start_time = null;
 
-        $selectedDate = Carbon::parse($this->booking->date);
+        $selectedDate = Carbon::parse($this->timeslot_date);
         if ($selectedDate->greaterThanOrEqualTo(Carbon::now())) {
-            $this->availableSlots = TimeslotService::fetchSlots($this->booking->date, $this->booking->assigned_to, $this->booking->duration);
+            $this->availableSlots = TimeslotService::fetchSlots($this->timeslot_date, $this->booking->assigned_to, $this->booking->duration);
 
             if ($this->availableSlots->count() > 0) {
-                $this->booking->time = $this->availableSlots->first();
+                $this->start_time = $this->availableSlots->first();
             }
         }
     }
@@ -258,10 +260,11 @@ class BookingPrivateForm extends Component
         $this->booking->save();
 
         //#2 attach appointment, car, billing
-        $this->booking->appointment()->create([
-            'date' => $this->booking->date,
-            'start_time' => $this->booking->time,
-            'end_time' => Carbon::parse($this->booking->time)->addMinutes($this->booking->duration - 1)->format('H:i'),
+        $this->booking->appointments()->create([
+            'user_id' => auth()->user()->id,
+            'date' => $this->timeslot_date,
+            'start_time' => $this->start_time,
+            'end_time' => Carbon::parse($this->start_time)->addMinutes($this->booking->duration - 1)->format('H:i'),
             'assigned_to' => $this->booking->assigned_to,
         ]);
         $this->booking->car()->create($this->cars->where('id', $this->carForBooking)->first()->toArray());
@@ -273,8 +276,8 @@ class BookingPrivateForm extends Component
     //
     protected function isSlotValidationFailed()
     {
-        $availableSlots = TimeslotService::fetchSlots($this->booking->date, $this->booking->assigned_to, $this->booking->duration);
-        if (!$availableSlots->contains($this->booking->time)) {
+        $availableSlots = TimeslotService::fetchSlots($this->timeslot_date, $this->booking->assigned_to, $this->booking->duration);
+        if (!$availableSlots->contains($this->start_time)) {
             session()->flash('message', 'Unfortunately in a meanwhile the timeslot has been taken. Please select a new one.');           
             return true;
         }

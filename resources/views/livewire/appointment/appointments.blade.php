@@ -19,7 +19,7 @@
                 @forelse ($appointments as $appointment)
                 <x-table.row>
                     <x-table.cell>
-                        {{   Carbon\Carbon::parse($appointment->date)->format('Y-m-d') }}
+                        {{   $appointment->dateForEditing }}
                     </x-table.cell>
                     <x-table.cell>
                         {{ $appointment->start_time }}

@@ -1,11 +1,10 @@
-<x-app-layout>
+<div>
     <x-header>
         <x-slot name="title">{{ __('app.booking_details') }}</x-slot>
         <x-slot name="actions"></x-slot>
     </x-header>
 
-    <!-- DEPRECATION will be repaced with show-booking livewire -->
-
+   
     <div class="max-w-7xl mx-auto pt-5 sm:py-5 sm:px-6 lg:px-8">
         <div class="bg-white rounded-md py-4 sm:py-6 sm:px-20 shadow">
 
@@ -30,7 +29,7 @@
             </div>
             @endif
 
-            <div class="px-4 py-5 sm:p-0">
+            <div class="px-4 py-5 sm:p-0">            
                 <dl>
                     <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
                         <dt class="text-sm leading-5 font-medium text-gray-500">
@@ -61,7 +60,6 @@
 
 
                     @if($booking->type == 'private')
-
                     <div class="mt-8 sm:mt-0 sm:grid sm:grid-cols-3 sm:gap-4 sm:border-t sm:border-gray-200 sm:px-6 sm:py-5">
                         <dt class="text-sm leading-5 font-medium text-gray-500">
                             {{ __('app.car')}}
@@ -226,11 +224,27 @@
                             {{ __('app.cleaning_date') }}
                         </dt>
                         <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
+                            <x-jet-action-message  on="onSingleAppointmentDelete">
+                                <span class="text-red-500 px-2 bg-red-50">
+                                    {{ __('At least one appointment is required.') }}
+                                </span>
+                            </x-jet-action-message>
                             @if($booking->type == 'business' && Auth::user()->can('manage_bookings') && Str::contains($booking->status, ['pending', 'confirmed']))
-                            <livewire:add-booking-timeslot :booking="$booking">
-                                @else
-                                {{ $booking->date}} {{ $booking->time}} (c.a. {{$booking->formatedDuration}} )
-                                @endif
+                                @foreach($booking->appointments as $appointment)
+                                <div class="py-4 border-b border-cool-gray-200">
+                                    <livewire:bookingtimeslot.edit-booking-timeslot :appointment="$appointment" :key="$appointment->id">
+                                </div>
+                                @endforeach
+                                <div class="pt-4">
+                                    <x-button.link wire:click="addDayToBooking()">
+                                        <span class="text-green-500 hover:text-green-700 hover:underline">{{ __('Add another day') }}</span>
+                                    </x-button.link>
+                                </div>
+                            @else
+                                @foreach($booking->appointments as $appointment)
+                                {{ $appointment->dateForEditing  }} {{ $appointment->start_time}} (c.a. {{$booking->formatedDuration}} )
+                                @endforeach
+                            @endif
                         </dd>
                     </div>
 
@@ -258,13 +272,7 @@
                             Timestamps
                         </dt>
                         <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-                            <p>Created {{ $booking->created_at }}</p>
-                            @if($booking->status == 'canceled')
-                            <p>Canceled {{ $booking->appointment->canceled_at }}</p>
-                            @endif
-                            @if($booking->status == 'completed')
-                            <p>Completed {{ $booking->appointment->completed_at }}</p>
-                            @endif
+                            <p>Created {{ $booking->created_at }}</p>                           
                         </dd>
                     </div>
                     @endcan
@@ -374,7 +382,7 @@
                 @endif
 
                 <!-- WHO AND WHEN CAN DELETE A BOOKING? --> 
-                @if($booking->status == 'draft' || ($booking->type =='business' && $booking->status == 'pending' && blank($booking->appointment))   )
+                @if($booking->status == 'draft' || ($booking->type =='business' && $booking->status == 'pending' && blank($booking->appointments))   )
                 <x-form-button method="DELETE" class="w-full sm:w-auto" action="/bookings/{{ $booking->id }}" buttonType="destructive">
                     {{ __('app.delete') }}
                 </x-form-button>
@@ -382,4 +390,6 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+    
+
+</div>

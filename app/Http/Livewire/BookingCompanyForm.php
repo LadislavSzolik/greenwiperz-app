@@ -14,6 +14,7 @@ use Livewire\Component;
 class BookingCompanyForm extends Component
 {
     public Booking $booking;
+    public $timeslot_date;
     public Fleet $smallCars;
     public Fleet $mediumCars;
     public Fleet $largeCars;
@@ -33,6 +34,7 @@ class BookingCompanyForm extends Component
     public function rules()
     {
         return [
+            'timeslot_date' => 'required|date|after:today',
             'addressForBooking' => 'required',
             'smallCars.outside' => 'required',
             'smallCars.inoutside' => 'required',
@@ -56,8 +58,7 @@ class BookingCompanyForm extends Component
             'booking.loc_street_number' => 'required',
             'booking.loc_route' => 'required',
             'booking.loc_city' => 'required',
-            'booking.loc_postal_code' => 'required | in:' . config('greenwiperz.service_area_postal_codes'),
-            'booking.date' => 'required|date|after:today',
+            'booking.loc_postal_code' => 'required | in:' . config('greenwiperz.service_area_postal_codes'),            
             'booking.email' => 'required',
             'booking.phone' => 'required',
             'booking.notes' => 'nullable',
@@ -232,6 +233,17 @@ class BookingCompanyForm extends Component
         $this->booking->fleets()->save($this->largeCars);
         $this->booking->fleets()->save($this->xlargeCars);
         $this->booking->billingAddress()->create($this->addressForBooking->toArray());
+
+
+
+        $this->booking->appointments()->create([
+            'user_id' => auth()->user()->id,
+            'date' => $this->timeslot_date,
+            'start_time' => '00:00',
+            'end_time' => '00:00',
+            'assigned_to' => $this->booking->assigned_to,
+        ]);
+
         $this->booking->push();
         return redirect()->route('bookings.company.review', ['booking' => $this->booking]);
     }

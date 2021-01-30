@@ -128,8 +128,8 @@
 
 
                     <!-- booking date -->
-                    <x-input.group class="col-span-6" for="date" label="{{ __('app.date') }}">
-                        <x-input.date wire:model="booking.date" placeholder="DD.MM.YYYY" required />
+                    <x-input.group class="col-span-6" for="timeslot_date" label="{{ __('app.date') }}">
+                        <x-input.date wire:model="timeslot_date" placeholder="DD.MM.YYYY" required />
                     </x-input.group>
 
 

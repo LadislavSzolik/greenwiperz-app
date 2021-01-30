@@ -1,4 +1,10 @@
 <div>
+
+
+
+    <!-- DEPRECATED will be replaced with bookingtimeslots --> 
+
+
     <x-header>
         <x-slot name="title">{{ __('app.bookings') }}</x-slot>
         <x-slot name="actions">

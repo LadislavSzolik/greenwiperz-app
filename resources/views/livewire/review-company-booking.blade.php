@@ -185,7 +185,7 @@
                         <label class='block font-medium text-sm text-gray-700 mb-2'>
                             {{ __('app.date_time') }}
                         </label>
-                        {{ $booking->date}}
+                        {{ optional($booking->appointments())->first()->dateForEditing}}
                     </div>
 
 

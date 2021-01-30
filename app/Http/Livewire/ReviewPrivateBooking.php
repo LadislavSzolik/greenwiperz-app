@@ -10,13 +10,13 @@ class ReviewPrivateBooking extends Component
     public Booking $booking;
     
     public function render()
-    {
+    {        
         return view('livewire.review-booking');
     }
 
     public function destroy()
     {
-        $this->booking->appointment()->delete();        
+        $this->booking->appointments()->delete();        
         $this->booking->billingAddress()->delete();      
         $this->booking->car()->delete();
         return redirect()->route('bookings.private.create');

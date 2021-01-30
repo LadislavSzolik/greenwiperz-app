@@ -23,6 +23,7 @@ class Appointment extends Model
         return $this->belongsTo('App\Models\User', 'assigned_to');
     }
 
+    
     public function getDateForEditingAttribute()
     {       
         return $this->date->format('Y-m-d');
@@ -31,6 +32,6 @@ class Appointment extends Model
     public function setDateForEditingAttribute($value)
     {            
         $this->date = Carbon::parse($value);
-    }
+    } 
    
 }
