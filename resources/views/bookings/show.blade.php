@@ -371,6 +371,7 @@
                 </x-confirms-business-cancelation>
                 @endif
 
+                <!-- WHO AND WHEN CAN DELETE A BOOKING? --> 
                 @if($booking->status == 'draft' || ($booking->type =='business' && $booking->status == 'pending' && blank($booking->appointment))   )
                 <x-form-button method="DELETE" class="w-full sm:w-auto" action="/bookings/{{ $booking->id }}" buttonType="destructive">
                     {{ __('app.delete') }}

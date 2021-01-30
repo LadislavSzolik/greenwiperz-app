@@ -40,6 +40,12 @@
                 },
                 
                 disableDayFn: function(theDate) {
+                var today = new Date();
+                today.setDate(today.getDate() - 1);
+
+                if(theDate<today) {
+                    return true;
+                }
                 if(theDate.getDay() == 0) {
                     return true;
                 } else {

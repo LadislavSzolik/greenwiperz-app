@@ -57,7 +57,7 @@ class BookingCompanyForm extends Component
             'booking.loc_route' => 'required',
             'booking.loc_city' => 'required',
             'booking.loc_postal_code' => 'required | in:' . config('greenwiperz.service_area_postal_codes'),
-            'booking.date' => 'required',
+            'booking.date' => 'required|date|after:today',
             'booking.email' => 'required',
             'booking.phone' => 'required',
             'booking.notes' => 'nullable',

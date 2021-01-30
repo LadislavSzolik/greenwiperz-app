@@ -35,7 +35,7 @@
         <select class="rounded-md flex-1 form-input block w-full" id="end" wire:model="end_time">
             <option value="" selected>-- {{ __('app.select')}}</option>
             @foreach($timeslots as $timeslot)
-            <option value="{{$timeslot }}">{{$timeslot}}</option>
+            <option value="{{ Carbon\Carbon::parse($timeslot)->subMinute()->format('H:i:s') }}">{{ Carbon\Carbon::parse($timeslot)->subMinute()->format('H:i:s') }}</option>
             @endforeach
         </select>
     </x-input.group>
