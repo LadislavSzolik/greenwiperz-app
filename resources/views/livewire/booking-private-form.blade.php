@@ -10,11 +10,11 @@
     </header>
 
     <form class="col-span-6" wire:submit.prevent="saveBooking">
-    @csrf
+        @csrf
         <div class="max-w-7xl mx-auto py-4 sm:px-6 lg:px-8 ">
             <div class="grid grid-cols-6 gap-3">
                 <div class="col-span-6 sm:col-span-4 grid grid-cols-6 gap-6 px-4 py-5 bg-white shadow rounded-md sm:px-20">
-                    
+
                     @if(session()->has('message'))
                     <div class="col-span-6 bg-red-100 text-red-700 rounded p-2">{{ __(session('message')) }}</div>
                     @endif
@@ -26,13 +26,11 @@
                             <a class="text-cool-gray-500 font-medium px-4 hover:text-green-500" href="{{ route('bookings.company.create') }}">{{ __('Business')}}</a>
                         </div>
                     </div>
-
-
-
+                
                     <!-- CAR INFORMATION -->
                     <x-input.group class="col-span-6" for="carForBooking" label="{{ __('app.car')}}">
                         @if(count($cars) > 0)
-                        <select class="rounded shadow-sm flex-1 form-input block w-full" name="carForBooking" wire:model="carForBooking" required>                            
+                        <select class="rounded shadow-sm flex-1 form-input block w-full" name="carForBooking" wire:model="carForBooking" required>
                             @forelse($cars as $car)
                             <option value="{{ $car->id}}">{{ $car->car_model }}, {{ $car->number_plate }}, {{ __($car->car_size) }}, {{ __($car->car_color) }}</option>
                             @empty
@@ -87,7 +85,11 @@
                                 </div>
                             </div>
                         </div>
-                        <x-input.location-search wire:ignore id="parkingStreet" name="parkingStreet" type="text" placeholder="{{ __('app.start_typing') }}" required />
+                        <div x-data="{show:true}" x-on:load.window="show=false" x-show.transition="show">Loading location services...</div>
+                        <div x-data="{show:false}" x-on:load.window="show=true" x-show.transition="show">
+                            <x-input.location-search wire:ignore id="parkingStreet" name="parkingStreet" type="text" placeholder="{{ __('app.start_typing') }}" required />
+                        </div>
+
                         @if ($errors->has('street_number') || $errors->has('street_number') || $errors->has('route'))
                         <p class='text-sm text-red-600'>{{ __('app.google_autocomplete_error_1') }}</p>
                         @endif
@@ -140,7 +142,7 @@
                                 @endif
                             </select>
                         </div>
-                     
+
                     </x-input.group>
 
 
