@@ -24,8 +24,7 @@ class PrivateBookingConfirmedMail extends Mailable
     {                
         return $this->subject(__('Greenwiperz Booking'))->markdown('emails.bookings.private.confirmed')->with([
             'booking_nr' => $this->booking->booking_nr,
-            'date' => $this->booking->date,
-            'time' => $this->booking->time,
+            'appointments' => $this->booking->appointments,            
             'price' => $this->booking->formatedTotalCost,
             'car' => $this->booking->car->car_model,
             'number_plate' => $this->booking->car->number_plate,

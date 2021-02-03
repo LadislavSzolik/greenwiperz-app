@@ -24,9 +24,7 @@ class BusinessBookingConfirmedMail extends Mailable
         return $this->subject(__('Booking confirmation'))->markdown('emails.bookings.business.confirmed')->with([
             'booking_nr' => $this->booking->booking_nr,
             'numberOfCars' => $this->booking->totalNumberOfCars,
-            'date' => $this->booking->date, 
-            'time' => $this->booking->time,       
-            'end_time' => $this->booking->appointment->end_time,                 
+            'appointments' => $this->booking->appointments,            
             'street_number' => $this->booking->loc_street_number,
             'route' => $this->booking->loc_route,
             'city' => $this->booking->loc_city,

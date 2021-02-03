@@ -12,7 +12,9 @@
 {{ __($color) }} 
 
 **{{__('Date and Time of cleaning')}}**  
-{{ $date}} {{ $time}}  
+@foreach($appointments as $appointment)
+{{ $appointment->dateForEditing }} {{ $appointment->start_time }} - {{ $appointment->end_time }}  
+@endforeach
 
 
 **{{__('Car parking')}}**  

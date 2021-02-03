@@ -8,11 +8,10 @@
 **{{__('Booking reference')}}**  
 {{ $booking_nr }}
 
-**{{__('Date')}}**  
-{{ $date }} 
-
-**{{__('Start and estimated end of cleaning')}}**  
-{{ $time }} - {{ $end_time}}
+**{{__('Date(s)')}}**  
+@foreach($appointments as $appointment)
+{{ $appointment->dateForEditing }} {{ $appointment->start_time }} - {{ $appointment->end_time }}  
+@endforeach
 
 **{{__('Location')}}**  
 {{ $route}} {{ $street_number}}  

@@ -22,8 +22,7 @@ class BusinessCanceledConfirmationMail extends Mailable
     public function build()
     {
         return $this->subject(__('Greenwiperz canceled'))->markdown('emails.bookings.business.canceled')->with([
-            'booking_nr' => $this->booking->booking_nr,
-            'date' => $this->booking->date,                  
+            'booking_nr' => $this->booking->booking_nr,        
             'numberOfCars' => $this->booking->totalNumberOfCars,                        
             'street_number' => $this->booking->loc_street_number,
             'route' => $this->booking->loc_route,

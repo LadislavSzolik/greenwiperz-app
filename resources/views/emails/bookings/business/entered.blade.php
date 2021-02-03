@@ -5,11 +5,13 @@
 
 {{__('Thank you very much for your order, we have recorded the cleaning of :numberOfCars cars in our system. Our staff will contact you shortly by phone to clarify the exact time.', ['numberOfCars' => $numberOfCars])}}
 
-**{{__('Booking reference')}}**
-{{ $booking_nr }}
+**{{__('Booking reference')}}**  
+{{ $booking_nr }}  
 
-**{{__('Date')}}**
-{{ $date }}
+**{{__('Date')}}**  
+@foreach($appointments as $appointment)
+{{ $appointment->dateForEditing }}   
+@endforeach
 
 **{{__('Location')}}**
 {{ $route}} {{ $street_number}}

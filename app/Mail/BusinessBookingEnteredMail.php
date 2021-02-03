@@ -24,7 +24,7 @@ class BusinessBookingEnteredMail extends Mailable
         return $this->subject(__('Greenwiperz booking'))->markdown('emails.bookings.business.entered')->with([
             'booking_nr' => $this->booking->booking_nr,
             'numberOfCars' => $this->booking->totalNumberOfCars,
-            'date' => $this->booking->date,                       
+            'appointments' => $this->booking->appointments,                       
             'street_number' => $this->booking->loc_street_number,
             'route' => $this->booking->loc_route,
             'city' => $this->booking->loc_city,

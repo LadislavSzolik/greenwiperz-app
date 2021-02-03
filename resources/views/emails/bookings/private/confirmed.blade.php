@@ -4,7 +4,6 @@
 {{__('Thank you for your booking! Please find below the summary')}}
 
 
-
 **{{__('Booking reference')}}**  
 {{ $booking_nr }}  
 
@@ -14,13 +13,15 @@
 {{ __($color) }} 
 
 **{{__('Date and Time of cleaning')}}**  
-{{ $date}} {{ $time}}  
+@foreach($appointments as $appointment)
+{{ $appointment->dateForEditing }} {{ $appointment->start_time }} - {{ $appointment->end_time }}  
+@endforeach
 
-**{{__('Car parking')}}**
+**{{__('Car parking')}}**  
 {{ $route}} {{ $street_number}}  
 {{ $postal_code }} {{ $city }}  
 
-**{{__('Amount')}}**
+**{{__('Amount')}}**  
 {{ $price }}  
 
 @component('mail::button', ['url' => $url])

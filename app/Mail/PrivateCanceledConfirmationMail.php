@@ -23,8 +23,7 @@ class PrivateCanceledConfirmationMail extends Mailable
     {
         return $this->subject(__('Greenwiperz canceled'))->markdown('emails.bookings.private.canceled')->with([
             'booking_nr' => $this->booking->booking_nr,
-            'date' => $this->booking->date,  
-            'time' => $this->booking->time,           
+            'appointments' => $this->booking->appointments,              
             'price' => $this->booking->brutto_total_amount,
             'car' => $this->booking->car->car_model,
             'number_plate' => $this->booking->car->number_plate,

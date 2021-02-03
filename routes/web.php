@@ -23,6 +23,10 @@ use App\Http\Livewire\ReviewCompanyBooking;
 use App\Http\Livewire\ReviewPrivateBooking;
 use App\Http\Livewire\ShowRatings;
 use App\Http\Livewire\Users;
+use App\Mail\BusinessBookingCompletedMail;
+use App\Mail\BusinessBookingConfirmedMail;
+use App\Mail\BusinessBookingEnteredMail;
+use App\Mail\BusinessCanceledConfirmationMail;
 use App\Mail\CompanyBookingConfirmedMail;
 use App\Mail\CompanyBookingEnteredMail;
 use App\Mail\PrivateBookingCompletedMail;
@@ -85,8 +89,8 @@ Route::post('/payments/handlePaymentFailed', [PaymentController::class, 'handleP
 
 // TODO: finish mail testing
 Route::get('mailable',function(){
-    $booking = Booking::findOrFail(2);   
-    return new PrivateBookingCompletedMail($booking);
+    $booking = Booking::findOrFail(1);   
+    return new PrivateBookingConfirmedMail($booking);
 });
 
 
