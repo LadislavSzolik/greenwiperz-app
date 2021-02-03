@@ -23,7 +23,7 @@ class ShowBooking extends Component
             'end_time' => '00:00',
             'assigned_to' => $this->booking->assigned_to,            
         ]);
-        $this->booking->refresh();
+        return redirect()->route('bookings.show', ['booking' => $this->booking]);
     }
 
     public function deleteAppointment($appointmentId)

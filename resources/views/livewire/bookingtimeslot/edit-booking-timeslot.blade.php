@@ -46,7 +46,7 @@
         <x-div-button wire:click="deleteAppointment" buttonType="tertiaryDestructive">{{ __('Delete date')}}</x-div-button>
 
         <x-div-button wire:click="saveAppointment" buttonType="primary">{{ __('Save this date')}}</x-div-button>
-        <x-jet-action-message class="ml-4" on="saved">
+        <x-jet-action-message class="ml-4 mt-2" on="saved">
             {{ __('Saved.') }}
         </x-jet-action-message>
 
