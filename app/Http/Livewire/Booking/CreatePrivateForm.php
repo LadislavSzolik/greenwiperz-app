@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Booking;
 
 use App\Models\Appointment;
 use App\Models\BillingAddress;
@@ -14,7 +14,7 @@ use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 
-class BookingPrivateForm extends Component
+class CreatePrivateForm extends Component
 {
     public Booking $booking;
     public $timeslot_date;
@@ -299,6 +299,6 @@ class BookingPrivateForm extends Component
     //
     public function render()
     {
-        return view('livewire.booking-private-form');
+        return view('livewire.booking.create-private-form');
     }
 }

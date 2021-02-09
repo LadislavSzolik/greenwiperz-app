@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Rating;
 
 use App\Http\Livewire\DataTable\WithSorting;
 use App\Models\Rating;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class ShowRatings extends Component
+class AdminRatings extends Component
 {
 
     use WithPagination;
@@ -79,6 +79,6 @@ class ShowRatings extends Component
 
     public function render()   
     {
-        return view('livewire.show-ratings',['ratings' => $this->rows ]);
+        return view('livewire.rating.admin-ratings',['ratings' => $this->rows ]);
     }
 }

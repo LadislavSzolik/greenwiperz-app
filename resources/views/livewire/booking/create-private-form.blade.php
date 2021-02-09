@@ -26,7 +26,7 @@
                             <a class="text-cool-gray-500 font-medium px-4 hover:text-green-500" href="{{ route('bookings.company.create') }}">{{ __('Business')}}</a>
                         </div>
                     </div>
-                
+
                     <!-- CAR INFORMATION -->
                     <x-input.group class="col-span-6" for="carForBooking" label="{{ __('app.car')}}">
                         @if(count($cars) > 0)
@@ -228,9 +228,9 @@
         </div>
     </form>
 
-    <livewire:add-booking-car>
+    <livewire:booking.new-car-modal>
 
-        <livewire:add-booking-address>
+        <livewire:booking.new-address-modal>
 
             <form wire:submit.prevent="selectAddress">
                 <x-jet-dialog-modal maxWidth="md" wire:model="showSelectAddressModal">

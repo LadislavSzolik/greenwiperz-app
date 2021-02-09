@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Booking;
 
 use App\Http\Livewire\DataTable\WithSorting;
 use App\Models\Booking;
@@ -32,6 +32,6 @@ class Bookings extends Component
     
     public function render()
     {        
-        return view('livewire.bookings', ['bookings'=> $this->rows]);
+        return view('livewire.booking.bookings', ['bookings'=> $this->rows]);
     }
 }

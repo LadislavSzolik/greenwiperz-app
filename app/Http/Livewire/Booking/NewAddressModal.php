@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Booking;
 
 use App\Models\BillingAddress;
 use Livewire\Component;
 
-class AddBookingAddress extends Component
+class NewAddressModal extends Component
 {
 
     public $isCompany = 0;
@@ -53,6 +53,6 @@ class AddBookingAddress extends Component
 
     public function render()
     {
-        return view('livewire.add-booking-address');
+        return view('livewire.booking.new-address-modal');
     }
 }

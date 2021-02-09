@@ -154,7 +154,7 @@
 
         
 
-        @livewire('show-public-ratings')
+        @livewire('rating.show-ratings')
 
          <!-- BEFORE/AFTER -->
          <section>

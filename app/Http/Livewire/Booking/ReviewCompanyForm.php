@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Booking;
 
 use App\Events\BusinessBookingEntered;
 use App\Models\Booking;
 use App\Models\Fleet;
 use Livewire\Component;
 
-class ReviewCompanyBooking extends Component
+class ReviewCompanyForm extends Component
 {
     public Booking $booking;
 
@@ -50,6 +50,6 @@ class ReviewCompanyBooking extends Component
     
     public function render()
     {
-        return view('livewire.review-company-booking');
+        return view('livewire.booking.review-company-form');
     }
 }

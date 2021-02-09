@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Booking;
 
 use App\Models\Car;
 use Livewire\Component;
 
-class AddBookingCar extends Component
+class NewCarModal extends Component
 {
     public $showCarModal = false;
     public $newCar;
@@ -41,6 +41,6 @@ class AddBookingCar extends Component
     
     public function render()
     {
-        return view('livewire.add-booking-car');
+        return view('livewire.booking.new-car-modal');
     }
 }

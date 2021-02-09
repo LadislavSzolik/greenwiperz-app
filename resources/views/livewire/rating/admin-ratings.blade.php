@@ -52,7 +52,7 @@
                     </x-table.row>
                     @empty
                     <x-table.row>
-                        <x-table.cell colspan="6" class="text-center">
+                        <x-table.cell colspan="7" class="text-center">
                             <span class="text-gray-500">{{__('No ratings yet')}}</span>
                         </x-table.cell>
                     </x-table.row>

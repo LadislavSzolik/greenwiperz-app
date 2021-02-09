@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Booking;
 
 use App\Models\BillingAddress;
 use App\Models\Booking;
@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 
-class BookingCompanyForm extends Component
+class CreateCompanyForm extends Component
 {
     public Booking $booking;
     public $timeslot_date;
@@ -251,7 +251,7 @@ class BookingCompanyForm extends Component
 
     public function render()
     {
-        return view('livewire.booking-company-form');
+        return view('livewire.booking.create-company-form');
     }
 
     protected function generateBaseNumber()

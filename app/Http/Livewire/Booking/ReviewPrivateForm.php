@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Booking;
 
 use App\Models\Booking;
 use Livewire\Component;
 
-class ReviewPrivateBooking extends Component
+class ReviewPrivateForm extends Component
 {
     public Booking $booking;
     
     public function render()
     {        
-        return view('livewire.review-booking');
+        return view('livewire.booking.review-private-form');
     }
 
     public function destroy()

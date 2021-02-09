@@ -219,7 +219,7 @@
         </div>
     </form>
 
-    <livewire:add-booking-address :isCompany="1">
+    <livewire:booking.new-address-modal :isCompany="1">
 
         <form wire:submit.prevent="selectAddress">
             <x-jet-dialog-modal maxWidth="md" wire:model="showSelectAddressModal">
