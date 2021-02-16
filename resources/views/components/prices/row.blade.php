@@ -1,5 +1,5 @@
 @props([
-    'size', 'exteriorPrice', 'exteriorDuration', 'intextPrice' , 'intextDuration',
+    'size', 'exteriorPrice', 'exteriorDuration', 'intextBasicPrice' , 'intextBasicDuration', 'intextPremiumPrice' , 'intextPremiumDuration',
 ])
 <tr>
     <td class="px-6 py-4 ">
@@ -18,9 +18,12 @@
         </div>
     </td>
     <td class="px-6 py-4 whitespace-no-wrap">
-        <span class="font-black">{{ $exteriorPrice }}</span> / {{ $exteriorDuration }}
+        <span class="block font-black">CHF {{ $exteriorPrice }}.-</span> {{ $exteriorDuration }} {{ __('pricespage.minutes') }} *
     </td>
     <td class="px-6 py-4 whitespace-no-wrap ">
-        <span class="font-black">{{ $intextPrice }}</span> / {{ $intextDuration }}
+        <span class="block font-black">CHF {{ $intextBasicPrice }}.-</span> {{ $intextBasicDuration }} {{ __('pricespage.minutes') }} *
+    </td>
+    <td class="px-6 py-4 whitespace-no-wrap ">
+        <span class="block font-black">CHF {{ $intextPremiumPrice }}.-</span>{{ $intextPremiumDuration }} {{ __('pricespage.minutes') }} *
     </td>
 </tr>

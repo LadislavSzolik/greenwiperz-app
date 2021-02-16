@@ -4,7 +4,8 @@ return [
     'title' => 'Our prices',   
     'carcategories' => 'Car categories',   
     'exterior' => 'Exterior only',
-    'intexterior' => 'Interior & Exterior',
+    'intexteriorBasic' => 'Interior & Exterior Basic',
+    'intexteriorPremium' => 'Interior & Exterior Premium',
 
     'carcategory1type' => 'Small cars',
     'carcategory1examples' => 'e.g. Smart, Mini, Fiat500',
@@ -15,6 +16,8 @@ return [
     'carcategory3examples' => 'e.g. SUV 7 seater',
     'carcategory4type' => 'Extra-large cars',
     'carcategory4examples' => 'e.g. transporter, minibus, minivan',
+
+    'minutes' => 'minutes',
 
     'duractionDesc' => '*The durations above serve as an approximate estimation based on our experience.',
 

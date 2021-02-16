@@ -22,4 +22,32 @@ return [
     'add_wiper_enabled' => env('GW_ADD_WIPER',false),
     'service_area_postal_codes' => env('GW_SERVICE_AREA_POSTAL', null),
 
+    'gw_s_e_price' => env('GW_S_E_PRICE', null),
+    'gw_s_e_duration' => env('GW_S_E_DURATION', null),
+    'gw_s_ib_price' => env('GW_S_IB_PRICE', null),
+    'gw_s_ib_duration' => env('GW_S_IB_DURATION', null),
+    'gw_s_ip_price' => env('GW_S_IP_PRICE', null),
+    'gw_s_ip_duration' => env('GW_S_IP_DURATION', null),
+
+    'gw_m_e_price' => env('GW_M_E_PRICE', null),
+    'gw_m_e_duration' => env('GW_M_E_DURATION', null),
+    'gw_m_ib_price' => env('GW_M_IB_PRICE', null),
+    'gw_m_ib_duration' => env('GW_M_IB_DURATION', null),
+    'gw_m_ip_price' => env('GW_M_IP_PRICE', null),
+    'gw_m_ip_duration' => env('GW_M_IP_DURATION', null),
+
+    'gw_l_e_price' => env('GW_L_E_PRICE', null),
+    'gw_l_e_duration' => env('GW_L_E_DURATION', null),
+    'gw_l_ib_price' => env('GW_L_IB_PRICE', null),
+    'gw_l_ib_duration' => env('GW_L_IB_DURATION', null),
+    'gw_l_ip_price' => env('GW_L_IP_PRICE', null),
+    'gw_l_ip_duration' => env('GW_L_IP_DURATION', null),
+
+    'gw_xl_e_price' => env('GW_XL_E_PRICE', null),
+    'gw_xl_e_duration' => env('GW_XL_E_DURATION', null),
+    'gw_xl_ib_price' => env('GW_XL_IB_PRICE', null),
+    'gw_xl_ib_duration' => env('GW_XL_IB_DURATION', null),
+    'gw_xl_ip_price' => env('GW_XL_IP_PRICE', null),
+    'gw_xl_ip_duration' => env('GW_XL_IP_DURATION', null),
+
 ];

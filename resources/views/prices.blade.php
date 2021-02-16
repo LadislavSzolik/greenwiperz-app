@@ -15,26 +15,37 @@
                     <div class="hidden sm:block -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                             <div class=" overflow-hidden border-b border-gray-200 ">
-                                <table class="min-w-full divide-y divide-green-400">
+                                <table class="min-w-full divide-y divide-green-400 table-fixed">
                                     <thead>
                                         <tr>
                                             <th
-                                                class="px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
+                                                class="w-2/5 px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
                                                 {{ __('pricespage.carcategories') }}
                                             </th>
                                             <th
-                                                class="px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
+                                                class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
                                                 {{ __('pricespage.exterior') }}
                                             </th>
                                             <th
-                                                class="px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
-                                                {{ __('pricespage.intexterior') }}
+                                                class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
+                                                {{ __('pricespage.intexteriorBasic') }}
+                                            </th>
+                                            <th
+                                                class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
+                                                {{ __('pricespage.intexteriorPremium') }}
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
-                                        <x-prices.row size='S' exteriorPrice='CHF 60.00' exteriorDuration='40 min*'
-                                            intextPrice='CHF 110.00' intextDuration='80 min*'>
+                                        <x-prices.row 
+                                            size='S' 
+                                            :exteriorPrice="config('greenwiperz.gw_s_e_price')"  
+                                            :exteriorDuration="config('greenwiperz.gw_s_e_duration')" 
+                                            :intextBasicPrice="config('greenwiperz.gw_s_ib_price')"  
+                                            :intextBasicDuration="config('greenwiperz.gw_s_ib_duration')" 
+                                            :intextPremiumPrice="config('greenwiperz.gw_s_ip_price')" 
+                                            :intextPremiumDuration="config('greenwiperz.gw_s_ip_duration')" 
+                                        >
                                             <x-slot name="carType">
                                                 {{ __('pricespage.carcategory1type') }}
                                             </x-slot>
@@ -43,8 +54,15 @@
                                             </x-slot>
                                         </x-prices.row>
 
-                                        <x-prices.row size='M' exteriorPrice='CHF 70.00' exteriorDuration='45 min*'
-                                            intextPrice='CHF 130.00' intextDuration='90 min*'>
+                                        <x-prices.row
+                                            size='M' 
+                                            :exteriorPrice="config('greenwiperz.gw_m_e_price')"  
+                                            :exteriorDuration="config('greenwiperz.gw_m_e_duration')" 
+                                            :intextBasicPrice="config('greenwiperz.gw_m_ib_price')"  
+                                            :intextBasicDuration="config('greenwiperz.gw_m_ib_duration')" 
+                                            :intextPremiumPrice="config('greenwiperz.gw_m_ip_price')" 
+                                            :intextPremiumDuration="config('greenwiperz.gw_m_ip_duration')" 
+                                        >
                                             <x-slot name="carType">
                                                 {{ __('pricespage.carcategory2type') }}
                                             </x-slot>
@@ -55,8 +73,14 @@
                                             </x-slot>
                                         </x-prices.row>
 
-                                        <x-prices.row size='L' exteriorPrice='CHF 80.00' exteriorDuration='50 min*'
-                                            intextPrice='CHF 150.00' intextDuration='100 min*'>
+                                        <x-prices.row  size='L' 
+                                            :exteriorPrice="config('greenwiperz.gw_l_e_price')"  
+                                            :exteriorDuration="config('greenwiperz.gw_l_e_duration')" 
+                                            :intextBasicPrice="config('greenwiperz.gw_l_ib_price')"  
+                                            :intextBasicDuration="config('greenwiperz.gw_l_ib_duration')" 
+                                            :intextPremiumPrice="config('greenwiperz.gw_l_ip_price')" 
+                                            :intextPremiumDuration="config('greenwiperz.gw_l_ip_duration')" 
+                                        >
                                             <x-slot name="carType">
                                                 {{ __('pricespage.carcategory3type') }}
                                             </x-slot>
@@ -65,8 +89,15 @@
                                             </x-slot>
                                         </x-prices.row>
 
-                                        <x-prices.row size='XL' exteriorPrice='CHF 90.00' exteriorDuration='70 min*'
-                                            intextPrice='CHF 165.00' intextDuration='120 min*'>
+                                        <x-prices.row 
+                                            size='XL' 
+                                            :exteriorPrice="config('greenwiperz.gw_xl_e_price')"  
+                                            :exteriorDuration="config('greenwiperz.gw_xl_e_duration')" 
+                                            :intextBasicPrice="config('greenwiperz.gw_xl_ib_price')"  
+                                            :intextBasicDuration="config('greenwiperz.gw_xl_ib_duration')" 
+                                            :intextPremiumPrice="config('greenwiperz.gw_xl_ip_price')" 
+                                            :intextPremiumDuration="config('greenwiperz.gw_xl_ip_duration')" 
+                                        >
                                             <x-slot name="carType">
                                                 {{ __('pricespage.carcategory4type') }}
                                             </x-slot>
@@ -82,8 +113,16 @@
                     </div>
 
                     <ul class=" grid sm:hidden grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        <x-prices.card size='S' colorSelected="0" exteriorPrice='CHF 60.00' exteriorDuration='40 min*'
-                            intextPrice='CHF 110.00' intextDuration='80 min*'>
+                        <x-prices.card 
+                            size='S' 
+                            colorSelected="0" 
+                            :exteriorPrice="config('greenwiperz.gw_s_e_price')"  
+                            :exteriorDuration="config('greenwiperz.gw_s_e_duration')" 
+                            :intextBasicPrice="config('greenwiperz.gw_s_ib_price')"  
+                            :intextBasicDuration="config('greenwiperz.gw_s_ib_duration')" 
+                            :intextPremiumPrice="config('greenwiperz.gw_s_ip_price')" 
+                            :intextPremiumDuration="config('greenwiperz.gw_s_ip_duration')" 
+                        >
                             <x-slot name="carType">
                                 {{ __('pricespage.carcategory1type') }}
                             </x-slot>
@@ -92,8 +131,15 @@
                             </x-slot>
                         </x-prices.card>
 
-                        <x-prices.card size='M' colorSelected="1" exteriorPrice='CHF 70.00' exteriorDuration='45 min*'
-                            intextPrice='CHF 130.00' intextDuration='90 min*'>
+                        <x-prices.card size='M' 
+                        colorSelected="1" 
+                        :exteriorPrice="config('greenwiperz.gw_m_e_price')"  
+                        :exteriorDuration="config('greenwiperz.gw_m_e_duration')" 
+                        :intextBasicPrice="config('greenwiperz.gw_m_ib_price')"  
+                        :intextBasicDuration="config('greenwiperz.gw_m_ib_duration')" 
+                        :intextPremiumPrice="config('greenwiperz.gw_m_ip_price')" 
+                        :intextPremiumDuration="config('greenwiperz.gw_m_ip_duration')" 
+                        >
                             <x-slot name="carType">
                                 {{ __('pricespage.carcategory2type') }}
                             </x-slot>
@@ -102,8 +148,14 @@
                             </x-slot>
                         </x-prices.card>
 
-                        <x-prices.card size='L' colorSelected="2" exteriorPrice='CHF 80.00' exteriorDuration='50 min*'
-                            intextPrice='CHF 150.00' intextDuration='100 min*'>
+                        <x-prices.card size='L' colorSelected="2" 
+                        :exteriorPrice="config('greenwiperz.gw_l_e_price')"  
+                        :exteriorDuration="config('greenwiperz.gw_l_e_duration')" 
+                        :intextBasicPrice="config('greenwiperz.gw_l_ib_price')"  
+                        :intextBasicDuration="config('greenwiperz.gw_l_ib_duration')" 
+                        :intextPremiumPrice="config('greenwiperz.gw_l_ip_price')" 
+                        :intextPremiumDuration="config('greenwiperz.gw_l_ip_duration')" 
+                            >
                             <x-slot name="carType">
                                 {{ __('pricespage.carcategory3type') }}
                             </x-slot>
@@ -112,8 +164,14 @@
                             </x-slot>
                         </x-prices.card>
 
-                        <x-prices.card size='XL' colorSelected="3" exteriorPrice='CHF 90.00' exteriorDuration='70 min*'
-                            intextPrice='CHF 165.00' intextDuration='120 min*'>
+                        <x-prices.card size='XL' colorSelected="3" 
+                        :exteriorPrice="config('greenwiperz.gw_xl_e_price')"  
+                        :exteriorDuration="config('greenwiperz.gw_xl_e_duration')" 
+                        :intextBasicPrice="config('greenwiperz.gw_xl_ib_price')"  
+                        :intextBasicDuration="config('greenwiperz.gw_xl_ib_duration')" 
+                        :intextPremiumPrice="config('greenwiperz.gw_xl_ip_price')" 
+                        :intextPremiumDuration="config('greenwiperz.gw_xl_ip_duration')" 
+                            >
                             <x-slot name="carType">
                                 {{ __('pricespage.carcategory4type') }}
                             </x-slot>
