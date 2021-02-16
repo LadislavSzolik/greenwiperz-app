@@ -50,7 +50,8 @@ return [
     'serviceAreaTitle' => 'Service area',
     'serviceAreaText1' => 'Our service area is the city of Zürich in the highlighet area.',
     'serviceAreaText2' => 'We cover the following postal codes:',
-    'serviceAreaText3' => 'Living outside, but on the edge of our service area? Give us a call and we see what we can do.',
+    'serviceAreaText3' => 'We work only on private parkplaces.',
+    'serviceAreaText4' => 'Living outside, but on the edge of our service area? Give us a call and we see what we can do.',
 
     //contact information
     'contactInformation' => 'Contact Information',
