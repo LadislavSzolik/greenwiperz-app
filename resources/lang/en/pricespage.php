@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'title' => 'Our prices',   
-    'carcategories' => 'Car categories',   
+    'title' => 'Our prices',
+    'carcategories' => 'Car categories',
     'exterior' => 'Exterior only',
     'intexteriorBasic' => 'Interior & Exterior Basic',
     'intexteriorPremium' => 'Interior & Exterior Premium',
@@ -23,4 +23,23 @@ return [
 
     'dirtySurcharge' => '„DIRRRTY“ surcharge',
     'dirtySurchargeDesc' => 'If your car is especially dirty, eg. the exterior has a lot of bugs and/or the interior has a lot of dog hair or stains: 30 CHF. Please be honest about this when you order our service.',
+
+    'services' => 'Services',
+
+    'handwash' => 'Hand wash',
+    'handPolish' => 'Hand polish',
+    'nanoWaxSealer'=> 'Nano wax sealer',
+    'cleaningAndCareOfExternalPlasticParts'=> 'Cleaning and care of external plastic parts',
+    'tankCapCleaning'=> 'Tank Cap cleaning',
+    'windowCleaningOutsideIncludingSunroof'=> 'Window cleaning outside including sunroof',
+    'rimsCleaning'=> 'Rims cleaning (outer part)',
+    'tireCare'=> 'Tire care',
+    'internalVacuuming'=> 'Internal vacuuming',
+    'carpetCleaning' => 'Carpet cleaning (including rubber)',
+    'cleaningAndMaintenanceOfAllFittingsIncludingDoorPanels' => 'Cleaning and maintenance of all fittings, including door panels',
+    'frontAndCenterConsoleCleaning'=> 'Front and center console cleaning',
+    'windowCleaningInside'=> 'Window cleaning inside (including sunroof)',
+    'thresholdCleaning'=> 'Threshold cleaning',
+    'doorRabbetsAndThresholdCleaning'=> 'Door rabbets and threshold cleaning',
+    'leatherCleaningAndCare'=> 'Leather cleaning and care',
 ];

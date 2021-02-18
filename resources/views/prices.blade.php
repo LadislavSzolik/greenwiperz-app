@@ -184,9 +184,14 @@
 
                     <div class="mt-4 sm:mt-2 text-xs text-gray-600 text-center sm:text-left">
                         {{ __('pricespage.duractionDesc') }}
-                    </div>
+                    </div>                    
+                </div>
 
-                    <div class="mt-10 bg-gray-50 border-l-4 border-blue-400 p-4">
+                <!-- Service table --> 
+                <x-service-details />
+
+
+                <div class="mt-10 bg-gray-50 border-l-4 border-blue-400 p-4">
                         <div class="flex">
                             <div class="flex-shrink-0">
                                 <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg"
@@ -214,7 +219,6 @@
                                 class="text-white px-4 py-2 bg-green-500 rounded-md ">{{ __('action-buttons.bookACleaningCTA') }}</a>
                         </div>
                     @endif
-                </div>
             </div>
         </section>
     </main>

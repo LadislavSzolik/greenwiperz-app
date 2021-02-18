@@ -24,4 +24,23 @@ return [
     'dirtySurcharge' => '„DIRRRTY“ Aufpreis',
     'dirtySurchargeDesc' => 'Wenn Ihr Auto besonders schmutzig ist, z.B. viele Insekten auf der Windschutzscheibe und / oder viele Hundehaare oder Flecken im Inneren, wir berechnen einen Aufpreis von 30 CHF. Bitte seien Sie ehrlich darüber, wenn Sie unseren Service bestellen.',
 
+    'services' => 'Leistungen',
+
+    'handwash' => 'Schonende Handwäsche',
+    'handPolish' => 'Glanzpolitur von Hand',
+    'nanoWaxSealer'=> 'Nano-Wachsversiegelung',
+    'cleaningAndCareOfExternalPlasticParts'=> 'Reinigung und Pflege äusserer Kunststoffteile',
+    'tankCapCleaning'=> 'Tankdeckel reinigen',
+    'windowCleaningOutsideIncludingSunroof'=> 'Scheibenreinigung aussen inkl. Schiebedach',
+    'rimsCleaning'=> 'Felgen reinigen (äusserer Teil)',
+    'tireCare'=> 'Gummipflege',
+    'internalVacuuming'=> 'Internes Staubsaugen',
+    'carpetCleaning' => 'Teppichreinigung (einschließlich Gummi)',
+    'cleaningAndMaintenanceOfAllFittingsIncludingDoorPanels' => 'Reinigung und Wartung aller Armaturen, einschließlich Türverkleidungen',
+    'frontAndCenterConsoleCleaning'=> 'Front- und Mittelkonzole reinigen',
+    'windowCleaningInside'=> 'Fensterreinigung innen (inkl. Schiebedach)',
+    'thresholdCleaning'=> 'Schwellenreinigung',
+    'doorRabbetsAndThresholdCleaning'=> 'Türfalze und Schwellenreinigung',
+    'leatherCleaningAndCare'=> 'Lederreiningung und Pflege',
+
 ];
