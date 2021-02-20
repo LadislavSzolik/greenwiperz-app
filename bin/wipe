@@ -1,0 +1,6 @@
+#!/bin/bash -e
+
+bin/artisan db:wipe
+bin/artisan migrate
+bin/artisan db:seed
+bin/artisan mage:import:data 1

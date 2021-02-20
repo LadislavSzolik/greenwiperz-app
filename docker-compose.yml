@@ -1,0 +1,84 @@
+version: '3.3'
+
+networks:
+  traefik:
+    external: true
+  database:
+    external: true
+  greenwiperz:
+    external: true
+
+volumes:
+  sockdata:
+
+services:
+  php:
+    image: alphaws/php74
+    volumes:
+      - ./.docker/images/php/php.ini:/usr/local/etc/php/conf.d/z-php.ini
+      - ./:/var/www/html
+      - sockdata:/sock
+      - ~/.composer:/composer
+    networks:
+      - database
+      - greenwiperz
+      - traefik
+    restart: always
+    environment:
+      - COMPOSER_HOME=/composer
+      - COMPOSER_MEMORY_LIMIT=-1
+    user: ${DOCKER_UID}:${DOCKER_GID}
+
+  nginx:
+    image: alphaws/nginx
+    volumes:
+      - ./:/var/www/html
+      - sockdata:/sock
+    networks:
+      - traefik
+      - greenwiperz
+    restart: always
+    depends_on:
+      - php
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik
+      - traefik.port=8001
+      - traefik.http.routers.${NAMESPACE}.rule=Host(`${BASE_URL}`)
+      - traefik.http.middlewares.redirect.redirectscheme.scheme=https
+      - traefik.http.services.${NAMESPACE}.loadbalancer.server.port=8001
+      # SSL
+      - traefik.http.routers.${NAMESPACE}.tls.certresolver=le
+      - traefik.http.routers.${NAMESPACE}.entrypoints=websecure
+
+  node:
+    image: "node:10.21"
+    user: $DOCKER_UID
+    working_dir: /application
+    restart: always
+    volumes:
+      - ./:/application
+    networks:
+      - greenwiperz
+
+  cron:
+    image: alphaws/lara-cron
+    networks:
+      - greenwiperz
+      - database
+    restart: always
+    volumes:
+      - ./:/var/www/html
+      - sockdata:/sock
+
+#  redis:
+#    restart: always
+#    image: redis:6.0
+#    networks:
+#      - greenwiperz
+#    volumes:
+#      - ./.docker/images/redis/redis.conf:/usr/local/etc/redis/redis.conf
+#      - ./.docker/images/redis/redis_data:/data
+#    ports:
+#      - 6379:6379
+
