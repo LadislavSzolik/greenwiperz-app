@@ -6,9 +6,9 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-16 pb-10">
 
                 <div class="mb-8">
-                    <h2 class="text-4xl tracking-tight leading-10 font-extrabold text-gray-800 sm:text-5xl sm:leading-none text-center">
+                    <h1 class="text-4xl tracking-tight leading-10 font-extrabold text-gray-800 sm:text-5xl sm:leading-none text-center">
                         {{ __('pricespage.title') }}
-                    </h2>
+                    </h1>
                 </div>
 
                 <div class="flex flex-col">
@@ -18,34 +18,22 @@
                                 <table class="min-w-full divide-y divide-green-400 table-fixed">
                                     <thead>
                                         <tr>
-                                            <th
-                                                class="w-2/5 px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
+                                            <th class="w-2/5 px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
                                                 {{ __('pricespage.carcategories') }}
                                             </th>
-                                            <th
-                                                class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
+                                            <th class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
                                                 {{ __('pricespage.exterior') }}
                                             </th>
-                                            <th
-                                                class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
+                                            <th class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
                                                 {{ __('pricespage.intexteriorBasic') }}
                                             </th>
-                                            <th
-                                                class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
+                                            <th class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-medium text-green-700 uppercase tracking-wider">
                                                 {{ __('pricespage.intexteriorPremium') }}
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
-                                        <x-prices.row 
-                                            size='S' 
-                                            :exteriorPrice="config('greenwiperz.gw_s_e_price')"  
-                                            :exteriorDuration="config('greenwiperz.gw_s_e_duration')" 
-                                            :intextBasicPrice="config('greenwiperz.gw_s_ib_price')"  
-                                            :intextBasicDuration="config('greenwiperz.gw_s_ib_duration')" 
-                                            :intextPremiumPrice="config('greenwiperz.gw_s_ip_price')" 
-                                            :intextPremiumDuration="config('greenwiperz.gw_s_ip_duration')" 
-                                        >
+                                        <x-prices.row size='S' :exteriorPrice="config('greenwiperz.gw_s_e_price')" :exteriorDuration="config('greenwiperz.gw_s_e_duration')" :intextBasicPrice="config('greenwiperz.gw_s_ib_price')" :intextBasicDuration="config('greenwiperz.gw_s_ib_duration')" :intextPremiumPrice="config('greenwiperz.gw_s_ip_price')" :intextPremiumDuration="config('greenwiperz.gw_s_ip_duration')">
                                             <x-slot name="carType">
                                                 {{ __('pricespage.carcategory1type') }}
                                             </x-slot>
@@ -54,15 +42,7 @@
                                             </x-slot>
                                         </x-prices.row>
 
-                                        <x-prices.row
-                                            size='M' 
-                                            :exteriorPrice="config('greenwiperz.gw_m_e_price')"  
-                                            :exteriorDuration="config('greenwiperz.gw_m_e_duration')" 
-                                            :intextBasicPrice="config('greenwiperz.gw_m_ib_price')"  
-                                            :intextBasicDuration="config('greenwiperz.gw_m_ib_duration')" 
-                                            :intextPremiumPrice="config('greenwiperz.gw_m_ip_price')" 
-                                            :intextPremiumDuration="config('greenwiperz.gw_m_ip_duration')" 
-                                        >
+                                        <x-prices.row size='M' :exteriorPrice="config('greenwiperz.gw_m_e_price')" :exteriorDuration="config('greenwiperz.gw_m_e_duration')" :intextBasicPrice="config('greenwiperz.gw_m_ib_price')" :intextBasicDuration="config('greenwiperz.gw_m_ib_duration')" :intextPremiumPrice="config('greenwiperz.gw_m_ip_price')" :intextPremiumDuration="config('greenwiperz.gw_m_ip_duration')">
                                             <x-slot name="carType">
                                                 {{ __('pricespage.carcategory2type') }}
                                             </x-slot>
@@ -73,14 +53,7 @@
                                             </x-slot>
                                         </x-prices.row>
 
-                                        <x-prices.row  size='L' 
-                                            :exteriorPrice="config('greenwiperz.gw_l_e_price')"  
-                                            :exteriorDuration="config('greenwiperz.gw_l_e_duration')" 
-                                            :intextBasicPrice="config('greenwiperz.gw_l_ib_price')"  
-                                            :intextBasicDuration="config('greenwiperz.gw_l_ib_duration')" 
-                                            :intextPremiumPrice="config('greenwiperz.gw_l_ip_price')" 
-                                            :intextPremiumDuration="config('greenwiperz.gw_l_ip_duration')" 
-                                        >
+                                        <x-prices.row size='L' :exteriorPrice="config('greenwiperz.gw_l_e_price')" :exteriorDuration="config('greenwiperz.gw_l_e_duration')" :intextBasicPrice="config('greenwiperz.gw_l_ib_price')" :intextBasicDuration="config('greenwiperz.gw_l_ib_duration')" :intextPremiumPrice="config('greenwiperz.gw_l_ip_price')" :intextPremiumDuration="config('greenwiperz.gw_l_ip_duration')">
                                             <x-slot name="carType">
                                                 {{ __('pricespage.carcategory3type') }}
                                             </x-slot>
@@ -89,15 +62,7 @@
                                             </x-slot>
                                         </x-prices.row>
 
-                                        <x-prices.row 
-                                            size='XL' 
-                                            :exteriorPrice="config('greenwiperz.gw_xl_e_price')"  
-                                            :exteriorDuration="config('greenwiperz.gw_xl_e_duration')" 
-                                            :intextBasicPrice="config('greenwiperz.gw_xl_ib_price')"  
-                                            :intextBasicDuration="config('greenwiperz.gw_xl_ib_duration')" 
-                                            :intextPremiumPrice="config('greenwiperz.gw_xl_ip_price')" 
-                                            :intextPremiumDuration="config('greenwiperz.gw_xl_ip_duration')" 
-                                        >
+                                        <x-prices.row size='XL' :exteriorPrice="config('greenwiperz.gw_xl_e_price')" :exteriorDuration="config('greenwiperz.gw_xl_e_duration')" :intextBasicPrice="config('greenwiperz.gw_xl_ib_price')" :intextBasicDuration="config('greenwiperz.gw_xl_ib_duration')" :intextPremiumPrice="config('greenwiperz.gw_xl_ip_price')" :intextPremiumDuration="config('greenwiperz.gw_xl_ip_duration')">
                                             <x-slot name="carType">
                                                 {{ __('pricespage.carcategory4type') }}
                                             </x-slot>
@@ -113,16 +78,7 @@
                     </div>
 
                     <ul class=" grid sm:hidden grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        <x-prices.card 
-                            size='S' 
-                            colorSelected="0" 
-                            :exteriorPrice="config('greenwiperz.gw_s_e_price')"  
-                            :exteriorDuration="config('greenwiperz.gw_s_e_duration')" 
-                            :intextBasicPrice="config('greenwiperz.gw_s_ib_price')"  
-                            :intextBasicDuration="config('greenwiperz.gw_s_ib_duration')" 
-                            :intextPremiumPrice="config('greenwiperz.gw_s_ip_price')" 
-                            :intextPremiumDuration="config('greenwiperz.gw_s_ip_duration')" 
-                        >
+                        <x-prices.card size='S' colorSelected="0" :exteriorPrice="config('greenwiperz.gw_s_e_price')" :exteriorDuration="config('greenwiperz.gw_s_e_duration')" :intextBasicPrice="config('greenwiperz.gw_s_ib_price')" :intextBasicDuration="config('greenwiperz.gw_s_ib_duration')" :intextPremiumPrice="config('greenwiperz.gw_s_ip_price')" :intextPremiumDuration="config('greenwiperz.gw_s_ip_duration')">
                             <x-slot name="carType">
                                 {{ __('pricespage.carcategory1type') }}
                             </x-slot>
@@ -131,15 +87,7 @@
                             </x-slot>
                         </x-prices.card>
 
-                        <x-prices.card size='M' 
-                        colorSelected="1" 
-                        :exteriorPrice="config('greenwiperz.gw_m_e_price')"  
-                        :exteriorDuration="config('greenwiperz.gw_m_e_duration')" 
-                        :intextBasicPrice="config('greenwiperz.gw_m_ib_price')"  
-                        :intextBasicDuration="config('greenwiperz.gw_m_ib_duration')" 
-                        :intextPremiumPrice="config('greenwiperz.gw_m_ip_price')" 
-                        :intextPremiumDuration="config('greenwiperz.gw_m_ip_duration')" 
-                        >
+                        <x-prices.card size='M' colorSelected="1" :exteriorPrice="config('greenwiperz.gw_m_e_price')" :exteriorDuration="config('greenwiperz.gw_m_e_duration')" :intextBasicPrice="config('greenwiperz.gw_m_ib_price')" :intextBasicDuration="config('greenwiperz.gw_m_ib_duration')" :intextPremiumPrice="config('greenwiperz.gw_m_ip_price')" :intextPremiumDuration="config('greenwiperz.gw_m_ip_duration')">
                             <x-slot name="carType">
                                 {{ __('pricespage.carcategory2type') }}
                             </x-slot>
@@ -148,14 +96,7 @@
                             </x-slot>
                         </x-prices.card>
 
-                        <x-prices.card size='L' colorSelected="2" 
-                        :exteriorPrice="config('greenwiperz.gw_l_e_price')"  
-                        :exteriorDuration="config('greenwiperz.gw_l_e_duration')" 
-                        :intextBasicPrice="config('greenwiperz.gw_l_ib_price')"  
-                        :intextBasicDuration="config('greenwiperz.gw_l_ib_duration')" 
-                        :intextPremiumPrice="config('greenwiperz.gw_l_ip_price')" 
-                        :intextPremiumDuration="config('greenwiperz.gw_l_ip_duration')" 
-                            >
+                        <x-prices.card size='L' colorSelected="2" :exteriorPrice="config('greenwiperz.gw_l_e_price')" :exteriorDuration="config('greenwiperz.gw_l_e_duration')" :intextBasicPrice="config('greenwiperz.gw_l_ib_price')" :intextBasicDuration="config('greenwiperz.gw_l_ib_duration')" :intextPremiumPrice="config('greenwiperz.gw_l_ip_price')" :intextPremiumDuration="config('greenwiperz.gw_l_ip_duration')">
                             <x-slot name="carType">
                                 {{ __('pricespage.carcategory3type') }}
                             </x-slot>
@@ -164,14 +105,7 @@
                             </x-slot>
                         </x-prices.card>
 
-                        <x-prices.card size='XL' colorSelected="3" 
-                        :exteriorPrice="config('greenwiperz.gw_xl_e_price')"  
-                        :exteriorDuration="config('greenwiperz.gw_xl_e_duration')" 
-                        :intextBasicPrice="config('greenwiperz.gw_xl_ib_price')"  
-                        :intextBasicDuration="config('greenwiperz.gw_xl_ib_duration')" 
-                        :intextPremiumPrice="config('greenwiperz.gw_xl_ip_price')" 
-                        :intextPremiumDuration="config('greenwiperz.gw_xl_ip_duration')" 
-                            >
+                        <x-prices.card size='XL' colorSelected="3" :exteriorPrice="config('greenwiperz.gw_xl_e_price')" :exteriorDuration="config('greenwiperz.gw_xl_e_duration')" :intextBasicPrice="config('greenwiperz.gw_xl_ib_price')" :intextBasicDuration="config('greenwiperz.gw_xl_ib_duration')" :intextPremiumPrice="config('greenwiperz.gw_xl_ip_price')" :intextPremiumDuration="config('greenwiperz.gw_xl_ip_duration')">
                             <x-slot name="carType">
                                 {{ __('pricespage.carcategory4type') }}
                             </x-slot>
@@ -184,41 +118,37 @@
 
                     <div class="mt-4 sm:mt-2 text-xs text-gray-600 text-center sm:text-left">
                         {{ __('pricespage.duractionDesc') }}
-                    </div>                    
+                    </div>
                 </div>
 
-                <!-- Service table --> 
+                <!-- Service table -->
                 <x-service-details />
 
 
                 <div class="mt-10 bg-gray-50 border-l-4 border-blue-400 p-4">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <div class="text-sm leading-5 text-blue-700 ml-3">
-                                <p class="font-bold">{{ __('pricespage.dirtySurcharge') }}</p>
-                                <p class="">
-                                    {{ __('pricespage.dirtySurchargeDesc') }}
-                                </p>
-                            </div>
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="text-sm leading-5 text-blue-700 ml-3">
+                            <p class="font-bold">{{ __('pricespage.dirtySurcharge') }}</p>
+                            <p class="">
+                                {{ __('pricespage.dirtySurchargeDesc') }}
+                            </p>
                         </div>
                     </div>
+                </div>
 
 
-                    <!-- TODO: use the global button instead of a -->
+                <!-- TODO: use the global button instead of a -->
 
-                    @if (config('greenwiperz.registration_enabled'))
-                        <div class="mt-5 flex items-center justify-end sm:px-6 ">
-                            <a href="{{ route('bookings.private.create') }}"
-                                class="text-white px-4 py-2 bg-green-500 rounded-md ">{{ __('action-buttons.bookACleaningCTA') }}</a>
-                        </div>
-                    @endif
+                @if (config('greenwiperz.registration_enabled'))
+                <div class="mt-5 flex items-center justify-end sm:px-6 ">
+                    <a href="{{ route('bookings.private.create') }}" class="text-white px-4 py-2 bg-green-500 rounded-md ">{{ __('action-buttons.bookACleaningCTA') }}</a>
+                </div>
+                @endif
             </div>
         </section>
     </main>
