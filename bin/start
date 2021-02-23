@@ -1,0 +1,16 @@
+#!/bin/bash -e
+
+ENV_FILE=.env
+if [ ! -f "$ENV_FILE" ]; then
+    [ -z "$1" ] && echo "Please specify an environment (local | develop | production)" && exit
+    cp .env.$1 .env
+    cp docker-compose-$1.yml docker-compose.yml
+fi
+source $ENV_FILE
+docker network inspect ${DOCKER_NETWORK_NAME} >/dev/null 2>&1 || docker network create ${DOCKER_NETWORK_NAME}
+echo 'env:' $1
+
+echo "===> starting containers"
+docker-compose up -d
+bin/dbInit
+bin/artisan migrate --seed

@@ -1,0 +1,7 @@
+#!/bin/bash -e
+bin/artisan ide-helper:generate
+bin/artisan ide-helper:model --write --reset
+bin/artisan test
+bin/artisan generate:erd
+bin/cli vendor/bin/phpcbf
+bin/cli vendor/bin/phpcs

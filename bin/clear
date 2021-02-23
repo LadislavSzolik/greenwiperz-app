@@ -1,0 +1,6 @@
+#!/bin/bash -e
+bin/artisan view:clear
+bin/artisan cache:clear
+bin/artisan route:clear
+bin/artisan config:clear
+bin/artisan debugbar:clear
