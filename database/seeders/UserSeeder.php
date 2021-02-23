@@ -23,20 +23,20 @@ class UserSeeder extends Seeder
         $user1 = User::create([
             'name' => 'John',
             'email' => 'sz@gmail.com',
-            'password' => Hash::make('password'),  
-        ]);     
+            'password' => Hash::make('password'),
+        ]);
 
         DB::table('users')->insert([
             'name' => 'Harold',
             'email' => 'l@gmail.com',
-            'password' => Hash::make('password'),       
+            'password' => Hash::make('password'),
         ]); */
 
         $user1 = User::create([
             'name' => 'admin',
             'email' => 'info@greenwiperz.ch',
-            'password' => Hash::make('password'),  
-        ]); 
+            'password' => Hash::make('password'),
+        ]);
 
         $role = Role::firstOrCreate([
             'name' => 'greenwiper',
@@ -45,8 +45,8 @@ class UserSeeder extends Seeder
         Ability::firstOrCreate([
             'name' => 'manage_bookings'
         ]);
-        
-        $role->allowTo('manage_bookings');        
+
+        $role->allowTo('manage_bookings');
         $user1->assignRole('greenwiper');
 
     }
