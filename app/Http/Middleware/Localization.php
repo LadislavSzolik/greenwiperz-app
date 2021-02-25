@@ -22,18 +22,18 @@ class Localization
         if(!$session->has('locale')){
             session()->put('locale', $request->getPreferredLanguage(['en','de']));
         }
-        
-        if ($request->has('locale')) {    
+
+        if ($request->has('locale')) {
             $lang = $request->get('locale');
             if (in_array($lang, ['en','de'])) {
                 $session->put('locale', $lang);
             }
-            
+
         }
 
         App::setlocale($request->session()->get('locale'));
-        
-        return $next($request); 
+
+        return $next($request);
     }
 }
 

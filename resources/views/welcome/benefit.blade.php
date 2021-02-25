@@ -1,5 +1,4 @@
-<!-- BENEFIT: SAVE WITH US -->
-<section class="my-24">
+<section id="welcome-benefits">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="mb-8 max-w-2xl mx-auto text-center">
             <h2 class="text-4xl tracking-tight leading-10 font-extrabold text-gray-800 sm:text-5xl sm:leading-none text-center">
@@ -13,7 +12,7 @@
                     {{ __('homepage.benefit1Description') }}
                 </dt>
                 <dd class="order-1 text-2xl leading-none font-extrabold text-green-600" aria-describedby="item-1">
-                    <img class="h-48 sm:h-80 mx-auto" src="{{ asset('img/save_water.png') }}" alt="Water saving" />
+                    <img class="mx-auto" src="{{ asset('img/save_water.png') }}" alt="Water saving" />
                     {{ __('homepage.benefit1Title') }}
                 </dd>
             </div>
@@ -23,7 +22,7 @@
                 </dt>
                 <dd class="order-1 text-2xl leading-none font-extrabold text-green-600">
 
-                    <img class="h-48 sm:h-80 mx-auto" src="{{ asset('img/one_hour_hustle.png') }}" alt="Hustling" />
+                    <img class="mx-auto" src="{{ asset('img/one_hour_hustle.png') }}" alt="Hustling" />
 
                     {{ __('homepage.benefit2Title') }}
                 </dd>
@@ -33,7 +32,7 @@
                     {{ __('homepage.benefit3Description') }}
                 </dt>
                 <dd class="order-1 text-2xl leading-none font-extrabold text-green-600">
-                    <img class="h-48 sm:h-80 mx-auto" src="{{ asset('img/shame.png') }}" alt="Feeling shamed" />
+                    <img class="mx-auto" src="{{ asset('img/shame.png') }}" alt="Feeling shamed" />
                     {{ __('homepage.benefit3Title') }}
                 </dd>
             </div>

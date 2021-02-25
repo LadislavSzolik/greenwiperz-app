@@ -1,16 +1,18 @@
 <!-- HOW IT WORKS -->
-<section class="bg-white">
+<section class="bg-white" id="how-it-works">
     <div class="max-w-6xl mx-auto py-12 px-4 sm:px-6">
         <div class="mb-8">
             <h2  class="text-4xl tracking-tight leading-10 font-extrabold text-gray-800 sm:text-5xl sm:leading-none text-center">
                 {{ __('homepage.howWorksMainTitle') }}
             </h2>
         </div>
+        <div class="mb-8 mx-auto flex justify-center text-gray-500 w-3/5 px-10 text-2xl">
+            {{ __('homepage.howWorksParagrph1') }}
+        </div>
 
         <div class="flex flex-wrap">
             <div class="prose prose-lg text-gray-500 w-full sm:w-2/5">
                 <ul>
-                    <li>{{ __('homepage.howWorksParagrph1') }} </li>
                     <li>{{ __('homepage.howWorksParagrph2') }} </li>
                     <li>{{ __('homepage.howWorksParagrph3') }} </li>
                     <li>{{ __('homepage.howWorksParagrph4') }} </li>
@@ -62,8 +64,8 @@
                 {{ __('homepage.exclConditionMainTitle') }}
             </h2>
         </div>
-        <div class="prose prose-lg text-gray-500 mx-auto text-center">                        
+        <div class="prose prose-lg text-gray-500 mx-auto text-center">
             {{ __('homepage.exclConditionParagrph1') }}
         </div>
     </div>
-</section> 
+</section>

@@ -1,7 +1,4 @@
-
-
-<!-- KEY FEATURES -->
-<section class="my-24">
+<section id="welcome-key-features">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <ul class="md:grid md:grid-cols-3 md:gap-x-8 md:gap-y-10">
             <li>

@@ -5,14 +5,11 @@
                 <x-application-logo class="h-20 text-green-500" />
             </div>
             <h1 class="text-4xl tracking-tight leading-10 font-extrabold text-green-500 sm:text-5xl sm:leading-none">
-                Greenwiperz
-                <br/>
-                <span class="text-gray-900"> {{ __('homepage.sloganShort') }}
+                Greenwiperz<br/><span class="text-gray-900"> {{ __('homepage.sloganShort') }}
             </h1>
             <p class="mt-3 max-w-md mx-auto text-lg text-gray-500 sm:text-xl md:mt-5 md:max-w-3xl">
                 {{ __('homepage.sloganLong') }}
             </p>
-
             <div class="mt-5 sm:flex">
                 @if (config('greenwiperz.registration_enabled'))
                     <a href="#"
@@ -27,10 +24,8 @@
                 @endif
             </div>
         </div>
-
-        <div class="flex justify-center w-full sm:w-3/5 px-2 sm:px-0 mt-8">
-            <img class="shadow-2xl h-48 sm:h-80 rounded-lg" src="{{ asset('img/hero-image.png') }}"
-                 alt="Hero image" />
+        <div class="flex justify-center w-full sm:w-3/5 px-2 sm:px-0">
+            @include('welcome.benefit')
         </div>
     </div>
 </section>

@@ -3,12 +3,10 @@
     <main class="relative pt-16">
         @include('welcome.hero1')
         @include('welcome.features')
-        @livewire('rating.show-ratings')
-        <!-- BEFORE/AFTER -->
+{{--        @livewire('rating.show-ratings')--}}
         <section>
             @livewire('show-work')
         </section>
-
     </main>
     <x-footer />
 </x-guest-layout>
