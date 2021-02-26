@@ -30,11 +30,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         \URL::forceScheme('https');
-        if (in_array(Request::segment(1), Config::get('app.all_langs'))) {
-            App::setLocale(Request::segment(1));
-            Config::set('app.locale_prefix', Request::segment(1));
-        } else {
-            return redirect(url(config("app.locale") . "/" ))->send();
-        }
     }
 }

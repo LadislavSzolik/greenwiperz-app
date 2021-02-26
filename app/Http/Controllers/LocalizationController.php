@@ -9,6 +9,6 @@ class LocalizationController extends Controller
     public function __invoke($locale)
     {
         session()->put('locale', $locale);
-        return back();
+        return redirect('/');
     }
 }

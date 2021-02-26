@@ -1,7 +1,7 @@
 <x-guest-layout>
     <x-jet-authentication-card>
         <x-slot name="logo">
-            <a href="{{ route('home') }}">
+            <a href="{{ route(current_lang() . '.' . 'home') }}">
                 <x-application-logo class="h-32 "/>
             </a>
         </x-slot>
@@ -14,7 +14,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route(current_lang() . '.' . 'login') }}">
             @csrf
 
             <div>

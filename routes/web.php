@@ -24,6 +24,9 @@ use App\Http\Livewire\Rating\AdminRatings;
 use App\Http\Livewire\Users;
 use App\Mail\PrivateBookingConfirmedMail;
 
+Route::get('/', function () {
+    return redirect(current_lang());
+ })->name('en.home');
 
 foreach (Config::get('app.all_langs') as $language) {
     Route::prefix($language)->group(function() use ($language) {
@@ -34,18 +37,21 @@ foreach (Config::get('app.all_langs') as $language) {
         Route::get('/about', function () {return view('about');})->name($language.'.about');
         Route::get('/contact', function () {return view('contact');})->name($language.'.contact');
         Route::get('/terms', function () {return view('terms');})->name($language.'.terms');
+        Route::get('lang/{locale}', LocalizationController::class)->name($language.'.language');
+        // Auth
+
     });
 }
 
 // VISITOR ZONE
-Route::get('lang/{locale}', LocalizationController::class)->name('language');
-Route::get('/', function () { return view('welcome'); })->name('home');
-Route::get('/prices', function () { return view('prices'); })->name('prices');
-Route::get('/how-it-works', function () { return view('how-it-works'); })->name('how.it.works');
-Route::get('/service-area', function () { return view('service-area');})->name('service.area');
-Route::get('/about', function () {return view('about');})->name('about');
-Route::get('/contact', function () {return view('contact');})->name('contact');
-Route::get('/terms', function () {return view('terms');})->name('terms');
+//Route::get('lang/{locale}', LocalizationController::class)->name('language');
+//Route::get('/', function () { return view('welcome'); })->name('home');
+//Route::get('/prices', function () { return view('prices'); })->name('prices');
+//Route::get('/how-it-works', function () { return view('how-it-works'); })->name('how.it.works');
+//Route::get('/service-area', function () { return view('service-area');})->name('service.area');
+//Route::get('/about', function () {return view('about');})->name('about');
+//Route::get('/contact', function () {return view('contact');})->name('contact');
+//Route::get('/terms', function () {return view('terms');})->name('terms');
 
 // SIGN UP FOR WAITINGLIST
 Route::get('/waitingvisitors/create', [WaitingVisitorController::class, 'create'])->name('waitingvisitors.create');
