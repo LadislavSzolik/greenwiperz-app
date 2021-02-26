@@ -1,14 +1,14 @@
 <x-guest-layout>
     <x-jet-authentication-card>
         <x-slot name="logo">
-            <a href="{{ route('home') }}">
+            <a href="{{ route(current_lang() . '.' . 'home') }}">
                 <x-application-logo class="h-32 text-green-500" />
             </a>
         </x-slot>
 
         <x-jet-validation-errors class="mb-4" />
 
-        <form method="POST" action="{{ route('register') }}">
+        <form method="POST" action="{{ route(current_lang() . '.' . 'register') }}">
             @csrf
 
             <div>
@@ -33,11 +33,11 @@
 
             <div class="flex justify-between">
                 <div class="flex items-center mt-4">
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('home') }}">{{ __('Back') }}</a>
+                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route(current_lang() . '.' . 'home') }}">{{ __('Back') }}</a>
                 </div>
 
                 <div class="flex items-center justify-end mt-4">
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
+                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route(current_lang() . '.' . 'login') }}">
                         {{ __('Already registered?') }}
                     </a>
 

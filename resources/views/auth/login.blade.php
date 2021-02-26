@@ -36,9 +36,9 @@
                         <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
                     </label>
                     <div>
-                        @if (Route::has('password.request'))
+                        @if (Route::has(current_lang() . '.' . 'password.request'))
                             <a class="underline text-sm text-gray-600 hover:text-gray-900"
-                               href="{{ route('password.request') }}">
+                               href="{{ route(current_lang() . '.' . 'password.request') }}">
                                 {{ __('Forgot your password?') }}
                             </a>
                         @endif
@@ -48,12 +48,12 @@
 
             <div class="flex justify-between">
                 <div class="flex items-center mt-6">
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('home') }}">{{ __('Back') }}</a>
+                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route(current_lang() . '.' . 'home') }}">{{ __('Back') }}</a>
                 </div>
 
                 <div class="flex items-center justify-end mt-6">
-                    @if (Route::has('register'))
-                    <a href="{{ route('register') }}" class="ml-4 px-4 py-2 border border-transparent text-xs tracking-widest uppercase rounded-md bg-cool-gray-100 hover:bg-gray-300 active:bg-gray-500 focus:border-gray-900 focus:outline-none focus:shadow-outline-gray">{{__('Register')}}</a>
+                    @if (Route::has(current_lang() . '.' . 'register'))
+                    <a href="{{ route(current_lang() . '.' . 'register') }}" class="ml-4 px-4 py-2 border border-transparent text-xs tracking-widest uppercase rounded-md bg-cool-gray-100 hover:bg-gray-300 active:bg-gray-500 focus:border-gray-900 focus:outline-none focus:shadow-outline-gray">{{__('Register')}}</a>
                     @endif
 
                     <x-jet-button class="ml-4">

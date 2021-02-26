@@ -23,22 +23,72 @@ use App\Http\Livewire\Bookingtimeslot\BookingTimeslots;
 use App\Http\Livewire\Rating\AdminRatings;
 use App\Http\Livewire\Users;
 use App\Mail\PrivateBookingConfirmedMail;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+use Laravel\Fortify\Http\Controllers\RegisteredUserController;
+use Laravel\Fortify\Http\Controllers\PasswordResetLinkController;
+use Laravel\Fortify\Http\Controllers\NewPasswordController;
+
 
 Route::get('/', function () {
     return redirect(current_lang());
- })->name('en.home');
+})->name('en.home');
 
 foreach (Config::get('app.all_langs') as $language) {
-    Route::prefix($language)->group(function() use ($language) {
-        Route::get('/', function () { return view('welcome'); })->name($language.'.home');
-        Route::get('/prices', function () { return view('prices'); })->name($language.'.prices');
-        Route::get('/how-it-works', function () { return view('how-it-works'); })->name($language.'.how.it.works');
-        Route::get('/service-area', function () { return view('service-area');})->name($language.'.service.area');
-        Route::get('/about', function () {return view('about');})->name($language.'.about');
-        Route::get('/contact', function () {return view('contact');})->name($language.'.contact');
-        Route::get('/terms', function () {return view('terms');})->name($language.'.terms');
-        Route::get('lang/{locale}', LocalizationController::class)->name($language.'.language');
+    Route::prefix($language)->group(function () use ($language) {
+        Route::get('/', function () {
+            return view('welcome');
+        })->name($language . '.home');
+        Route::get('/prices', function () {
+            return view('prices');
+        })->name($language . '.prices');
+        Route::get('/how-it-works', function () {
+            return view('how-it-works');
+        })->name($language . '.how.it.works');
+        Route::get('/service-area', function () {
+            return view('service-area');
+        })->name($language . '.service.area');
+        Route::get('/about', function () {
+            return view('about');
+        })->name($language . '.about');
+        Route::get('/contact', function () {
+            return view('contact');
+        })->name($language . '.contact');
+        Route::get('/terms', function () {
+            return view('terms');
+        })->name($language . '.terms');
+        Route::get('lang/{locale}', LocalizationController::class)->name($language . '.language');
         // Auth
+        $limiter = config('fortify.limiters.login');
+        Route::get('/login', [AuthenticatedSessionController::class, 'create'])
+            ->middleware(['guest'])
+            ->name($language . '.login');
+        Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+            ->middleware(array_filter([
+                'guest',
+                $limiter ? 'throttle:' . $limiter : null,
+            ]));
+        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+            ->name($language . '.logout');
+        Route::get('/register', [RegisteredUserController::class, 'create'])
+            ->middleware(['guest'])
+            ->name($language . '.register');
+        Route::post('/register', [RegisteredUserController::class, 'store'])
+            ->middleware(['guest']);
+        Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
+            ->middleware(['guest'])
+            ->name($language . '.password.request');
+
+        Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
+            ->middleware(['guest'])
+            ->name($language . '.password.reset');
+
+        Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
+            ->middleware(['guest'])
+            ->name($language . '.password.email');
+
+        Route::post('/reset-password', [NewPasswordController::class, 'store'])
+            ->middleware(['guest'])
+            ->name($language . '.password.update');
 
     });
 }
@@ -62,7 +112,7 @@ Route::get('/ratings/{user}', [RatingController::class, 'create'])->name('rating
 Route::post('/ratings', [RatingController::class, 'store'])->name('ratings.store');
 
 // ADMIN
-Route::middleware(['auth:sanctum', 'verified','can:manage_bookings'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'can:manage_bookings'])->group(function () {
     Route::post('/bookings/{booking}/complete', [BookingController::class, 'complete'])->name('bookings.complete');
     Route::post('/comments/{booking}', [BookingCommentController::class, 'store']);
     Route::get('/appointments', Appointments::class)->name('appointments.index');
@@ -88,7 +138,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/bookings/{booking}/refund', [BookingController::class, 'showRefund'])->name('bookings.refund');
     Route::get('/cars', Cars::class)->name('cars.index');
     Route::get('/payments/redirectToDatatrans/{id}', [PaymentController::class, 'redirectToDatatrans'])->name('payments.redirect');
-    Route::get('/termsinapp', function () {return view('terms-inapp');})->name('terms.inapp');
+    Route::get('/termsinapp', function () {
+        return view('terms-inapp');
+    })->name('terms.inapp');
 });
 
 // Handle datatrans POST
@@ -97,7 +149,7 @@ Route::post('/payments/handlePaymentCanceled', [PaymentController::class, 'handl
 Route::post('/payments/handlePaymentFailed', [PaymentController::class, 'handlePaymentFailed']);
 
 // TODO: Remove from PROD.
-Route::get('mailable',function(){
+Route::get('mailable', function () {
     $booking = Booking::findOrFail(1);
     return new PrivateBookingConfirmedMail($booking);
 });

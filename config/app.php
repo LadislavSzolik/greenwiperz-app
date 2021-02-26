@@ -80,14 +80,13 @@ return [
     |
     */
 
-    'locale' => 'de-ch',
+    'locale' => 'en',
 
     /*
      * Alternative languages
      */
 
     'all_langs' => [
-        'en',
         'en-ch',
         'de-ch',
     ],
@@ -103,7 +102,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'en-ch',
+    'fallback_locale' => 'en',
 
     /*
     |--------------------------------------------------------------------------
