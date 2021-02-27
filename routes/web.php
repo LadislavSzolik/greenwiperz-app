@@ -56,21 +56,21 @@ foreach (Config::get('app.all_langs') as $language) {
         Route::get('/user/profile', [UserProfileController::class, 'show'])->name($language . '.profile.show');
 
         // SIGN UP FOR WAITINGLIST
-        Route::get('/waitingvisitors/create', [WaitingVisitorController::class, 'create'])->name('waitingvisitors.create');
-        Route::post('/waitingvisitors/store', [WaitingVisitorController::class, 'store'])->name('waitingvisitors.store');
+        Route::get('/waitingvisitors/create', [WaitingVisitorController::class, 'create'])->name($language . '.waitingvisitors.create');
+        Route::post('/waitingvisitors/store', [WaitingVisitorController::class, 'store'])->name($language . '.waitingvisitors.store');
 
 // RATING
-        Route::get('/ratings/{user}', [RatingController::class, 'create'])->name('ratings.create');
-        Route::post('/ratings', [RatingController::class, 'store'])->name('ratings.store');
+        Route::get('/ratings/{user}', [RatingController::class, 'create'])->name($language . '.ratings.create');
+        Route::post('/ratings', [RatingController::class, 'store'])->name($language . '.ratings.store');
 
 // ADMIN
-        Route::middleware(['auth:sanctum', 'verified', 'can:manage_bookings'])->group(function () {
-            Route::post('/bookings/{booking}/complete', [BookingController::class, 'complete'])->name('bookings.complete');
-            Route::post('/comments/{booking}', [BookingCommentController::class, 'store']);
-            Route::get('/appointments', Appointments::class)->name('appointments.index');
-            Route::get('/ratings', AdminRatings::class)->name('ratings.index');
-            Route::get('/users', Users::class)->name('users.index');
-            Route::get('/clients', Clients::class)->name('clients.index');
+        Route::middleware(['auth:sanctum', 'verified', 'can:manage_bookings'])->group(function () use ($language)  {
+            Route::post('/bookings/{booking}/complete', [BookingController::class, 'complete'])->name($language . '.bookings.complete');
+            Route::post('/comments/{booking}', [BookingCommentController::class, $language . '.store']);
+            Route::get('/appointments', Appointments::class)->name($language . '.appointments.index');
+            Route::get('/ratings', AdminRatings::class)->name($language . '.ratings.index');
+            Route::get('/users', Users::class)->name($language . '.users.index');
+            Route::get('/clients', Clients::class)->name($language . '.clients.index');
         });
 
 // AUTH CUSTOMER ZONE

@@ -89,7 +89,7 @@ class PaymentController extends Controller
             'title'=>'Booking confirmation',
             'description'=>'Your booking was successful. We received your funds. Shortly you will receive a mail about the confirmation.'
         ]);
-        return redirect()->route('bookings.show',['booking' => $booking->id]);
+        return redirect(route('bookings.show',['booking' => $booking->id]));
     }
 
 
