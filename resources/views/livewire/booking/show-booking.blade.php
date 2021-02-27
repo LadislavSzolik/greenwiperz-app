@@ -166,18 +166,18 @@
                             <div class="sm:inline-flex items-center sm:space-x-2 space-y-2 sm:space-y-0">
                                 <p>{{ $booking->formatedTotalCost }}</p>
 
-                                <x-document-download link="/bookings/{{ $booking->id }}/invoice">
+                                <x-document-download link="{{ route('bookings.invoice', $booking->id) }}">
                                     {{ __('app.invoice')}}
                                 </x-document-download>
 
                                 @isset ($booking->receipt)
-                                <x-document-download link="/bookings/{{ $booking->id }}/receipt">
+                                <x-document-download link="{{ route('bookings.receipt', $booking->id) }}">
                                     {{ __('app.reciept')}}
                                 </x-document-download>
                                 @endisset
 
                                 @isset ($booking->refund)
-                                <x-document-download link="/bookings/{{ $booking->id }}/refund">
+                                <x-document-download link="{{ route('bookings.refund', $booking->id) }}">
                                     {{ __('app.refund')}}
                                 </x-document-download>
                                 @endisset
@@ -242,7 +242,19 @@
                                 </div>
                             @else
                                 @foreach($booking->appointments as $appointment)
+
                                 {{ $appointment->dateForEditing  }} {{ $appointment->start_time}} (c.a. {{$booking->formatedDuration}} )
+
+                                    <x-modals.booktime actionLink="{{ route('bookingtime.update', $appointment->id) }}"
+                                                       :startDate="$appointment->dateForEditing"
+                                                       :startTime="$appointment->start_time"
+                                    >
+                                        <x-div-button class="w-full sm:w-auto" buttonType="primary">
+                                            {{ __('app.modify') }}
+                                        </x-div-button>
+                                    </x-modals.booktime>
+
+
                                 @endforeach
                             @endif
                         </dd>
@@ -300,7 +312,7 @@
                                 {{ $booking->internal_notes }}
                             </div>
                             @endisset
-                            <x-modals.comment actionLink="/comments/{{ $booking->id }}" :currentNote="$booking->internal_notes">
+                            <x-modals.comment actionLink="{{ route('comments.update', $booking->id) }}" :currentNote="$booking->internal_notes">
                                 <x-div-button class="w-full sm:w-auto" buttonType="primary">
                                     {{ __('app.modify') }}
                                 </x-div-button>
@@ -347,7 +359,6 @@
                 @cannot('manage_bookings')
                 @if(($booking->status == 'paid' || $booking->status == 'pending') && $booking->type === 'private' )
                 <x-confirms-cancelation actionLink="{{ route('bookings.cancel', $booking->id) }}">
-{{--       /bookings/{{ $booking->id }}/cancel             --}}
                     <x-div-button class="w-full sm:w-auto" buttonType="destructive">
                         {{ __('app.cancel_booking') }}
                     </x-div-button>

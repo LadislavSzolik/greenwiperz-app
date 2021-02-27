@@ -10,7 +10,7 @@
         </x-slot>
     </x-header>
 
-    <!-- MESSEGING --> 
+    <!-- MESSEGING -->
     @if (session()->has('message'))
     <div class="py-4 sm:px-6 px-4 w-full sm:max-w-7xl mx-auto ">
         <x-flash.universal x-data="{open: true}" :color="session('message')['color']" x-show.transition.out="open">
@@ -29,7 +29,7 @@
         </x-flash.universal>
     </div>
     @endif
-    <!-- EOF MESSEGING --> 
+    <!-- EOF MESSEGING -->
 
     <div class="py-4 sm:px-6 lg:px-8 w-full sm:max-w-7xl mx-auto">
         <div class="hidden sm:block">
@@ -51,10 +51,10 @@
                             {{ $appointment->dateForEditing  }}
                         </x-table.cell>
                         <x-table.cell>
-                            {{ $appointment->start_time }}                            
+                            {{ $appointment->start_time }}
                         </x-table.cell>
                         <x-table.cell>
-                            {{ $appointment->end_time }}                            
+                            {{ $appointment->end_time }}
                         </x-table.cell>
                         <x-table.cell>
                             {!! $appointment->booking->parkingLocationAddress !!}
@@ -68,15 +68,15 @@
                         <x-table.cell>
                             @if($appointment->booking->status == 'draft')
                             @can('manage_bookings')
-                                <x-form-button method="GET" action="/bookings/{{ $appointment->booking->id }}" buttonType="tertiary">
+                                <x-form-button method="GET" action="{{ route('bookings.show', $appointment->booking->id) }}" buttonType="tertiary">
                                     {{ __('app.details') }}
                                 </x-form-button>
                             @endcan
-                            <x-form-button method="DELETE" action="/bookings/{{ $appointment->booking->id }}" buttonType="tertiaryDestructive">
+                            <x-form-button method="DELETE" action="{{ route('bookings.destroy', $appointment->booking->id) }}" buttonType="tertiaryDestructive">
                                 {{ __('app.delete') }}
                             </x-form-button>
                             @else
-                            <x-form-button method="GET" action="/bookings/{{ $appointment->booking->id }}" buttonType="tertiary">
+                            <x-form-button method="GET" action="{{ route('bookings.show', $appointment->booking->id) }}" buttonType="tertiary">
                                 {{ __('app.details') }}
                             </x-form-button>
                             @endif
@@ -100,6 +100,6 @@
         </div>
     </div>
 
-    
+
 
 </div>

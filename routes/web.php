@@ -10,6 +10,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\WaitingVisitorController;
 use App\Http\Controllers\BookingCommentController;
+use App\Http\Controllers\AppointmentTimeController;
 use App\Http\Controllers\RatingController;
 use App\Http\Livewire\Appointment\Appointments;
 use App\Http\Livewire\Booking\CreateCompanyForm;
@@ -66,7 +67,8 @@ foreach (Config::get('app.all_langs') as $language) {
 // ADMIN
         Route::middleware(['auth:sanctum', 'verified', 'can:manage_bookings'])->group(function () use ($language)  {
             Route::post('/bookings/{booking}/complete', [BookingController::class, 'complete'])->name($language . '.bookings.complete');
-            Route::post('/comments/{booking}', [BookingCommentController::class, $language . '.store']);
+            Route::post('/comments/{booking}', [BookingCommentController::class, 'store'])->name($language . '.comments.update');
+            Route::post('/appointment/{appointment}', [AppointmentTimeController::class, 'store'])->name($language . '.bookingtime.update');
             Route::get('/appointments', Appointments::class)->name($language . '.appointments.index');
             Route::get('/ratings', AdminRatings::class)->name($language . '.ratings.index');
             Route::get('/users', Users::class)->name($language . '.users.index');
