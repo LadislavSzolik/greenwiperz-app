@@ -11,5 +11,12 @@ class VerifyCsrfToken extends Middleware
      *
      * @var array
      */
-    protected $except = ['/payments/handlePaymentSucceeded','/payments/handlePaymentCanceled','/payments/handlePaymentFailed'];
+    protected $except = [
+        '/en-ch/payments/handlePaymentSucceeded',
+        '/en-ch/payments/handlePaymentCanceled',
+        '/en-ch/payments/handlePaymentFailed',
+        '/de-ch/payments/handlePaymentSucceeded',
+        '/de-ch/payments/handlePaymentCanceled',
+        '/de-ch/payments/handlePaymentFailed',
+    ];
 }

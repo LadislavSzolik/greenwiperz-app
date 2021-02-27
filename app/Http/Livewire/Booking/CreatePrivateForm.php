@@ -54,7 +54,7 @@ class CreatePrivateForm extends Component
             'booking.loc_street_number' => 'required',
             'booking.loc_route' => 'required',
             'booking.loc_city' => 'required',
-            'booking.loc_postal_code' => 'required | in:' . config('greenwiperz.service_area_postal_codes'),           
+            'booking.loc_postal_code' => 'required | in:' . config('greenwiperz.service_area_postal_codes'),
             'booking.email' => 'required',
             'booking.phone' => 'nullable',
             'booking.notes' => 'nullable',
@@ -199,10 +199,12 @@ class CreatePrivateForm extends Component
         if ($this->hasAnimalHair) {
             $this->booking->animal_hair = 1;
             $this->booking->extra_cost += config('greenwiperz.company.dirty_surcharge');
+            $this->booking->duration +=15;
         }
         if ($this->hasExtraDirt) {
             $this->booking->extra_dirt = 1;
             $this->booking->extra_cost += config('greenwiperz.company.dirty_surcharge');
+            $this->booking->duration +=15;
         }
         $this->booking->brutto_total_amount = $this->booking->base_cost + $this->booking->extra_cost;
     }
@@ -216,7 +218,7 @@ class CreatePrivateForm extends Component
     }
 
     public function updatedTimeslotDate()
-    {        
+    {
         $this->availableSlots = [];
         $this->start_time = null;
 
@@ -230,7 +232,7 @@ class CreatePrivateForm extends Component
         }
     }
 
-    // google maps    
+    // google maps
     public function placeChanged($placeData)
     {
         Validator::make(
@@ -252,7 +254,7 @@ class CreatePrivateForm extends Component
     public function saveBooking()
     {
         $this->validate();
-        if ($this->isSlotValidationFailed()) {           
+        if ($this->isSlotValidationFailed()) {
             return;
         }
 
@@ -270,7 +272,8 @@ class CreatePrivateForm extends Component
         $this->booking->car()->create($this->cars->where('id', $this->carForBooking)->first()->toArray());
         $this->booking->billingAddress()->create($this->addressForBooking->toArray());
         $this->booking->push();
-        return redirect()->route('bookings.review', ['booking' => $this->booking]);
+        $route = route('bookings.review', ['booking' => $this->booking]);
+        return redirect($route);
     }
 
     //
@@ -278,7 +281,7 @@ class CreatePrivateForm extends Component
     {
         $availableSlots = TimeslotService::fetchSlots($this->timeslot_date, $this->booking->assigned_to, $this->booking->duration);
         if (!$availableSlots->contains($this->start_time)) {
-            session()->flash('message', 'Unfortunately in a meanwhile the timeslot has been taken. Please select a new one.');           
+            session()->flash('message', 'Unfortunately in a meanwhile the timeslot has been taken. Please select a new one.');
             return true;
         }
         return false;

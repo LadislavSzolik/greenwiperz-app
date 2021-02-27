@@ -1,7 +1,7 @@
 <x-guest-layout>
     <x-jet-authentication-card>
         <x-slot name="logo">
-            <a href="{{ route(current_lang() . '.' . 'home') }}">
+            <a href="{{ route('home') }}">
                 <x-application-logo class="h-32 "/>
             </a>
         </x-slot>
@@ -18,7 +18,7 @@
 
         <x-jet-validation-errors class="mb-4" />
 
-        <form method="POST" action="{{ route(current_lang() . '.' . 'password.email') }}">
+        <form method="POST" action="{{ route('password.email') }}">
             @csrf
 
             <div class="block">
@@ -27,7 +27,7 @@
             </div>
 
             <div class="flex items-center justify-between mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route(current_lang() . '.' . 'login') }}">{{ __('To login') }}</a>
+            <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">{{ __('To login') }}</a>
                 <x-jet-button>
                     {{ __('Email Password Reset Link') }}
                 </x-jet-button>
