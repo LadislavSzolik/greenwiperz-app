@@ -58,7 +58,7 @@ class CreateCompanyForm extends Component
             'booking.loc_street_number' => 'required',
             'booking.loc_route' => 'required',
             'booking.loc_city' => 'required',
-            'booking.loc_postal_code' => 'required | in:' . config('greenwiperz.service_area_postal_codes'),            
+            'booking.loc_postal_code' => 'required | in:' . config('greenwiperz.service_area_postal_codes'),
             'booking.email' => 'required',
             'booking.phone' => 'required',
             'booking.notes' => 'nullable',
@@ -75,6 +75,11 @@ class CreateCompanyForm extends Component
         ];
     }
 
+    /**
+     * Mount the component.
+     *
+     * @return void
+     */
     public function mount()
     {
         $role = Role::whereName('greenwiper')->firstOrFail();
@@ -204,7 +209,7 @@ class CreateCompanyForm extends Component
         }
         $this->booking->discounted_cost =   $this->booking->brutto_total_amount - ($this->booking->fleet_discount * 0.01 * $this->booking->brutto_total_amount);
     }
-    // google maps    
+    // google maps
     public function placeChanged($placeData)
     {
         Validator::make(
@@ -225,10 +230,10 @@ class CreateCompanyForm extends Component
     }
 
     public function saveBooking()
-    {         
-        $this->validate();      
-        $this->booking->save(); 
-        $this->booking->fleets()->save($this->smallCars);        
+    {
+        $this->validate();
+        $this->booking->save();
+        $this->booking->fleets()->save($this->smallCars);
         $this->booking->fleets()->save($this->mediumCars);
         $this->booking->fleets()->save($this->largeCars);
         $this->booking->fleets()->save($this->xlargeCars);
@@ -245,7 +250,7 @@ class CreateCompanyForm extends Component
         ]);
 
         $this->booking->push();
-        return redirect()->route('bookings.company.review', ['booking' => $this->booking]);
+        return redirect(route('bookings.company.review', ['booking' => $this->booking]));
     }
 
 

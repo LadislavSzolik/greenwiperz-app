@@ -40,94 +40,112 @@ use Illuminate\Support\Facades\App;
  */
 class BookingController extends Controller
 {
-    public function __construct() {
-       $this->authorizeResource(Booking::class, 'booking');
+    /**
+     * BookingController constructor.
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Booking::class, 'booking');
     }
 
-
-    public function cancel(Request $request, Booking $booking) {
-        if($booking->isCancelAllowed === false ) {
+    /**
+     * @param Request $request
+     * @param Booking $booking
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function cancel(Request $request, Booking $booking)
+    {
+        if ($booking->isCancelAllowed === false) {
             abort(403, 'Cannot cancel booking');
         }
-        if($booking->status === 'paid' && $booking->type = 'private') {
+        if ($booking->status === 'paid' && $booking->type = 'private') {
             $refundableAmount = $booking->refundableAmount;
-            if(auth()->user()->isGreenwiper() && filled($request['amountToRefund'])) {
-                if($request['amountToRefund'] > $booking->brutto_total_amount) {
+            if (auth()->user()->isGreenwiper() && filled($request['amountToRefund'])) {
+                if ($request['amountToRefund'] > $booking->brutto_total_amount) {
                     $refundableAmount = $booking->brutto_total_amount;
-                }else {
+                } else {
                     $refundableAmount = $request['amountToRefund'];
                 }
             }
             Datatrans::handleBookingRefund($booking, $refundableAmount);
         }
 
-        Appointment::where('booking_id', $booking->id)->update(['canceled_at'=> now(), 'canceled_by'=>auth()->user()->id]);
-        Booking::where('id',$booking->id)->update(['status'=> 'canceled']);
+        Appointment::where('booking_id', $booking->id)->update(['canceled_at' => now(), 'canceled_by' => auth()->user()->id]);
+        Booking::where('id', $booking->id)->update(['status' => 'canceled']);
 
-        if($booking->type == 'private') {
+        if ($booking->type == 'private') {
             event(new PrivateBookingCanceled($booking));
         } else {
             event(new BusinessBookingCanceled($booking));
         }
 
         $request->session()->flash('message',
-        [
-            'color'=>'green',
-            'title'=>'Booking canceled',
-            'description'=>'Your booking was canceled. Shortly you will receive a mail about the confirmation.'
-        ]);
+            [
+                'color' => 'green',
+                'title' => 'Booking canceled',
+                'description' => 'Your booking was canceled. Shortly you will receive a mail about the confirmation.'
+            ]);
         return back();
     }
 
+    /**
+     * @param Request $request
+     * @param Booking $booking
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function complete(Request $request, Booking $booking)
     {
-        if(!auth()->user()->isGreenwiper() || $booking->isCompleteAllowed === false) {
+        if (!auth()->user()->isGreenwiper() || $booking->isCompleteAllowed === false) {
             abort(403);
         }
-        if($booking->appointment) {
+        if ($booking->appointment) {
             $booking->appointment->completed_at = now();
             $booking->appointment->completed_by = auth()->user()->id;
         }
         $booking->status = 'completed';
         $booking->push();
-        if($booking->type === 'private') {
+        if ($booking->type === 'private') {
             event(new PrivateBookingCompleted($booking));
         } else {
             event(new BusinessBookingCompleted($booking));
         }
         $request->session()->flash('message',
-        [
-            'color'=>'green',
-            'title'=>'Booking completed',
-            'description'=>'Nice delivery. The client will receive a confirmation mail soon!'
-        ]);
+            [
+                'color' => 'green',
+                'title' => 'Booking completed',
+                'description' => 'Nice delivery. The client will receive a confirmation mail soon!'
+            ]);
         return back();
     }
 
-
-
+    /**
+     * @param Request $request
+     * @param Booking $booking
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Exception
+     */
     public function destroy(Request $request, Booking $booking)
     {
-        if( $booking->appointments) {
+        if ($booking->appointments) {
             $booking->appointments()->delete();
         }
-        if($booking->billingAddress) {
+        if ($booking->billingAddress) {
             $booking->billingAddress()->delete();
         }
-        if($booking->car) {
+        if ($booking->car) {
             $booking->car()->delete();
         }
-        if($booking->fleets) {
+        if ($booking->fleets) {
             $booking->fleets()->delete();
         }
         $booking->delete();
 
         $request->session()->flash('message',
-        [
-            'color'=>'green',
-            'title'=>'Booking deleted',
-            'description'=>'The booking has been successfully deleted'
-        ]);
+            [
+                'color' => 'green',
+                'title' => 'Booking deleted',
+                'description' => 'The booking has been successfully deleted'
+            ]);
         return redirect(route('bookings.index'));
     }
 
@@ -138,7 +156,8 @@ class BookingController extends Controller
      * @return mixed
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function showInvoice(Booking $booking) {
+    public function showInvoice(Booking $booking)
+    {
         $this->authorize('update', $booking);
 
         $pdf = App::make('dompdf.wrapper');
@@ -146,7 +165,13 @@ class BookingController extends Controller
         return $pdf->stream();
     }
 
-    public function showReceipt(Booking $booking){
+    /**
+     * @param Booking $booking
+     * @return mixed
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function showReceipt(Booking $booking)
+    {
         $this->authorize('update', $booking);
 
         $pdf = App::make('dompdf.wrapper');
@@ -154,7 +179,13 @@ class BookingController extends Controller
         return $pdf->stream();
     }
 
-    public function showRefund(Booking $booking){
+    /**
+     * @param Booking $booking
+     * @return mixed
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function showRefund(Booking $booking)
+    {
         $this->authorize('update', $booking);
 
         $pdf = App::make('dompdf.wrapper');

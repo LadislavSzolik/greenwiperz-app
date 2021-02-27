@@ -15,6 +15,11 @@ class Bookings extends Component
 
     protected $queryString = ['sortField','sortDirection'];
 
+    /**
+     * Mount the component.
+     *
+     * @return void
+     */
     public function mount()
     {
         $this->sortField = 'date';
@@ -29,9 +34,9 @@ class Bookings extends Component
         ->when(!$isGreenwiper, fn($query) => $query->where('customer_id', auth()->user()->id));
         return $this->applySorting($query)->paginate(10);
     }
-    
+
     public function render()
-    {        
+    {
         return view('livewire.booking.bookings', ['bookings'=> $this->rows]);
     }
 }

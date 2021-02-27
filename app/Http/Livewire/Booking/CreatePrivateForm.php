@@ -14,6 +14,10 @@ use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 
+/**
+ * Class CreatePrivateForm
+ * @package App\Http\Livewire\Booking
+ */
 class CreatePrivateForm extends Component
 {
     public Booking $booking;
@@ -69,6 +73,11 @@ class CreatePrivateForm extends Component
         ];
     }
 
+    /**
+     * Mount the component.
+     *
+     * @return void
+     */
     public function mount()
     {
         // #1 get wipers if there are many
@@ -253,11 +262,13 @@ class CreatePrivateForm extends Component
 
     public function saveBooking()
     {
-        $this->validate();
+        $validation = $this->validate();
+        //dd($validation);
         if ($this->isSlotValidationFailed()) {
+            dd('failed');
             return;
         }
-
+//dd('1');
         // #1 save booking so that I can attach the relationships
         $this->booking->save();
 

@@ -12,7 +12,7 @@
             </p>
             <div class="mt-5 sm:flex">
                 @if (config('greenwiperz.registration_enabled'))
-                    <a href="#"
+                    <a href="{{ route('bookings.private.create') }}"
                        class="flex items-center justify-center px-8 py-3 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-green-600 hover:bg-green-500 focus:outline-none focus:border-green-700 focus:shadow-outline-green transition duration-150 ease-in-out md:py-4 md:text-lg md:px-10 ">
                         {{ __('action-buttons.bookACleaningCTA') }}
                     </a>

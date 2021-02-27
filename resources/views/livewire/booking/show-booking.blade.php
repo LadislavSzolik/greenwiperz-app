@@ -244,16 +244,15 @@
                                 @foreach($booking->appointments as $appointment)
 
                                 {{ $appointment->dateForEditing  }} {{ $appointment->start_time}} (c.a. {{$booking->formatedDuration}} )
-
+                                    @can('manage_bookings')
                                     <x-modals.booktime actionLink="{{ route('bookingtime.update', $appointment->id) }}"
                                                        :startDate="$appointment->dateForEditing"
-                                                       :startTime="$appointment->start_time"
-                                    >
+                                                       :startTime="$appointment->start_time">
                                         <x-div-button class="w-full sm:w-auto" buttonType="primary">
                                             {{ __('app.modify') }}
                                         </x-div-button>
                                     </x-modals.booktime>
-
+                                    @endcan
 
                                 @endforeach
                             @endif

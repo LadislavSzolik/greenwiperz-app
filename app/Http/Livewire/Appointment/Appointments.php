@@ -17,25 +17,30 @@ class Appointments extends Component
     protected $queryString = ['sortField','sortDirection'];
     protected $listeners = ['saved'];
 
+    /**
+     * Mount the component.
+     *
+     * @return void
+     */
     public function mount()
     {
         $this->sortField = 'date';
-        $this->sortDirection = 'desc';   
+        $this->sortDirection = 'desc';
     }
 
     public function create()
-    {       
-        $this->emit('modalOpened'); 
+    {
+        $this->emit('modalOpened');
         $this->showModal = true;
     }
 
     public function save()
     {
         if($this->showSingle) {
-            $this->emit('saveSingle');               
+            $this->emit('saveSingle');
         } else {
-            $this->emit('saveMultiple');               
-        }   
+            $this->emit('saveMultiple');
+        }
     }
 
     // listener
