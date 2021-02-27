@@ -9,70 +9,56 @@
                         <x-application-logo class="h-10 text-green-500 " />
                     </a>
                 </div>
-
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-
-                    
-                    <x-jet-nav-link href="{{ route('bookings.index') }}" 
-                    :active="request()->routeIs('bookings.index')">
+                    <x-jet-nav-link href="{{ route('bookings.index') }}" :active="isRouteName('bookings.index')">
                         {{ __('app.bookings') }}
                     </x-jet-nav-link>
-                    
-                    @cannot('manage_bookings') 
+                    @cannot('manage_bookings')
                     <x-jet-nav-link href="{{ route('bookings.private.create') }}"
-                        :active="request()->routeIs('bookings.private.create') || request()->routeIs('bookings.company.create')">
+                        :active="isRouteName('bookings.private.create') || isRouteName('bookings.company.create')">
                         {{ __('app.new_booking') }}
                     </x-jet-nav-link>
-
-                    <x-jet-nav-link href="{{ route('cars.index') }}"
-                        :active="request()->routeIs('cars.index')">
+                    <x-jet-nav-link href="{{ route('cars.index') }}" :active="isRouteName('cars.index')">
                         {{ __('Cars') }}
                     </x-jet-nav-link>
-
                     @endcannot
-
-                    @can('manage_bookings') 
-                    <x-jet-nav-link href="{{ route('appointments.index') }}"
-                        :active="request()->routeIs('appointments.index')">
+                    @can('manage_bookings')
+                    <x-jet-nav-link href="{{ route('appointments.index') }}" :active="isRouteName('appointments.index')">
                         {{ __('app.vacations') }}
                     </x-jet-nav-link>
 
-                    @if(config('greenwiperz.add_wiper_enabled'))  
-                    <x-jet-nav-link href="{{ route('users.index') }}"
-                        :active="request()->routeIs('users.index')">
+                    @if(config('greenwiperz.add_wiper_enabled'))
+                    <x-jet-nav-link href="{{ route('users.index') }}" :active="isRouteName('users.index')">
                         {{ __('app.users') }}
                     </x-jet-nav-link>
                     @endif
 
-                    <x-jet-nav-link href="{{ route('clients.index') }}"
-                        :active="request()->routeIs('clients.index')">
+                    <x-jet-nav-link href="{{ route('clients.index') }}" :active="isRouteName('clients.index')">
                         {{ __('Clients') }}
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('ratings.index') }}"
-                        :active="request()->routeIs('ratings.index')">
+                    <x-jet-nav-link href="{{ route('ratings.index') }}" :active="isRouteName('ratings.index')">
                         {{ __('app.ratings') }}
                     </x-jet-nav-link>
                     @endcan
 
-                    <x-jet-nav-link href="{{ route('terms.inapp') }}"
-                        :active="request()->routeIs('terms.inapp')">
+                    <x-jet-nav-link href="{{ route('terms.inapp') }}" :active="isRouteName('terms.inapp')">
                         {{ __('app.terms_conditions') }}
                     </x-jet-nav-link>
 
-                   
+
 
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
-               
+
                 <div class="text-sm text-gray-500">
                     Tel.:{{ config('greenwiperz.company.telefon') }}
                 </div>
-                
+
                 <x-app-language-switcher />
 
                 <x-jet-dropdown align="right" width="48">
@@ -182,54 +168,48 @@
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
 
-             
-            <x-jet-responsive-nav-link href="{{ route('bookings.index') }}"
-                :active="request()->routeIs('bookings.index')">
+
+            <x-jet-responsive-nav-link href="{{ route('bookings.index') }}" :active="isRouteName('bookings.index')">
                 {{ __('app.bookings') }}
             </x-jet-responsive-nav-link>
             @cannot('manage_bookings')
-            <x-jet-responsive-nav-link href="{{ route('bookings.private.create') }}"
-                :active="request()->routeIs('bookings.private.create') || request()->routeIs('bookings.private.create')">
+            <x-jet-responsive-nav-link href="{{ route('bookings.private.create') }}" :active="isRouteName('bookings.private.create') || isRouteName('bookings.private.create')">
                 {{ __('app.new_booking') }}
             </x-jet-responsive-nav-link>
-
-            <x-jet-responsive-nav-link href="{{ route('cars.index') }}"
-                :active="request()->routeIs('cars.index')">
+            <x-jet-responsive-nav-link href="{{ route('cars.index') }}" :active="isRouteName('cars.index')">
                 {{ __('Cars') }}
             </x-jet-responsive-nav-link>
-
             @endcannot
 
-            @can('manage_bookings') 
-            <x-jet-responsive-nav-link href="{{ route('appointments.index') }}"
-                :active="request()->routeIs('appointments.index')">
+            @can('manage_bookings')
+            <x-jet-responsive-nav-link href="{{ route('appointments.index') }}" :active="isRouteName('appointments.index')">
                 {{ __('app.vacations') }}
             </x-jet-responsive-nav-link>
 
-            @if(config('greenwiperz.add_wiper_enabled'))  
+            @if(config('greenwiperz.add_wiper_enabled'))
             <x-jet-responsive-nav-link href="{{ route('users.index') }}"
-                :active="request()->routeIs('users.index')">
+                :active="isRouteName('users.index')">
                 {{ __('app.users') }}
             </x-jet-responsive-nav-link>
             @endif
 
             <x-jet-responsive-nav-link href="{{ route('clients.index') }}"
-                :active="request()->routeIs('clients.index')">
+                :active="isRouteName('clients.index')">
                 {{ __('Clients') }}
             </x-jet-responsive-nav-link>
 
             <x-jet-responsive-nav-link href="{{ route('ratings.index') }}"
-                :active="request()->routeIs('ratings.index')">
+                :active="isRouteName('ratings.index')">
                 {{ __('app.ratings') }}
             </x-jet-responsive-nav-link>
 
             @endcan
 
             <x-jet-responsive-nav-link href="{{ route('terms.inapp') }}"
-                :active="request()->routeIs('terms.inapp')">
+                :active="isRouteName('terms.inapp')">
                 {{ __('app.terms_conditions') }}
             </x-jet-responsive-nav-link>
-            
+
         </div>
         <div class="pt-2 pb-1 border-t border-gray-200">
             <x-app-language-switcher />
@@ -251,13 +231,13 @@
             <div class="mt-3 space-y-1">
                 <!-- Account Management -->
                 <x-jet-responsive-nav-link href="{{ route('profile.show') }}"
-                    :active="request()->routeIs('profile.show')">
+                    :active="isRouteName('profile.show')">
                     {{ __('Profile') }}
                 </x-jet-responsive-nav-link>
 
                 @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                     <x-jet-responsive-nav-link href="{{ route('api-tokens.index') }}"
-                        :active="request()->routeIs('api-tokens.index')">
+                        :active="isRouteName('api-tokens.index')">
                         {{ __('API Tokens') }}
                     </x-jet-responsive-nav-link>
                 @endif
@@ -282,12 +262,12 @@
 
                     <!-- Team Settings -->
                     <x-jet-responsive-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}"
-                        :active="request()->routeIs('teams.show')">
+                        :active="isRouteName('teams.show')">
                         {{ __('Team Settings') }}
                     </x-jet-responsive-nav-link>
 
                     <x-jet-responsive-nav-link href="{{ route('teams.create') }}"
-                        :active="request()->routeIs('teams.create')">
+                        :active="isRouteName('teams.create')">
                         {{ __('Create New Team') }}
                     </x-jet-responsive-nav-link>
 

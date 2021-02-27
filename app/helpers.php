@@ -34,3 +34,12 @@ function route($name, $parameters = [], $absolute = true, $lang = null): string
     $locale_prefix = current_lang();
     return app('url')->route($locale_prefix . '.' . $name, $parameters, $absolute);
 }
+
+/**
+ * @param $name
+ * @return bool
+ */
+function isRouteName(string $name): bool
+{
+    return request()->route()->getName() == current_lang() . '.' . $name;
+}

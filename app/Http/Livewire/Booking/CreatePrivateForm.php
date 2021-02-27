@@ -1,4 +1,26 @@
 <?php
+/**
+ * This file is part of the Greenwiperz project.
+ *
+ * LICENSE: This source file is subject to version 3.14 of the PrStart license
+ * that is available through the world-wide-web at the following URI:
+ * https://www.prstart.co.uk/license/  If you did not receive a copy of
+ * the PrStart License and are unable to obtain it through the web, please
+ * send a note to imre@prstart.co.uk so we can mail you a copy immediately.
+ *
+ * DESCRIPTION: Greenwiperz
+ *
+ * @category   Laravel
+ * @package    Greenwiperz
+ * @author     Imre Szeness <imre@prstart.co.uk>
+ * @copyright  Copyright (c) 2021 PrStart Ltd. (https://www.prstart.co.uk)
+ * @license    https://www.prstart.co.uk/license/ PrStart Ltd. License
+ * @version    1.0.0 (02/02/2021)
+ * @link       https://www.prstart.co.uk/laravel-development/greenwiperz/
+ * @since      File available since Release 1.0.0
+ */
+
+declare(strict_types=1);
 
 namespace App\Http\Livewire\Booking;
 
@@ -145,6 +167,10 @@ class CreatePrivateForm extends Component
         $this->showSelectAddressModal = false;
     }
 
+    /**
+     * @param BillingAddress $billingAddress
+     * @throws \Exception
+     */
     public function deleteAddress(BillingAddress $billingAddress)
     {
         $billingAddress->delete();
@@ -165,8 +191,10 @@ class CreatePrivateForm extends Component
         $this->recalculatePriceAndTime();
     }
 
-
     // this is live:wire event hook
+    /**
+     *
+     */
     public function updatedBookingServiceType()
     {
         $this->availableSlots = [];
@@ -175,21 +203,33 @@ class CreatePrivateForm extends Component
         $this->recalculatePriceAndTime();
     }
 
+    /**
+     *
+     */
     public function updatedHasExtraDirt()
     {
         $this->recalculatePriceAndTime();
     }
 
+    /**
+     *
+     */
     public function updatedHasAnimalHair()
     {
         $this->recalculatePriceAndTime();
     }
 
+    /**
+     * @return CarbonInterval
+     */
     public function getFormatedDurationProperty()
     {
         return CarbonInterval::minutes($this->booking->duration);
     }
 
+    /**
+     *
+     */
     public function recalculatePriceAndTime()
     {
         $this->booking->extra_cost = 0;
@@ -218,7 +258,9 @@ class CreatePrivateForm extends Component
         $this->booking->brutto_total_amount = $this->booking->base_cost + $this->booking->extra_cost;
     }
 
-
+    /**
+     *
+     */
     public function updatedBookingAssignedTo()
     {
         $this->availableSlots = [];
@@ -226,6 +268,9 @@ class CreatePrivateForm extends Component
         $this->timeslot_date = null;
     }
 
+    /**
+     * update TimeSlot
+     */
     public function updatedTimeslotDate()
     {
         $this->availableSlots = [];
@@ -260,15 +305,16 @@ class CreatePrivateForm extends Component
         $this->booking->loc_postal_code = $placeData['postal_code'];
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|void
+     */
     public function saveBooking()
     {
-        $validation = $this->validate();
-        //dd($validation);
+        $this->validate();
         if ($this->isSlotValidationFailed()) {
             dd('failed');
             return;
         }
-//dd('1');
         // #1 save booking so that I can attach the relationships
         $this->booking->save();
 
@@ -283,11 +329,12 @@ class CreatePrivateForm extends Component
         $this->booking->car()->create($this->cars->where('id', $this->carForBooking)->first()->toArray());
         $this->booking->billingAddress()->create($this->addressForBooking->toArray());
         $this->booking->push();
-        $route = route('bookings.review', ['booking' => $this->booking]);
-        return redirect($route);
+        return redirect(route('bookings.review', ['booking' => $this->booking]));
     }
 
-    //
+    /**
+     * @return bool
+     */
     protected function isSlotValidationFailed()
     {
         $availableSlots = TimeslotService::fetchSlots($this->timeslot_date, $this->booking->assigned_to, $this->booking->duration);
@@ -298,8 +345,9 @@ class CreatePrivateForm extends Component
         return false;
     }
 
-
-    //
+    /**
+     * @return string
+     */
     protected function generateBaseNumber()
     {
         $baseNumberStructure = [
@@ -310,7 +358,9 @@ class CreatePrivateForm extends Component
         return implode($baseNumberStructure);
     }
 
-    //
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function render()
     {
         return view('livewire.booking.create-private-form');

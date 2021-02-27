@@ -7,47 +7,44 @@
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
                     <a class="inline-flex items-center" href="{{ route('home') }}">
-                        <x-application-logo class="h-10 text-green-500 " />                       
+                        <x-application-logo class="h-10 text-green-500 " />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden md:flex space-x-6 sm:-my-px sm:ml-6">
-                    <x-jet-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
+                    <x-jet-nav-link href="{{ route('home') }}" :active="isRouteName('home')">
                         {{ __('Home') }}
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('how.it.works') }}" :active="request()->routeIs('how.it.works')">
+                    <x-jet-nav-link href="{{ route('how.it.works') }}" :active="isRouteName('how.it.works')">
                         {{ __('action-buttons.how-it-works') }}
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('prices') }}" :active="request()->routeIs('prices')">
+                    <x-jet-nav-link href="{{ route('prices') }}" :active="isRouteName('prices')">
                         {{ __('action-buttons.prices') }}
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('service.area') }}" :active="request()->routeIs('service.area')">
+                    <x-jet-nav-link href="{{ route('service.area') }}" :active="isRouteName('service.area')">
                         {{ __('action-buttons.serviceArea') }}
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('terms') }}" :active="request()->routeIs('terms')">
+                    <x-jet-nav-link href="{{ route('terms') }}" :active="isRouteName('terms')">
                         {{ __('action-buttons.termsAndConditions') }}
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('about') }}" :active="request()->routeIs('about')">
+                    <x-jet-nav-link href="{{ route('about') }}" :active="isRouteName('about')">
                         {{ __('action-buttons.about') }}
                     </x-jet-nav-link>
 
-                    <x-jet-nav-link href="{{ route('contact') }}" :active="request()->routeIs('contact')">
+                    <x-jet-nav-link href="{{ route('contact') }}" :active="isRouteName('contact')">
                         {{ __('action-buttons.contact') }}
                     </x-jet-nav-link>
                 </div>
             </div>
-
             <div class="hidden sm:flex items-center">
-                 
                 <x-app-language-switcher />
-
-                @if(config('greenwiperz.registration_enabled'))   
+                @if(config('greenwiperz.registration_enabled'))
                     @auth
                         <a href="{{ route('bookings.index') }}" class="text-gray-700 underline">{{ __('My Bookings') }}</a>
                     @else
@@ -85,31 +82,31 @@
 
                     <x-app-language-switcher />
 
-                    @if(config('greenwiperz.registration_enabled'))     
+                    @if(config('greenwiperz.registration_enabled'))
                         @auth
-                            <x-jet-responsive-nav-link 
-                                href="{{ route('bookings.index') }}" 
-                                :active="request()->routeIs('bookings.index')">
+                            <x-jet-responsive-nav-link
+                                href="{{ route('bookings.index') }}"
+                                :active="isRouteName('bookings.index')">
                                     {{ __('My Bookings') }}
-                            </x-jet-responsive-nav-link> 
+                            </x-jet-responsive-nav-link>
                         @else
-                            <x-jet-responsive-nav-link 
-                                href="{{ route('login') }}" 
-                                :active="request()->routeIs('login')">
+                            <x-jet-responsive-nav-link
+                                href="{{ route('login') }}"
+                                :active="isRouteName('login')">
                                     {{ __('Login') }}
-                            </x-jet-responsive-nav-link> 
+                            </x-jet-responsive-nav-link>
                             @if(Route::has('register'))
-                                <x-jet-responsive-nav-link 
-                                    href="{{ route('register') }}" 
-                                    :active="request()->routeIs('register')">
+                                <x-jet-responsive-nav-link
+                                    href="{{ route('register') }}"
+                                    :active="isRouteName('register')">
                                         {{ __('Register') }}
                                 </x-jet-responsive-nav-link>
                             @endif
 
-                        @endif                           
+                        @endif
                     @else
                     <x-jet-responsive-nav-link href="{{ route('waitingvisitors.create') }}">{{ __('action-buttons.notifyMe') }}</x-jet-responsive-nav-link>
-                    @endif                    
+                    @endif
                 </div>
             </div>
 
@@ -117,36 +114,33 @@
             <!-- Mobile menu -->
             <div class="pt-2 pb-3 space-y-1">
                 <div class="pt-2 pb-3 space-y-1">
-                    <x-jet-responsive-nav-link href="{{ route('home') }}"
-                        :active="request()->routeIs('home')">
+                    <x-jet-responsive-nav-link href="{{ route('home') }}" :active="isRouteName('home')">
                         {{ __('Home') }}
                     </x-jet-responsive-nav-link>
-                    <x-jet-responsive-nav-link href="{{ route('how.it.works') }}"
-                        :active="request()->routeIs('how.it.works')">
+                    <x-jet-responsive-nav-link href="{{ route('how.it.works') }}" :active="isRouteName('how.it.works')">
                         {{ __('action-buttons.how-it-works') }}
                     </x-jet-responsive-nav-link>
 
-                    <x-jet-responsive-nav-link href="{{ route('prices') }}" :active="request()->routeIs('prices')">
+                    <x-jet-responsive-nav-link href="{{ route('prices') }}" :active="isRouteName('prices')">
                         {{ __('action-buttons.prices') }}
                     </x-jet-responsive-nav-link>
 
-                    <x-jet-responsive-nav-link href="{{ route('service.area') }}"
-                        :active="request()->routeIs('service.area')">
+                    <x-jet-responsive-nav-link href="{{ route('service.area') }}" :active="isRouteName('service.area')">
                         {{ __('action-buttons.serviceArea') }}
                     </x-jet-responsive-nav-link>
-                    
+
                     <x-jet-responsive-nav-link href="{{ route('terms') }}"
-                        :active="request()->routeIs('terms')">
+                        :active="isRouteName('terms')">
                         {{ __('action-buttons.termsAndConditions') }}
                     </x-jet-responsive-nav-link>
-                   
+
                     <x-jet-responsive-nav-link href="{{ route('about') }}"
-                        :active="request()->routeIs('about')">
+                        :active="isRouteName('about')">
                         {{ __('action-buttons.about') }}
                     </x-jet-responsive-nav-link>
 
                     <x-jet-responsive-nav-link href="{{ route('contact') }}"
-                        :active="request()->routeIs('contact')">
+                        :active="isRouteName('contact')">
                         {{ __('action-buttons.contact') }}
                     </x-jet-responsive-nav-link>
                 </div>
