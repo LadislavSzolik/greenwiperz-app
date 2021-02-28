@@ -11,6 +11,9 @@
 
     <form class="col-span-6" wire:submit.prevent="saveBooking">
         @csrf
+        {!! RecaptchaV3::initJs() !!}
+        {!! RecaptchaV3::field('privateBooking') !!}
+
         <div class="max-w-7xl mx-auto py-4 sm:px-6 lg:px-8 ">
             <div class="grid grid-cols-6 gap-3">
                 <div class="col-span-6 sm:col-span-4 grid grid-cols-6 gap-6 px-4 py-5 bg-white shadow rounded-md sm:px-20">

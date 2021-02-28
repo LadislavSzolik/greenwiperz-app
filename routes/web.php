@@ -47,6 +47,9 @@ foreach (Config::get('app.all_langs') as $language) {
         $limiter = config('fortify.limiters.login');
         Route::get('/login', [AuthenticatedSessionController::class, 'create'])->middleware(['guest'])->name($language . '.login');
         Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middleware(array_filter(['guest', $limiter ? 'throttle:' . $limiter : null,]));
+
+       // Route::post('/login', [\App\Http\Controllers\CaptchaValidationController::class, 'validateGCaptcha'])->middleware(['guest'])->name($language . '.login.validate-g-recaptcha');
+
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name($language . '.logout');
         Route::get('/register', [RegisteredUserController::class, 'create'])->middleware(['guest'])->name($language . '.register');
         Route::post('/register', [RegisteredUserController::class, 'store'])->middleware(['guest']);

@@ -312,7 +312,6 @@ class CreatePrivateForm extends Component
     {
         $this->validate();
         if ($this->isSlotValidationFailed()) {
-            dd('failed');
             return;
         }
         // #1 save booking so that I can attach the relationships
@@ -348,12 +347,12 @@ class CreatePrivateForm extends Component
     /**
      * @return string
      */
-    protected function generateBaseNumber()
+    protected function generateBaseNumber(): string
     {
         $baseNumberStructure = [
             'date' => Carbon::now('GMT+2')->format('U'),
             'divider2' => '-',
-            'userid' => str_pad(auth()->user()->id, 4, "0", STR_PAD_LEFT),
+            'userid' => str_pad(auth()->user()->id . '', 4, "0", STR_PAD_LEFT),
         ];
         return implode($baseNumberStructure);
     }
