@@ -28,11 +28,12 @@ return [
     'howWorksParagrph6' => 'Within 40 to 60 minutes we’ll have your car shiny clean and ready to go.',
 
     'howNanotechMainTitle' => 'How waterless nanotechnology cleaning works?',
-    'howNanotechParagrph1' => 'The burning question of course is how does this cleaning method work? How does wiping the car without water NOT damage the paint surface of the car?',
-    'howNanotechParagrph2' => 'Dirt particles are liquefied and encapsulated by special premium grade polymers on contact with the cleaning product and are gently ‘lifted and suspended’ away from the surface',
-    'howNanotechParagrph3' => 'The encapsulated dirt is then trapped by the microscopic fibres of our microfibre clothes.',
-    'howNanotechParagrph4' => 'Our cleaning product also contains Nano and Carnauba waxes which seal the vehicles base metal and wax coats the paint surface at the same time for double protection: repelling water, making the surface super slick, shiny and giving anti-static protective qualities.',
-    'howNanotechParagrph5' => 'This helps to prevent dust being attracted to the surface keeping the surfaces cleaner and shinier for much longer than old style traditional washing.',
+    'howNanotechTitle2' => 'Scratch-free and brilliant clean!',
+    'howNanotechParagrph1' => 'The burning question of course is how does this cleaning method work? <b>How does wiping the car without water <u>NOT damage the paint surface</u> of the car?</b>',
+    'howNanotechParagrph2' => '<b>Dirt particles are liquefied and encapsulated</b> by special premium grade polymers on contact with the cleaning product and are <b>gently ‘lifted and suspended’ away</b> from the surface',
+    'howNanotechParagrph3' => 'The <b>encapsulated dirt is then trapped by the microscopic fibres of our microfibre clothes.</b>',
+    'howNanotechParagrph4' => 'Our cleaning product also contains <b>Nano and Carnauba</b> waxes which seal the vehicles base metal and wax coats the paint surface at the same time for double protection: <b>repelling water, making the surface super slick, shiny and giving anti-static protective qualities.</b>',
+    'howNanotechParagrph5' => 'This helps to <b>prevent dust</b> being attracted to the surface keeping the surfaces <b>cleaner and shinier for much longer than old style traditional washing.</b>',
 
     'exclConditionMainTitle' => 'Excluding conditions',
     'exclConditionParagrph1' => 'Cars with a thick layer of mud cannot be cleaned by waterless technology.',
@@ -44,7 +45,7 @@ return [
     'friday'  => 'Friday',
     'saturday'  => 'Saturday',
     'sunday'  => 'Sunday',
-    'closed'  => 'Closed',   
+    'closed'  => 'Closed',
 
     //service area
     'serviceAreaTitle' => 'Service area',

@@ -19,6 +19,11 @@ class AddMultipleDays extends Component
         'comment' => 'sometimes',
     ];
 
+    /**
+     * Mount the component.
+     *
+     * @return void
+     */
     public function mount()
     {
         $this->initDates();
@@ -29,13 +34,13 @@ class AddMultipleDays extends Component
     {
         $this->validate();
         $date_from = new Carbon($this->date_from);
-        $date_to = new Carbon($this->date_to);       
+        $date_to = new Carbon($this->date_to);
         while($date_from->lessThanOrEqualTo($date_to)) {
             Appointment::create([
-                'date'=> $date_from, 
-                'start_time'=> '07:00:00', 
-                'end_time'=>'18:00:00' , 
-                'is_vacation' => 1, 
+                'date'=> $date_from,
+                'start_time'=> '07:00:00',
+                'end_time'=>'18:00:00' ,
+                'is_vacation' => 1,
                 'assigned_to' => auth()->user()->id,
                 'comment' => $this->comment,
             ]);
@@ -47,9 +52,9 @@ class AddMultipleDays extends Component
     // listener
     public function modalOpened()
     {
-        $this->initDates();      
-    }  
-    
+        $this->initDates();
+    }
+
     public function initDates()
     {
         $this->date_from = Carbon::now('GMT+2')->format('Y-m-d');

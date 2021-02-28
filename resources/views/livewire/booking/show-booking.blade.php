@@ -4,7 +4,7 @@
         <x-slot name="actions"></x-slot>
     </x-header>
 
-   
+
     <div class="max-w-7xl mx-auto pt-5 sm:py-5 sm:px-6 lg:px-8">
         <div class="bg-white rounded-md py-4 sm:py-6 sm:px-20 shadow">
 
@@ -29,7 +29,7 @@
             </div>
             @endif
 
-            <div class="px-4 py-5 sm:p-0">            
+            <div class="px-4 py-5 sm:p-0">
                 <dl>
                     <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
                         <dt class="text-sm leading-5 font-medium text-gray-500">
@@ -166,18 +166,18 @@
                             <div class="sm:inline-flex items-center sm:space-x-2 space-y-2 sm:space-y-0">
                                 <p>{{ $booking->formatedTotalCost }}</p>
 
-                                <x-document-download link="/bookings/{{ $booking->id }}/invoice">
+                                <x-document-download link="{{ route('bookings.invoice', $booking->id) }}">
                                     {{ __('app.invoice')}}
                                 </x-document-download>
 
                                 @isset ($booking->receipt)
-                                <x-document-download link="/bookings/{{ $booking->id }}/receipt">
+                                <x-document-download link="{{ route('bookings.receipt', $booking->id) }}">
                                     {{ __('app.reciept')}}
                                 </x-document-download>
                                 @endisset
 
                                 @isset ($booking->refund)
-                                <x-document-download link="/bookings/{{ $booking->id }}/refund">
+                                <x-document-download link="{{ route('bookings.refund', $booking->id) }}">
                                     {{ __('app.refund')}}
                                 </x-document-download>
                                 @endisset
@@ -242,7 +242,18 @@
                                 </div>
                             @else
                                 @foreach($booking->appointments as $appointment)
+
                                 {{ $appointment->dateForEditing  }} {{ $appointment->start_time}} (c.a. {{$booking->formatedDuration}} )
+                                    @can('manage_bookings')
+                                    <x-modals.booktime actionLink="{{ route('bookingtime.update', $appointment->id) }}"
+                                                       :startDate="$appointment->dateForEditing"
+                                                       :startTime="$appointment->start_time">
+                                        <x-div-button class="w-full sm:w-auto" buttonType="primary">
+                                            {{ __('app.modify') }}
+                                        </x-div-button>
+                                    </x-modals.booktime>
+                                    @endcan
+
                                 @endforeach
                             @endif
                         </dd>
@@ -272,7 +283,7 @@
                             Timestamps
                         </dt>
                         <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-                            <p>Created {{ $booking->created_at }}</p>                           
+                            <p>Created {{ $booking->created_at }}</p>
                         </dd>
                     </div>
                     @endcan
@@ -300,7 +311,7 @@
                                 {{ $booking->internal_notes }}
                             </div>
                             @endisset
-                            <x-modals.comment actionLink="/comments/{{ $booking->id }}" :currentNote="$booking->internal_notes">
+                            <x-modals.comment actionLink="{{ route('comments.update', $booking->id) }}" :currentNote="$booking->internal_notes">
                                 <x-div-button class="w-full sm:w-auto" buttonType="primary">
                                     {{ __('app.modify') }}
                                 </x-div-button>
@@ -337,7 +348,7 @@
             </div>
 
             <div class="mt-4 sm:flex justify-between px-4 sm:px-0 space-y-5 sm:space-y-0">
-                <a href="/bookings/">
+                <a href="{{ route('bookings.index') }}">
                     <x-div-button class="w-full sm:w-auto" buttonType="secondary">
                         {{ __('app.back_overview') }}
                     </x-div-button>
@@ -346,7 +357,7 @@
 
                 @cannot('manage_bookings')
                 @if(($booking->status == 'paid' || $booking->status == 'pending') && $booking->type === 'private' )
-                <x-confirms-cancelation actionLink="/bookings/{{ $booking->id }}/cancel">
+                <x-confirms-cancelation actionLink="{{ route('bookings.cancel', $booking->id) }}">
                     <x-div-button class="w-full sm:w-auto" buttonType="destructive">
                         {{ __('app.cancel_booking') }}
                     </x-div-button>
@@ -362,7 +373,7 @@
                     <x-div-button class="w-full sm:w-auto" buttonType="destructive">
                         {{ __('app.cancel_booking') }}
                     </x-div-button>
-                </x-modals.confirms-wiper-cancelation>             
+                </x-modals.confirms-wiper-cancelation>
                 @endif
                 <x-confirms-completion actionLink="/bookings/{{ $booking->id }}/complete">
                     <x-div-button class="w-full sm:w-auto" buttonType="primary">
@@ -381,7 +392,7 @@
                 </x-confirms-business-cancelation>
                 @endif
 
-                <!-- WHO AND WHEN CAN DELETE A BOOKING? --> 
+                <!-- WHO AND WHEN CAN DELETE A BOOKING? -->
                 @if($booking->status == 'draft' || ($booking->type =='business' && $booking->status == 'pending' && blank($booking->appointments))   )
                 <x-form-button method="DELETE" class="w-full sm:w-auto" action="/bookings/{{ $booking->id }}" buttonType="destructive">
                     {{ __('app.delete') }}
@@ -390,6 +401,6 @@
             </div>
         </div>
     </div>
-    
+
 
 </div>

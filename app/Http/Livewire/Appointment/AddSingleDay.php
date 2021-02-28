@@ -22,14 +22,19 @@ class AddSingleDay extends Component
             'editing.end_time' => 'required',
             'editing.is_vacation' => 'required',
             'editing.assigned_to' => 'required',
-            'editing.comment' => 'sometimes',            
+            'editing.comment' => 'sometimes',
         ];
     }
 
+    /**
+     * Mount the component.
+     *
+     * @return void
+     */
     public function mount()
-    {          
-        $this->editing = $this->createBlank();      
-        $this->timeslots = Timeslot::all()->pluck('timeslot');       
+    {
+        $this->editing = $this->createBlank();
+        $this->timeslots = Timeslot::all()->pluck('timeslot');
     }
 
     public function createBlank()
@@ -40,13 +45,13 @@ class AddSingleDay extends Component
     // listener
     public function modalOpened()
     {
-        $this->editing = $this->createBlank();      
-    }    
-    
+        $this->editing = $this->createBlank();
+    }
+
     // listener
     public function saveSingle()
     {
-        $this->validate();  
+        $this->validate();
         $this->editing->save();
         $this->emit('saved');
     }
