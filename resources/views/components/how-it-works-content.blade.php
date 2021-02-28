@@ -20,38 +20,45 @@
                 <div class="px-4 py-5 flex-auto">
                     <div class="tab-content tab-space">
                         <div x-show="openTab === 'booking'" id="booking-tab">
+
                             <div class="mb-8">
                                 <h2  class="text-4xl tracking-tight leading-10 font-extrabold text-gray-800 sm:text-5xl sm:leading-none text-center">
-                                    {{ __('homepage.howWorksMainTitle') }}
+                                    {{ __('how.howWorksMainTitle') }}
                                 </h2>
                             </div>
                             <div class="mb-8 mx-auto flex justify-center text-gray-500 w-3/5 px-10 text-2xl">
                                 {{ __('homepage.howWorksParagrph1') }}
                             </div>
 
+
                             <div class="flex flex-wrap">
                                 <div class="prose prose-lg text-gray-500 w-full sm:w-2/5">
-                                    <ul>
-                                        <li class="bold">Register</li>
-                                        <li>{{ __('homepage.howWorksParagrph2') }} </li>
-                                        <li>{{ __('homepage.howWorksParagrph3') }} </li>
-                                        <li>{{ __('homepage.howWorksParagrph4') }} </li>
-                                        <li>{{ __('homepage.howWorksParagrph5') }} </li>
-                                        <li>{{ __('homepage.howWorksParagrph6') }} </li>
-                                    </ul>
+                                    <ol>
+                                        <li><span class="font-extrabold">Register</span><div class="">@lang('how.howRegister')</div></li>
+                                        <li><span class="font-extrabold">Order</span><div class="">@lang('how.howOrder')</div></li>
+                                        <li><span class="font-extrabold">Pay</span><div class="">@lang('how.howPay')</div></li>
+                                        <li><span class="font-extrabold">We get to your car and start to work</span><div class="">@lang('how.howStart')</div></li>
+                                        <li><span class="font-extrabold">Confirmation</span><div class="">@lang('how.howConfirm')</div></li>
+                                        <li><span class="font-extrabold">Rate US</span><div class="">@lang('how.howRate')</div></li>
+                                    </ol>
                                 </div>
                                 <div class="flex justify-center w-full sm:w-3/5 px-2 sm:px-0 mt-8">
-                                    <img class="shadow-2xl h-48 sm:h-80 rounded-lg" src="{{ asset('img/howitworks/how-it-works-biker.jpg') }}"
-                                         alt="Cleaning" />
+                                    <img class="shadow-2xl h-48 sm:h-80 rounded-lg" src="{{ asset('img/howitworks/how-it-works-biker.jpg') }}" alt="Cleaning" />
                                 </div>
                             </div>
                         </div>
                         <div x-show="openTab === 'cleaning'" id="cleaning-tab">
+
                             <div class="mb-8 max-w-2xl mx-auto">
-                                <h2 class="text-4xl tracking-tight leading-10 font-extrabold text-gray-800 sm:text-5xl sm:leading-none text-center">
+                                <h2  class="text-4xl tracking-tight leading-10 font-extrabold text-gray-800 sm:text-5xl sm:leading-none text-center">
                                     {{ __('homepage.howNanotechMainTitle') }}
                                 </h2>
                             </div>
+                            <div class="mb-8 mx-auto flex justify-center text-gray-500 w-3/5 px-10 text-2xl">
+                                {{ __('homepage.howNanotechTitle2') }}
+                            </div>
+
+
                             <div class="flex flex-wrap">
                                 <div class="flex justify-center w-full sm:w-2/5 px-2 sm:px-0 mt-6 mb-8">
                                     <img class="shadow-2xl h-48 sm:h-64 rounded" src="{{ asset('img/howitworks/how-it-works-nano.jpg') }}"
@@ -59,11 +66,11 @@
                                 </div>
                                 <div class="prose prose-lg text-gray-500 text-left w-full sm:w-3/5">
                                     <ul>
-                                        <li>{{ __('homepage.howNanotechParagrph1') }} </li>
-                                        <li>{{ __('homepage.howNanotechParagrph2') }} </li>
-                                        <li>{{ __('homepage.howNanotechParagrph3') }} </li>
-                                        <li>{{ __('homepage.howNanotechParagrph4') }} </li>
-                                        <li>{{ __('homepage.howNanotechParagrph5') }} </li>
+                                        <li>{!! __('homepage.howNanotechParagrph1') !!} </li>
+                                        <li>{!! __('homepage.howNanotechParagrph2') !!} </li>
+                                        <li>{!! __('homepage.howNanotechParagrph3') !!} </li>
+                                        <li>{!! __('homepage.howNanotechParagrph4') !!} </li>
+                                        <li>{!! __('homepage.howNanotechParagrph5') !!} </li>
                                     </ul>
                                 </div>
                             </div>
