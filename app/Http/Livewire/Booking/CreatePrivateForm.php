@@ -381,7 +381,6 @@ class CreatePrivateForm extends Component
      */
     public function render()
     {
-        die('aa');
         return view('livewire.booking.create-private-form');
     }
 }
