@@ -36,6 +36,7 @@ use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
+use Lunaweb\RecaptchaV3\Facades\RecaptchaV3;
 
 /**
  * Class CreatePrivateForm
@@ -45,6 +46,7 @@ class CreatePrivateForm extends Component
 {
     public Booking $booking;
     public $timeslot_date;
+    public $recaptcha = 1;
     public $start_time;
     public $hasExtraDirt;
     public $hasAnimalHair;
@@ -66,6 +68,7 @@ class CreatePrivateForm extends Component
     public function rules()
     {
         return [
+            'recaptcha' => 'required|recaptchav3:recaptcha,0.5',
             'timeslot_date' => 'required',
             'start_time' => 'required',
             'carForBooking' => 'required',
@@ -316,12 +319,12 @@ class CreatePrivateForm extends Component
      */
     public function saveBooking()
     {
-        dd(request());
-        $response = Http::post('https://www.google.com/recaptcha/api/siteverify?secret=' . env('CAPTCHA_SECRET_KEY') . '&response=' . $token);
-        $this->captcha = $response->json()['score'];
 
-        dd($this->captcha);
+        dump(request());
+        dump(request()->get('recaptcha'));
 
+        $score = RecaptchaV3::verify(request()->get('recaptcha'), 'register');
+        dump($score);
 
 //        $this->validate([
 //            'g-recaptcha-response' => 'required|recaptchav3:booking,0.5',

@@ -12,7 +12,18 @@
     <form class="col-span-6" wire:submit.prevent="saveBooking">
         @csrf
         {!! RecaptchaV3::initJs() !!}
-        {!! RecaptchaV3::field('booking') !!}
+{{--        {!! RecaptchaV3::field('booking', 'recaptcha') !!}--}}
+        <input type="hidden" name="recaptcha" id="recaptcha" wire:model="recaptcha">
+        <script>
+            grecaptcha.ready(function() {
+                grecaptcha.execute('{{ config('recaptchav3.sitekey') }}', {action: 'booking'}).then(function(token) {
+                    let recaptchaItem = document.getElementById('recaptcha');
+                    recaptchaItem.dispatchEvent(new Event('input'));
+                    document.getElementById('recaptcha').value = token;
+                    console.log(document.getElementById('recaptcha'))
+                });
+            });
+        </script>
         @error('g-recaptcha-response')
         <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
         @enderror
