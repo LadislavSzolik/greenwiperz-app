@@ -17,18 +17,17 @@ use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
  */
 class LoginResponse implements LoginResponseContract
 {
-    //TODO: delete or use it!!!!
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Symfony\Component\HttpFoundation\Response
+     */
     public function toResponse($request)
     {
         $flattenRoles = Auth::user()->roles->flatten()->pluck('name')->unique();
         if ($flattenRoles->contains('greenwiper')) {
-            return redirect()->route('appointments.index');
-        } else {
-            return redirect()->route('bookings.index');
+            return redirect(route('appointments.index'));
         }
-        return $request->wantsJson()
-                    ? response()->json(['two_factor' => false])
-                    : redirect()->intended(config('fortify.home'));
+        return redirect(route('bookings.index'));
     }
 
 }
