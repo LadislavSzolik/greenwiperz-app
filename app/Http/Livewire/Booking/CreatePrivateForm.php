@@ -20,7 +20,7 @@
  * @since      File available since Release 1.0.0
  */
 
-declare(strict_types=1);
+//declare(strict_types=1);
 
 namespace App\Http\Livewire\Booking;
 
@@ -33,6 +33,7 @@ use App\Models\Services;
 use App\TimeslotService;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 
@@ -136,6 +137,11 @@ class CreatePrivateForm extends Component
 
 
         $this->recalculatePriceAndTime();
+    }
+
+    public function updated($booking)
+    {
+        $this->validateOnly($booking);
     }
 
     public function carSaved()
@@ -310,6 +316,18 @@ class CreatePrivateForm extends Component
      */
     public function saveBooking()
     {
+        dd(request());
+        $response = Http::post('https://www.google.com/recaptcha/api/siteverify?secret=' . env('CAPTCHA_SECRET_KEY') . '&response=' . $token);
+        $this->captcha = $response->json()['score'];
+
+        dd($this->captcha);
+
+
+//        $this->validate([
+//            'g-recaptcha-response' => 'required|recaptchav3:booking,0.5',
+//        ]);
+
+
         $this->validate();
         if ($this->isSlotValidationFailed()) {
             return;

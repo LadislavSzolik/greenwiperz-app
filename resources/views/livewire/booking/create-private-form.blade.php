@@ -12,7 +12,10 @@
     <form class="col-span-6" wire:submit.prevent="saveBooking">
         @csrf
         {!! RecaptchaV3::initJs() !!}
-        {!! RecaptchaV3::field('privateBooking') !!}
+        {!! RecaptchaV3::field('booking') !!}
+        @error('g-recaptcha-response')
+        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+        @enderror
 
         <div class="max-w-7xl mx-auto py-4 sm:px-6 lg:px-8 ">
             <div class="grid grid-cols-6 gap-3">
@@ -21,6 +24,8 @@
                     @if(session()->has('message'))
                     <div class="col-span-6 bg-red-100 text-red-700 rounded p-2">{{ __(session('message')) }}</div>
                     @endif
+
+                        <x-jet-validation-errors class="col-span-6"/>
 
                     <div class="col-span-6 border-b border-gray-200 flex justify-between items-center bg-white sm:pt-4 pb-2  sm:items-baseline">
                         <h2 class="text-2xl font-extrabold text-gray-900">{{ __('Client') }}</h2>
@@ -73,34 +78,67 @@
                         </div>
                     </div>
 
+                        {{--   Address          --}}
+                        <div class="col-span-6">{{ __('app.car_location')}}</div>
+                        <div class="col-span-3">
+                            <x-input.group class="col-span-6 sm:col-span-3" for="zip" label="{{ __('app.postal_code') }}">
+                                <x-input.text wire:model.lazy="booking.loc_postal_code" name="zip" type="text" autocomplete="{{ Str::random(10) }}postalcode" required />
+                            </x-input.group>
+                            @error('booking.loc_postal_code') <span class="error text-red-600">{{ $message }}</span><p class="text-red-600">{{ __('homepage.serviceAreaText2') }}
+                                <span class="text-green-800 font-bold">8001, 8002, 8003, 8004, 8005, 8006</span>
+                            </p> @enderror
+                        </div>
+
+                        <div class="col-span-3">
+                            <x-input.group class="col-span-6 sm:col-span-3" for="loc_city" label="{{ __('app.city') }}">
+                                <x-input.text wire:model="booking.loc_city" name="loc_city" type="text" autocomplete="{{ Str::random(10) }}city" required />
+                            </x-input.group>
+                            @error('booking.loc_city') <span class="error text-red-600">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="col-span-4">
+                            <x-input.group class="col-span-6 sm:col-span-3" for="loc_route" label="{{ __('app.street') }}">
+                                <x-input.text wire:model="booking.loc_route" name="loc_route" type="text" autocomplete="{{ Str::random(10) }}street" required />
+                            </x-input.group>
+                            @error('booking.loc_route') <span class="error text-red-600">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="col-span-2">
+                            <x-input.group class="col-span-6 sm:col-span-3" for="loc_street_number" label="{{ __('app.street_number') }}">
+                                <x-input.text wire:model="booking.loc_street_number" name="loc_street_number" type="text" autocomplete="{{ Str::random(10) }}number" required />
+                            </x-input.group>
+                        </div>
+
+
+
+
 
                     <!-- booking.service_type -->
-                    <x-input.group class="col-span-6" for="parkingStreet" label="{{ __('app.car_location')}}">
-                        <div class="mt-2 bg-blue-50 border-blue-400 p-2 rounded-md">
-                            <div class="flex">
-                                <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="text-sm leading-5 text-blue-700 ml-3">
-                                    {{ __('app.google_autocomplete_info_text')}}
-                                </div>
-                            </div>
-                        </div>
-                        <div x-data="{show:true}" x-on:load.window="show=false" x-show.transition="show">Loading location services...</div>
-                        <div x-data="{show:false}" x-on:load.window="show=true" x-show.transition="show">
-                            <x-input.location-search wire:ignore id="parkingStreet" name="parkingStreet" type="text" placeholder="{{ __('app.start_typing') }}" required />
-                        </div>
+{{--                    <x-input.group class="col-span-6" for="parkingStreet" label="{{ __('app.car_location')}}">--}}
+{{--                        <div class="mt-2 bg-blue-50 border-blue-400 p-2 rounded-md">--}}
+{{--                            <div class="flex">--}}
+{{--                                <div class="flex-shrink-0">--}}
+{{--                                    <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">--}}
+{{--                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />--}}
+{{--                                    </svg>--}}
+{{--                                </div>--}}
+{{--                                <div class="text-sm leading-5 text-blue-700 ml-3">--}}
+{{--                                    {{ __('app.google_autocomplete_info_text')}}--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div x-data="{show:true}" x-on:load.window="show=false" x-show.transition="show">Loading location services...</div>--}}
+{{--                        <div x-data="{show:false}" x-on:load.window="show=true" x-show.transition="show">--}}
+{{--                            <x-input.location-search wire:ignore id="parkingStreet" name="parkingStreet" type="text" placeholder="{{ __('app.start_typing') }}" required />--}}
+{{--                        </div>--}}
 
-                        @if ($errors->has('street_number') || $errors->has('street_number') || $errors->has('route'))
-                        <p class='text-sm text-red-600'>{{ __('app.google_autocomplete_error_1') }}</p>
-                        @endif
+{{--                        @if ($errors->has('street_number') || $errors->has('street_number') || $errors->has('route'))--}}
+{{--                        <p class='text-sm text-red-600'>{{ __('app.google_autocomplete_error_1') }}</p>--}}
+{{--                        @endif--}}
 
-                        @error('postal_code')
-                        <p class='text-sm text-red-600'>{{ __('app.google_autocomplete_error_2') }}</p>
-                        @enderror
-                    </x-input.group>
+{{--                        @error('postal_code')--}}
+{{--                        <p class='text-sm text-red-600'>{{ __('app.google_autocomplete_error_2') }}</p>--}}
+{{--                        @enderror--}}
+{{--                    </x-input.group>--}}
 
 
                     <!-- wipers -->
@@ -203,7 +241,9 @@
                         </div>
 
                         <div class="flex items-center justify-end pt-4 ">
-                            <x-button wire:loading.attr="disabled" buttonType="primary" type="submit">
+                            <x-button wire:loading.attr="disabled" buttonType="primary" type="submit"
+
+                            >
                                 {{ __('app.checkout') }}
                             </x-button>
                         </div>

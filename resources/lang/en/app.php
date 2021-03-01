@@ -1,19 +1,19 @@
 <?php
 
 return [
-    'vacations' => 'Vacations',  
-    
+    'vacations' => 'Vacations',
+
     'bookings' => 'Bookings',
     'booking_details' => 'Booking details',
     'new_booking' => 'New booking',
     'new' => 'New',
-      
+
     'about' => 'About',
     'added_on_date' => 'Added on',
-    'animal_hair' => 'Animal hair', 
+    'animal_hair' => 'Animal hair',
     'available_timeslots' => 'Available timeslots',
     'back_overview' => 'Back to overview',
-    'billing_address' => 'Billing Address',   
+    'billing_address' => 'Billing Address',
     'car' => 'Car',
     'car_category' => 'Car category',
     'car_color' => 'Car color',
@@ -51,7 +51,7 @@ return [
     'from' => 'From',
     'google_autocomplete_info_text' => 'Please make sure you select the address from the dropdown.',
     'google_autocomplete_error_1' => 'Please provide the entire address.',
-    'google_autocomplete_error_2' => 'Unfortunately our services are not yet available in this area. Please call us on +41 123 12 12 to discuss further details.',    
+    'google_autocomplete_error_2' => 'Unfortunately our services are not yet available in this area. Please call us on +41 123 12 12 to discuss further details.',
     'invoice' => 'Invoice',
     'last_name' => 'Last name',
     'lets_make_sure' => 'Let\'s make sure we can do this job for you!',
@@ -63,14 +63,14 @@ return [
     'name' => 'Name',
     'new_user' => 'New user',
     'new_vacation' => 'New vacation',
-    'no_bookings' => 'No bookings yet',   
+    'no_bookings' => 'No bookings yet',
     'no_timeslot' => 'No timeslot',
-    'no_users' => 'No users yet',  
-    'no_vacation' => 'No vacations yet',  
-    'optional' => 'Optional',  
+    'no_users' => 'No users yet',
+    'no_vacation' => 'No vacations yet',
+    'optional' => 'Optional',
     'password' => 'Password',
     'paid' => 'Paid',
-    'pay' => 'Pay',  
+    'pay' => 'Pay',
     'pending' => 'Pending',
     'phone' => 'Phone',
     'plate_number' => 'Plate number',
@@ -89,6 +89,7 @@ return [
     'start_typing' => 'Start typing...',
     'status' => 'Status',
     'street' => 'Street',
+    'street_number' => 'Street number',
     'summary' => 'Summary',
     'terms_conditions' => 'Terms & Conditions',
     'terms_1_title' => 'I, the highly valued customer do declare that',
@@ -100,7 +101,7 @@ return [
     'terms_2_title' => 'I, the greatly appreciated customer graciously accept that',
     'terms_2_sub_1' => 'Photographs are taken of the surfaces of my car before and after cleaning',
     'terms_2_sub_2' => 'Organic matter (e.g. beetles) burned into the paintwork cannot be removed',
-    'terms_2_sub_3' => 'The inner wheel arches will not be washed',   
+    'terms_2_sub_3' => 'The inner wheel arches will not be washed',
     'terms_3_sub_1' => 'Yes, indeed',
     'time' => 'Time',
     'total_cost' => 'Total cost',
@@ -116,5 +117,5 @@ return [
 
     'created_at' => 'Registered',
     'bookings_count' => 'Bookings',
-    
+
 ];
