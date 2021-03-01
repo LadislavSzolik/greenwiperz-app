@@ -319,10 +319,8 @@ class CreatePrivateForm extends Component
      */
     public function saveBooking()
     {
-
         dump(request());
         dump(request()->get('recaptcha'));
-
         $score = RecaptchaV3::verify(request()->get('recaptcha'), 'register');
         dump($score);
 
