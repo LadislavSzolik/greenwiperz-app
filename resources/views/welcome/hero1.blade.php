@@ -7,9 +7,9 @@
             <h1 class="text-4xl tracking-tight leading-10 font-extrabold text-green-500 sm:text-5xl sm:leading-none">
                 Greenwiperz<br/><span class="text-gray-900"> {{ __('homepage.sloganShort') }}
             </h1>
-            <p class="mt-3 max-w-md mx-auto text-lg text-gray-500 sm:text-xl md:mt-5 md:max-w-3xl">
+            <h2 class="mt-3 max-w-md mx-auto text-lg text-gray-500 sm:text-xl md:mt-5 md:max-w-3xl">
                 {{ __('homepage.sloganLong') }}
-            </p>
+            </h2>
             <div class="mt-5 sm:flex">
                 @if (config('greenwiperz.registration_enabled'))
                     <a href="{{ route('bookings.private.create') }}"

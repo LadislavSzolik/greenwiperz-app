@@ -68,7 +68,6 @@ class CreatePrivateForm extends Component
     public function rules()
     {
         return [
-            'recaptcha' => 'required|recaptchav3:recaptcha,0.5',
             'timeslot_date' => 'required',
             'start_time' => 'required',
             'carForBooking' => 'required',
@@ -319,15 +318,13 @@ class CreatePrivateForm extends Component
      */
     public function saveBooking()
     {
-        dump(request());
-        dump(request()->get('recaptcha'));
-        $score = RecaptchaV3::verify(request()->get('recaptcha'), 'register');
-        dump($score);
-
+//        dump(request());
+//        dump(request()->get('recaptcha'));
+//        $score = RecaptchaV3::verify(request()->get('recaptcha'), 'register');
+//        dump($score);
 //        $this->validate([
 //            'g-recaptcha-response' => 'required|recaptchav3:booking,0.5',
 //        ]);
-
 
         $this->validate();
         if ($this->isSlotValidationFailed()) {

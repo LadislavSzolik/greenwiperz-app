@@ -11,23 +11,6 @@
 
     <form class="col-span-6" wire:submit.prevent="saveBooking">
         @csrf
-        {!! RecaptchaV3::initJs() !!}
-{{--        {!! RecaptchaV3::field('booking', 'recaptcha') !!}--}}
-        <input type="hidden" name="recaptcha" id="recaptcha" wire:model="recaptcha">
-        <script>
-            grecaptcha.ready(function() {
-                grecaptcha.execute('{{ config('recaptchav3.sitekey') }}', {action: 'booking'}).then(function(token) {
-                    let recaptchaItem = document.getElementById('recaptcha');
-                    recaptchaItem.dispatchEvent(new Event('input'));
-                    document.getElementById('recaptcha').value = token;
-                    console.log(document.getElementById('recaptcha'))
-                });
-            });
-        </script>
-        @error('g-recaptcha-response')
-        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-        @enderror
-
         <div class="max-w-7xl mx-auto py-4 sm:px-6 lg:px-8 ">
             <div class="grid grid-cols-6 gap-3">
                 <div class="col-span-6 sm:col-span-4 grid grid-cols-6 gap-6 px-4 py-5 bg-white shadow rounded-md sm:px-20">
@@ -102,20 +85,20 @@
 
                         <div class="col-span-3">
                             <x-input.group class="col-span-6 sm:col-span-3" for="loc_city" label="{{ __('app.city') }}">
-                                <x-input.text wire:model="booking.loc_city" name="loc_city" type="text" autocomplete="{{ Str::random(10) }}city" required />
+                                <x-input.text wire:model.lazy="booking.loc_city" name="loc_city" type="text" autocomplete="{{ Str::random(10) }}city" required />
                             </x-input.group>
                             @error('booking.loc_city') <span class="error text-red-600">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="col-span-4">
                             <x-input.group class="col-span-6 sm:col-span-3" for="loc_route" label="{{ __('app.street') }}">
-                                <x-input.text wire:model="booking.loc_route" name="loc_route" type="text" autocomplete="{{ Str::random(10) }}street" required />
+                                <x-input.text wire:model.lazy="booking.loc_route" name="loc_route" type="text" autocomplete="{{ Str::random(10) }}street" required />
                             </x-input.group>
                             @error('booking.loc_route') <span class="error text-red-600">{{ $message }}</span> @enderror
                         </div>
                         <div class="col-span-2">
                             <x-input.group class="col-span-6 sm:col-span-3" for="loc_street_number" label="{{ __('app.street_number') }}">
-                                <x-input.text wire:model="booking.loc_street_number" name="loc_street_number" type="text" autocomplete="{{ Str::random(10) }}number" required />
+                                <x-input.text wire:model.lazy="booking.loc_street_number" name="loc_street_number" type="text" autocomplete="{{ Str::random(10) }}number" required />
                             </x-input.group>
                         </div>
 
@@ -280,6 +263,21 @@
                 </div>
             </div>
         </div>
+        {!! RecaptchaV3::initJs() !!}
+        <input type="hidden" name="recaptcha" id="recaptcha" wire:model="recaptcha">
+        <script>
+            grecaptcha.ready(function() {
+                grecaptcha.execute('{{ config('recaptchav3.sitekey') }}', {action: 'booking'}).then(function(token) {
+                    console.log(token);
+                    let recaptchaItem = document.getElementById('recaptcha');
+                    recaptchaItem.dispatchEvent(new Event('input'));
+                    document.getElementById('recaptcha').value = token;
+                });
+            });
+        </script>
+        @error('g-recaptcha-response')
+        <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+        @enderror
     </form>
 
     <livewire:booking.new-car-modal>
