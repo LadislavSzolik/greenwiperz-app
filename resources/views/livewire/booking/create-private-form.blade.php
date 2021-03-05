@@ -29,6 +29,16 @@
                         </div>
                     </div>
 
+                        @if ($errors->any())
+                            <div class="col-span-6 text-red-600">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
                     <!-- CAR INFORMATION -->
                     <x-input.group class="col-span-6" for="carForBooking" label="{{ __('app.car')}}">
                         @if(count($cars) > 0)

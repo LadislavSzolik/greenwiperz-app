@@ -26,7 +26,7 @@
                                     {{ __('how.howWorksMainTitle') }}
                                 </h2>
                             </div>
-                            <div class="mb-8 mx-auto flex justify-center text-gray-500 w-3/5 px-10 text-2xl">
+                            <div class="mb-8 mx-auto flex justify-center text-gray-500 md:w-3/5 md:px-10 text-2xl">
                                 {{ __('homepage.howWorksParagrph1') }}
                             </div>
 
@@ -54,7 +54,7 @@
                                     {{ __('homepage.howNanotechMainTitle') }}
                                 </h2>
                             </div>
-                            <div class="mb-8 mx-auto flex justify-center text-gray-500 w-3/5 px-10 text-2xl">
+                            <div class="mb-8 mx-auto flex justify-center text-gray-500 sm:w-3/5 sm:px-10 text-2xl">
                                 {{ __('homepage.howNanotechTitle2') }}
                             </div>
 

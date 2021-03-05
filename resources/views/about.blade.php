@@ -23,10 +23,11 @@
                     <div class="flex justify-center w-full sm:w-3/5 px-2 sm:p-8 mt-6 sm:mt-0 mb-12">
                         <img class="shadow-2xl h-full w-full rounded-lg" src="{{ asset('img/about-us.jpg') }}"
                             alt="About us image" />
-                    </div>                   
+                    </div>
                 </div>
             </div>
         </section>
+        @livewire('rating.show-ratings')
     </main>
     <x-footer />
 </x-guest-layout>

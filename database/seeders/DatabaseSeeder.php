@@ -6,7 +6,10 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\ServiceSeeder;
 
-
+/**
+ * Class DatabaseSeeder
+ * @package Database\Seeders
+ */
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -18,8 +21,8 @@ class DatabaseSeeder extends Seeder
     {
       $this->call([
       TimeslotSeeder::class,
-      ServiceSeeder::class,     
-      UserSeeder::class,    
+      ServiceSeeder::class,
+      UserSeeder::class,
     ]);
     }
 }
