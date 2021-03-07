@@ -108,12 +108,13 @@ return [
     'until' => 'Until',
     'users' => 'Users',
     'outside' => 'Only outside',
-    'in_outside' => 'Inside and outside',
+    'in_outside_basic' => 'Inside and outside Basic',
+    'in_outside_premium' => 'Inside and outside Premium',
+    'services' => 'Services',
 
     'loc_route' => 'Car parking',
     'service_type' => 'Cleaning',
     'brutto_total_amount' => 'Price',
-    'status' => 'Status',
 
     'created_at' => 'Registered',
     'bookings_count' => 'Bookings',

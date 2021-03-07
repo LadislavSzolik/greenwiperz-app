@@ -14,11 +14,11 @@ class AdminRatings extends Component
     use WithSorting;
 
     public $showModal = false;
-    public Rating $editing; 
+    public Rating $editing;
 
     public function rules() { return [
         'editing.display_name' => 'required|min:3',
-        'editing.level' => 'required|in:'.collect(Rating::LEVELS)->keys()->implode(','),        
+        'editing.level' => 'required|in:'.collect(Rating::LEVELS)->keys()->implode(','),
         'editing.comment' => 'required|min:5',
     ]; }
 
@@ -26,7 +26,7 @@ class AdminRatings extends Component
     {
         $this->sortField = 'display_name';
         $this->sortDirection = 'asc';
-        $this->editing = $this->makeBlankRating();   
+        $this->editing = $this->makeBlankRating();
     }
 
     public function makeBlankRating()
@@ -35,8 +35,8 @@ class AdminRatings extends Component
     }
 
     public function create()
-    {        
-        $this->editing = $this->makeBlankRating();        
+    {
+        $this->editing = $this->makeBlankRating();
         $this->showModal = true;
     }
 
@@ -49,8 +49,8 @@ class AdminRatings extends Component
 
     public function save()
     {
-        $this->validate();              
-        $this->editing->save();        
+        $this->validate();
+        $this->editing->save();
         $this->showModal = false;
     }
 
@@ -77,7 +77,7 @@ class AdminRatings extends Component
         return $this->applySorting($query)->paginate(15);
     }
 
-    public function render()   
+    public function render()
     {
         return view('livewire.rating.admin-ratings',['ratings' => $this->rows ]);
     }

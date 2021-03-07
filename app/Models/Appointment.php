@@ -31,7 +31,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User|null $assignedTo
  * @property-read \App\Models\Booking|null $booking
- * @property mixed $date_for_editing
+ * @property string $date_for_editing
  * @method static \Illuminate\Database\Eloquent\Builder|Appointment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Appointment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Appointment query()

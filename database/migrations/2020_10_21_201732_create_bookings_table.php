@@ -36,7 +36,7 @@ class CreateBookingsTable extends Migration
             $table->string('loc_city',100);
             $table->string('loc_postal_code',20);
 
-            $table->enum('service_type', ['outside', 'inside-outside'])->nullable();
+            $table->enum('service_type', ['outside', 'inside-outside-basic', 'inside-outside-premium'])->nullable();
             $table->integer('duration');
             $table->string('currency')->default('CHF');
 

@@ -41,6 +41,10 @@
                     <x-jet-nav-link href="{{ route('ratings.index') }}" :active="isRouteName('ratings.index')">
                         {{ __('app.ratings') }}
                     </x-jet-nav-link>
+
+                        <x-jet-nav-link href="{{ route('services.index') }}" :active="isRouteName('services.index')">
+                            {{ __('app.services') }}
+                        </x-jet-nav-link>
                     @endcan
 
                     <x-jet-nav-link href="{{ route('terms.inapp') }}" :active="isRouteName('terms.inapp')">

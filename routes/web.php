@@ -22,6 +22,7 @@ use App\Http\Livewire\Cars;
 use App\Http\Livewire\Clients;
 use App\Http\Livewire\Bookingtimeslot\BookingTimeslots;
 use App\Http\Livewire\Rating\AdminRatings;
+use App\Http\Livewire\Service\AdminServices;
 use App\Http\Livewire\Users;
 use App\Mail\PrivateBookingConfirmedMail;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
@@ -74,6 +75,7 @@ foreach (Config::get('app.all_langs') as $language) {
             Route::post('/appointment/{appointment}', [AppointmentTimeController::class, 'store'])->name($language . '.bookingtime.update');
             Route::get('/appointments', Appointments::class)->name($language . '.appointments.index');
             Route::get('/ratings', AdminRatings::class)->name($language . '.ratings.index');
+            Route::get('/services', AdminServices::class)->name($language . '.services.index');
             Route::get('/users', Users::class)->name($language . '.users.index');
             Route::get('/clients', Clients::class)->name($language . '.clients.index');
         });

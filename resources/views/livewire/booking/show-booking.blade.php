@@ -369,13 +369,13 @@
                 @can('manage_bookings')
                 @if($booking->status == 'paid' || $booking->status == 'confirmed')
                 @if($booking->type === 'private')
-                <x-modals.confirms-wiper-cancelation amount="{{ $booking->brutto_total_amount }}" amountToRefund="{{$booking->refundableAmount}}" actionLink="/bookings/{{ $booking->id }}/cancel">
+                <x-modals.confirms-wiper-cancelation amount="{{ $booking->brutto_total_amount }}" amountToRefund="{{$booking->refundableAmount}}" actionLink="{{ route('bookings.cancel', $booking->id) }}">
                     <x-div-button class="w-full sm:w-auto" buttonType="destructive">
                         {{ __('app.cancel_booking') }}
                     </x-div-button>
                 </x-modals.confirms-wiper-cancelation>
                 @endif
-                <x-confirms-completion actionLink="/bookings/{{ $booking->id }}/complete">
+                <x-confirms-completion actionLink="{{ route('bookings.complete', $booking->id) }}">
                     <x-div-button class="w-full sm:w-auto" buttonType="primary">
                         {{ __('app.mark_done') }}
                     </x-div-button>
@@ -385,7 +385,7 @@
                 <!-- EOF WIPER SECTION -->
 
                 @if($booking->status == 'confirmed' && $booking->type === 'business')
-                <x-confirms-business-cancelation actionLink="/bookings/{{ $booking->id }}/cancel">
+                <x-confirms-business-cancelation actionLink="{{ route('bookings.cancel', $booking->id) }}">
                     <x-div-button class="w-full sm:w-auto" buttonType="destructive">
                         {{ __('app.cancel_booking') }}
                     </x-div-button>
@@ -394,7 +394,7 @@
 
                 <!-- WHO AND WHEN CAN DELETE A BOOKING? -->
                 @if($booking->status == 'draft' || ($booking->type =='business' && $booking->status == 'pending' && blank($booking->appointments))   )
-                <x-form-button method="DELETE" class="w-full sm:w-auto" action="/bookings/{{ $booking->id }}" buttonType="destructive">
+                <x-form-button method="DELETE" class="w-full sm:w-auto" action="{{ route('bookings.destroy', $booking->id) }}" buttonType="destructive">
                     {{ __('app.delete') }}
                 </x-form-button>
                 @endif

@@ -58,7 +58,9 @@
                     <x-input.group class="col-span-6 sm:col-span-3" for="serviceType" label="{{ __('app.cleaning')}}">
                         <x-input.radio wire:model="booking.service_type" name="serviceType" value="outside" text="{{ __('app.outside')}}">
                         </x-input.radio>
-                        <x-input.radio wire:model="booking.service_type" name="serviceType" value="inside-outside" text="{{ __('app.in_outside')}}">
+                        <x-input.radio wire:model="booking.service_type" name="serviceType" value="inside-outside-basic" text="{{ __('app.in_outside_basic')}}">
+                        </x-input.radio>
+                        <x-input.radio wire:model="booking.service_type" name="serviceType" value="inside-outside-premium" text="{{ __('app.in_outside_premium')}}">
                         </x-input.radio>
                     </x-input.group>
 
