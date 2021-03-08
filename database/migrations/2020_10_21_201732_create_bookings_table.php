@@ -120,7 +120,8 @@ class CreateBookingsTable extends Migration
         {
             $table->id();
             $table->unsignedInteger('outside')->default(0);
-            $table->unsignedInteger('inoutside')->default(0);
+            $table->unsignedInteger('inoutsidebasic')->default(0);
+            $table->unsignedInteger('inoutsidepremium')->default(0);
             $table->enum('car_size', ['small', 'medium', 'large','x-large']);
             $table->morphs('fleetable');
             $table->timestamps();

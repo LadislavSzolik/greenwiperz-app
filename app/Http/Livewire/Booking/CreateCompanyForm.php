@@ -37,16 +37,20 @@ class CreateCompanyForm extends Component
             'timeslot_date' => 'required|date|after:today',
             'addressForBooking' => 'required',
             'smallCars.outside' => 'required',
-            'smallCars.inoutside' => 'required',
+            'smallCars.inoutsidebasic' => 'required',
+            'smallCars.inoutsidepremium' => 'required',
             'smallCars.car_size' => 'required',
             'mediumCars.outside' => 'required',
-            'mediumCars.inoutside' => 'required',
+            'mediumCars.inoutsidebasic' => 'required',
+            'mediumCars.inoutsidepremium' => 'required',
             'mediumCars.car_size' => 'required',
             'largeCars.outside' => 'required',
-            'largeCars.inoutside' => 'required',
+            'largeCars.inoutsidebasic' => 'required',
+            'largeCars.inoutsidepremium' => 'required',
             'largeCars.car_size' => 'required',
             'xlargeCars.outside' => 'required',
-            'xlargeCars.inoutside' => 'required',
+            'xlargeCars.inoutsidebasic' => 'required',
+            'xlargeCars.inoutsidepremium' => 'required',
             'xlargeCars.car_size' => 'required',
             'booking.type' => 'required',
             'booking.customer_id' => 'required',
@@ -106,10 +110,10 @@ class CreateCompanyForm extends Component
         $this->priceList = Services::all();
         $this->addresses = auth()->user()->billingAddresses()->where('is_company', '=', 1)->get();
         $this->addressForBooking =  $this->addresses->last();
-        $this->smallCars = Fleet::make(['outside' => 0, 'inoutside' => 0, 'car_size' => 'small']);
-        $this->mediumCars = Fleet::make(['outside' => 0, 'inoutside' => 0, 'car_size' => 'medium']);
-        $this->largeCars = Fleet::make(['outside' => 0, 'inoutside' => 0, 'car_size' => 'large']);
-        $this->xlargeCars = Fleet::make(['outside' => 0, 'inoutside' => 0, 'car_size' => 'x-large']);
+        $this->smallCars = Fleet::make(['outside' => 0, 'inoutsidebasic' => 0, 'inoutsidepremium' => 0, 'car_size' => 'small']);
+        $this->mediumCars = Fleet::make(['outside' => 0, 'inoutsidebasic' => 0, 'inoutsidepremium' => 0, 'car_size' => 'medium']);
+        $this->largeCars = Fleet::make(['outside' => 0, 'inoutsidebasic' => 0, 'inoutsidepremium' => 0, 'car_size' => 'large']);
+        $this->xlargeCars = Fleet::make(['outside' => 0, 'inoutsidebasic' => 0, 'inoutsidepremium' => 0, 'car_size' => 'x-large']);
 
         $this->recalculatePriceAndTime();
     }
@@ -146,7 +150,9 @@ class CreateCompanyForm extends Component
         $this->showSelectAddressModal = false;
     }
 
-
+    /**
+     *
+     */
     public function recalculatePriceAndTime()
     {
         $this->booking->base_cost = 0;
@@ -155,43 +161,62 @@ class CreateCompanyForm extends Component
 
 
         $smallOut = intval($this->smallCars->outside);
-        $smallInOut = intval($this->smallCars->inoutside);
+        $smallInOutBasic = intval($this->smallCars->inoutsidebasic);
+        $smallInOutPremium = intval($this->smallCars->inoutsidepremium);
 
         $priceSmallOut =  $this->priceList->where('type', 'outside')->where('vehicle_size', 'small')->first();
-        $priceSmallInOut =  $this->priceList->where('type', 'inside-outside')->where('vehicle_size', 'small')->first();
+        $priceSmallInOutBasic =  $this->priceList->where('type', 'inside-outside-basic')->where('vehicle_size', 'small')->first();
+        $priceSmallInOutPremium =  $this->priceList->where('type', 'inside-outside-premium')->where('vehicle_size', 'small')->first();
         $this->booking->base_cost += $priceSmallOut->price * $smallOut;
-        $this->booking->base_cost += $priceSmallInOut->price * $smallInOut;
-        $this->booking->duration += ($smallOut * $priceSmallOut->duration) + ($smallInOut * $priceSmallInOut->duration);
+        $this->booking->base_cost += $priceSmallInOutBasic->price * $smallInOutBasic;
+        $this->booking->base_cost += $priceSmallInOutPremium->price * $smallInOutPremium;
+        $this->booking->duration += ($smallOut * $priceSmallOut->duration) +
+            ($smallInOutBasic * $priceSmallInOutBasic->duration) +
+            ($smallInOutPremium * $priceSmallInOutPremium->duration);
 
 
         $mediumOut = intval($this->mediumCars->outside);
-        $mediumInOut = intval($this->mediumCars->inoutside);
+        $mediumInOutBasic = intval($this->mediumCars->inoutsidebasic);
+        $mediumInOutPremium = intval($this->mediumCars->inoutsidebasic);
 
         $priceMediumOut =  $this->priceList->where('type', 'outside')->where('vehicle_size', 'medium')->first();
-        $priceMediumInOut =  $this->priceList->where('type', 'inside-outside')->where('vehicle_size', 'medium')->first();
+        $priceMediumInOutBasic =  $this->priceList->where('type', 'inside-outside-basic')->where('vehicle_size', 'medium')->first();
+        $priceMediumInOutPremium =  $this->priceList->where('type', 'inside-outside-premium')->where('vehicle_size', 'medium')->first();
         $this->booking->base_cost += $priceMediumOut->price *  $mediumOut;
-        $this->booking->base_cost += $priceMediumInOut->price *  $mediumInOut;
-        $this->booking->duration += ($mediumOut  * $priceMediumOut->duration) + ($mediumInOut * $priceMediumInOut->duration);
+        $this->booking->base_cost += $priceMediumInOutBasic->price *  $mediumInOutBasic;
+        $this->booking->base_cost += $priceMediumInOutPremium->price *  $mediumInOutPremium;
+        $this->booking->duration += ($mediumOut  * $priceMediumOut->duration) +
+            ($mediumInOutBasic * $priceMediumInOutBasic->duration) +
+            ($mediumInOutPremium * $priceMediumInOutPremium->duration);
 
 
         $largeOut = intval($this->largeCars->outside);
-        $largeInOut = intval($this->largeCars->inoutside);
+        $largeInOutBasic = intval($this->largeCars->inoutsidebasic);
+        $largeInOutPremium = intval($this->largeCars->inoutsidebasic);
 
         $priceLargeOut =  $this->priceList->where('type', 'outside')->where('vehicle_size', 'large')->first();
-        $priceLargeInOut =  $this->priceList->where('type', 'inside-outside')->where('vehicle_size', 'large')->first();
+        $priceLargeInOutBasic =  $this->priceList->where('type', 'inside-outside-basic')->where('vehicle_size', 'large')->first();
+        $priceLargeInOutPremium =  $this->priceList->where('type', 'inside-outside-premium')->where('vehicle_size', 'large')->first();
         $this->booking->base_cost += $priceLargeOut->price *  $largeOut;
-        $this->booking->base_cost += $priceLargeInOut->price *  $largeInOut;
-        $this->booking->duration += ($largeOut * $priceLargeOut->duration) + ($largeInOut * $priceLargeInOut->duration);
-
+        $this->booking->base_cost += $priceLargeInOutBasic->price *  $largeInOutBasic;
+        $this->booking->base_cost += $priceLargeInOutPremium->price *  $largeInOutPremium;
+        $this->booking->duration += ($largeOut * $priceLargeOut->duration) +
+            ($largeInOutBasic * $priceLargeInOutBasic->duration) +
+            ($largeInOutPremium * $priceLargeInOutPremium->duration);
 
         $xlargeOut = intval($this->xlargeCars->outside);
-        $xlargeInOut = intval($this->xlargeCars->inoutside);
+        $xlargeInOutBasic = intval($this->xlargeCars->inoutsidebasic);
+        $xlargeInOutPremium = intval($this->xlargeCars->inoutsidebasic);
 
         $priceXLargeOut =  $this->priceList->where('type', 'outside')->where('vehicle_size', 'x-large')->first();
-        $priceXLargeInOut =  $this->priceList->where('type', 'inside-outside')->where('vehicle_size', 'x-large')->first();
+        $priceXLargeInOutBasic =  $this->priceList->where('type', 'inside-outside-basic')->where('vehicle_size', 'x-large')->first();
+        $priceXLargeInOutPremium =  $this->priceList->where('type', 'inside-outside-premium')->where('vehicle_size', 'x-large')->first();
         $this->booking->base_cost += $priceXLargeOut->price *  $xlargeOut;
-        $this->booking->base_cost += $priceXLargeInOut->price *  $xlargeInOut;
-        $this->booking->duration += ($xlargeOut * $priceXLargeOut->duration) + ($xlargeInOut * $priceXLargeInOut->duration);
+        $this->booking->base_cost += $priceXLargeInOutBasic->price *  $xlargeInOutBasic;
+        $this->booking->base_cost += $priceXLargeInOutPremium->price *  $xlargeInOutPremium;
+        $this->booking->duration += ($xlargeOut * $priceXLargeOut->duration) +
+            ($xlargeInOutBasic * $priceXLargeInOutBasic->duration) +
+            ($xlargeInOutPremium * $priceXLargeInOutPremium->duration);
 
         $animal_hair = intval($this->booking->animal_hair);
         $extra_dirt = intval($this->booking->extra_dirt);
@@ -200,7 +225,18 @@ class CreateCompanyForm extends Component
         $this->booking->extra_cost += ($animal_hair * config('greenwiperz.company.dirty_surcharge'));
         $this->booking->extra_cost += ($extra_dirt * config('greenwiperz.company.dirty_surcharge'));
 
-        $this->booking->fleet_discount = $smallOut + $smallInOut + $mediumOut + $mediumInOut + $largeOut  + $largeInOut  + $xlargeOut + $xlargeInOut;
+        $this->booking->fleet_discount = $smallOut +
+            $smallInOutBasic +
+            $smallInOutPremium +
+            $mediumOut +
+            $mediumInOutBasic +
+            $mediumInOutPremium +
+            $largeOut  +
+            $largeInOutBasic  +
+            $largeInOutPremium  +
+            $xlargeOut +
+            $xlargeInOutBasic +
+            $xlargeInOutPremium;;
 
         $this->booking->brutto_total_amount = $this->booking->base_cost + $this->booking->extra_cost;
 

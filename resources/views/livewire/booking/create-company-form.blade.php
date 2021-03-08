@@ -65,8 +65,11 @@
                             <x-input.text type="number" wire:model="smallCars.outside" min="0" max="100" value="0" required />
                         </x-input.inline-group>
 
-                        <x-input.inline-group class="w-full " for="smallCars.inoutside" label="{{ __('app.in_outside')}} ({{ __('Piece') }})">
-                            <x-input.text type="number" wire:model="smallCars.inoutside" min="0" max="100" value="0" required />
+                        <x-input.inline-group class="w-full " for="smallCars.inoutside" label="{{ __('app.in_outside_basic')}} ({{ __('Piece') }})">
+                            <x-input.text type="number" wire:model="smallCars.inoutsidebasic" min="0" max="100" value="0" required />
+                        </x-input.inline-group>
+                        <x-input.inline-group class="w-full " for="smallCars.inoutside" label="{{ __('app.in_outside_premium')}} ({{ __('Piece') }})">
+                            <x-input.text type="number" wire:model="smallCars.inoutsidepremium" min="0" max="100" value="0" required />
                         </x-input.inline-group>
                     </div>
 
@@ -77,8 +80,12 @@
                             <x-input.text type="number" wire:model="mediumCars.outside" min="0" max="100" value="0" required />
                         </x-input.inline-group>
 
-                        <x-input.inline-group class="w-full" for="mediumCars.inoutside" label="{{ __('app.in_outside')}} ({{ __('Piece') }})">
-                            <x-input.text type="number" wire:model="mediumCars.inoutside" min="0" max="100" value="0" required />
+                        <x-input.inline-group class="w-full" for="mediumCars.inoutside" label="{{ __('app.in_outside_basic')}} ({{ __('Piece') }})">
+                            <x-input.text type="number" wire:model="mediumCars.inoutsidebasic" min="0" max="100" value="0" required />
+                        </x-input.inline-group>
+
+                        <x-input.inline-group class="w-full" for="mediumCars.inoutside" label="{{ __('app.in_outside_premium')}} ({{ __('Piece') }})">
+                            <x-input.text type="number" wire:model="mediumCars.inoutsidepremium" min="0" max="100" value="0" required />
                         </x-input.inline-group>
                     </div>
 
@@ -91,7 +98,11 @@
                         </x-input.inline-group>
 
                         <x-input.inline-group class="w-full" for="largeCars.inoutside" label="{{ __('app.in_outside')}} ({{ __('Piece') }})">
-                            <x-input.text type="number" wire:model="largeCars.inoutside" min="0" max="100" value="0" required />
+                            <x-input.text type="number" wire:model="largeCars.inoutsidebasic" min="0" max="100" value="0" required />
+                        </x-input.inline-group>
+
+                        <x-input.inline-group class="w-full" for="largeCars.inoutside" label="{{ __('app.in_outside')}} ({{ __('Piece') }})">
+                            <x-input.text type="number" wire:model="largeCars.inoutsidepremium" min="0" max="100" value="0" required />
                         </x-input.inline-group>
 
                     </div>
@@ -106,7 +117,10 @@
                         </x-input.inline-group>
 
                         <x-input.inline-group class="w-full" for="xlargeCars.inoutside" label="{{ __('app.in_outside')}} ({{ __('Piece') }})">
-                            <x-input.text type="number" wire:model="xlargeCars.inoutside" min="0" max="100" value="0" required />
+                            <x-input.text type="number" wire:model="xlargeCars.inoutsidebasic" min="0" max="100" value="0" required />
+                        </x-input.inline-group>
+                        <x-input.inline-group class="w-full" for="xlargeCars.inoutside" label="{{ __('app.in_outside')}} ({{ __('Piece') }})">
+                            <x-input.text type="number" wire:model="xlargeCars.inoutsidepremium" min="0" max="100" value="0" required />
                         </x-input.inline-group>
                     </div>
 

@@ -33,5 +33,5 @@ class Fleet extends Model
 {
     use HasFactory;
 
-    protected $fillable = [ 'outside', 'inoutside', 'car_size'];
+    protected $fillable = [ 'outside', 'inoutsidebasic', 'inoutsidepremium', 'car_size'];
 }
