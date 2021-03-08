@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int $outside
- * @property int $inoutside
+ * @property int $inoutsidebasic
+ * @property int $inoutsidepremium
  * @property string $car_size
  * @property string $fleetable_type
  * @property int $fleetable_id
@@ -24,7 +25,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Fleet whereFleetableId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Fleet whereFleetableType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Fleet whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Fleet whereInoutside($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Fleet whereInoutsidebasic($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Fleet whereInoutsidepremium($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Fleet whereOutside($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Fleet whereUpdatedAt($value)
  * @mixin \Eloquent

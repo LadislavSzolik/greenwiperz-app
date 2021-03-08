@@ -177,7 +177,7 @@ class CreateCompanyForm extends Component
 
         $mediumOut = intval($this->mediumCars->outside);
         $mediumInOutBasic = intval($this->mediumCars->inoutsidebasic);
-        $mediumInOutPremium = intval($this->mediumCars->inoutsidebasic);
+        $mediumInOutPremium = intval($this->mediumCars->inoutsidepremium);
 
         $priceMediumOut =  $this->priceList->where('type', 'outside')->where('vehicle_size', 'medium')->first();
         $priceMediumInOutBasic =  $this->priceList->where('type', 'inside-outside-basic')->where('vehicle_size', 'medium')->first();
@@ -189,10 +189,9 @@ class CreateCompanyForm extends Component
             ($mediumInOutBasic * $priceMediumInOutBasic->duration) +
             ($mediumInOutPremium * $priceMediumInOutPremium->duration);
 
-
         $largeOut = intval($this->largeCars->outside);
         $largeInOutBasic = intval($this->largeCars->inoutsidebasic);
-        $largeInOutPremium = intval($this->largeCars->inoutsidebasic);
+        $largeInOutPremium = intval($this->largeCars->inoutsidepremium);
 
         $priceLargeOut =  $this->priceList->where('type', 'outside')->where('vehicle_size', 'large')->first();
         $priceLargeInOutBasic =  $this->priceList->where('type', 'inside-outside-basic')->where('vehicle_size', 'large')->first();
@@ -206,7 +205,7 @@ class CreateCompanyForm extends Component
 
         $xlargeOut = intval($this->xlargeCars->outside);
         $xlargeInOutBasic = intval($this->xlargeCars->inoutsidebasic);
-        $xlargeInOutPremium = intval($this->xlargeCars->inoutsidebasic);
+        $xlargeInOutPremium = intval($this->xlargeCars->inoutsidepremium);
 
         $priceXLargeOut =  $this->priceList->where('type', 'outside')->where('vehicle_size', 'x-large')->first();
         $priceXLargeInOutBasic =  $this->priceList->where('type', 'inside-outside-basic')->where('vehicle_size', 'x-large')->first();
@@ -220,6 +219,9 @@ class CreateCompanyForm extends Component
 
         $animal_hair = intval($this->booking->animal_hair);
         $extra_dirt = intval($this->booking->extra_dirt);
+
+        $this->booking->duration += 15 * $animal_hair;
+        $this->booking->duration += 15 * $extra_dirt;
 
         $this->booking->extra_cost = 0;
         $this->booking->extra_cost += ($animal_hair * config('greenwiperz.company.dirty_surcharge'));

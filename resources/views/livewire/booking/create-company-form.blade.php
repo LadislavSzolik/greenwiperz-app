@@ -97,11 +97,11 @@
                             <x-input.text type="number" wire:model="largeCars.outside" min="0" max="100" value="0" required />
                         </x-input.inline-group>
 
-                        <x-input.inline-group class="w-full" for="largeCars.inoutside" label="{{ __('app.in_outside')}} ({{ __('Piece') }})">
+                        <x-input.inline-group class="w-full" for="largeCars.inoutside" label="{{ __('app.in_outside_basic')}} ({{ __('Piece') }})">
                             <x-input.text type="number" wire:model="largeCars.inoutsidebasic" min="0" max="100" value="0" required />
                         </x-input.inline-group>
 
-                        <x-input.inline-group class="w-full" for="largeCars.inoutside" label="{{ __('app.in_outside')}} ({{ __('Piece') }})">
+                        <x-input.inline-group class="w-full" for="largeCars.inoutside" label="{{ __('app.in_outside_premium')}} ({{ __('Piece') }})">
                             <x-input.text type="number" wire:model="largeCars.inoutsidepremium" min="0" max="100" value="0" required />
                         </x-input.inline-group>
 
@@ -116,10 +116,10 @@
                             <x-input.text type="number" wire:model="xlargeCars.outside" min="0" max="100" value="0" required />
                         </x-input.inline-group>
 
-                        <x-input.inline-group class="w-full" for="xlargeCars.inoutside" label="{{ __('app.in_outside')}} ({{ __('Piece') }})">
+                        <x-input.inline-group class="w-full" for="xlargeCars.inoutside" label="{{ __('app.in_outside_basic')}} ({{ __('Piece') }})">
                             <x-input.text type="number" wire:model="xlargeCars.inoutsidebasic" min="0" max="100" value="0" required />
                         </x-input.inline-group>
-                        <x-input.inline-group class="w-full" for="xlargeCars.inoutside" label="{{ __('app.in_outside')}} ({{ __('Piece') }})">
+                        <x-input.inline-group class="w-full" for="xlargeCars.inoutside" label="{{ __('app.in_outside_premium')}} ({{ __('Piece') }})">
                             <x-input.text type="number" wire:model="xlargeCars.inoutsidepremium" min="0" max="100" value="0" required />
                         </x-input.inline-group>
                     </div>
